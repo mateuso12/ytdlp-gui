@@ -15,9 +15,9 @@ Without a certificate, Windows SmartScreen warns on first run and Smart App Cont
 3. In the GitHub repository settings add:
    - variables: `SIGNPATH_ENABLED` = `true`, `SIGNPATH_ORGANIZATION_ID`, `SIGNPATH_PROJECT_SLUG`, `SIGNPATH_SIGNING_POLICY_SLUG`
    - secret: `SIGNPATH_API_TOKEN`
-4. The Windows job in `.github/workflows/release.yml` then uploads the installers to SignPath and downloads the signed copies (`signed-windows` artifact).
+4. The Windows job in `.github/workflows/release.yml` then uploads the installers as a workflow artifact, submits them to SignPath and downloads the signed copies into a local directory (`signed-windows`) on the runner. That is all it does.
 
-The step does not run unless `SIGNPATH_ENABLED` is `true`, so builds never depend on it. Note that `tauri-action` publishes the unsigned installers to the release first; once SignPath is approved, the workflow needs a follow-up step that replaces those release assets with the signed ones (and regenerates the updater signature for them). Adjust the SignPath artifact configuration to your project's needs.
+The step does not run unless `SIGNPATH_ENABLED` is `true`, so builds never depend on it. **Still to do** once SignPath is approved: `tauri-action` has already attached the unsigned installers to the draft release, so a follow-up step must replace those release assets with the signed ones (for example with `gh release upload --clobber`) and regenerate the updater `.sig` files and `latest.json` for them. The step has not been tested. Adjust the SignPath artifact configuration to your project's needs.
 
 ## macOS
 
@@ -25,4 +25,9 @@ Signing and notarisation need an Apple Developer account. It will be evaluated i
 
 ## Workflow hardening
 
-Third-party actions are pinned by major version tag. Pinning to a full commit SHA is a possible further hardening.
+Third-party actions are pinned by major version tag. Dependabot (`.github/dependabot.yml`) proposes updates weekly for GitHub Actions, npm and Cargo. Once it is on, pinning the release job's actions to full commit SHAs is a recommended hardening (Dependabot keeps SHA pins current).
+
+## Release process notes
+
+- release-please creates the GitHub release as a **draft**. The `build` jobs attach the installers and `latest.json` to it, and the final `publish` job publishes it only if every build succeeded.
+- The manifest starts at `0.0.0` and the config has `release-as: 0.1.0` so the first release is 0.1.0 whatever the commits say. **Remove `release-as` from `release-please-config.json` after the first release**, or it keeps forcing that version. Key names (`release-as`, `draft`) are from memory of the release-please docs; verify them on the first run.
