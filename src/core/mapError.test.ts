@@ -22,6 +22,8 @@ const cases: [string, ErrorCode, Action][] = [
   ['private', 'private', 'use_cookies'],
   ['unavailable', 'private', 'use_cookies'],
   ['age', 'age', 'use_cookies'],
+  ['bot', 'bot', 'use_cookies'],
+  ['403', 'forbidden', 'update_ytdlp'],
   ['geo', 'geo', 'set_proxy'],
   ['extractor', 'extractor', 'update_ytdlp'],
   ['rate_limit', 'rate_limit', 'retry_later'],

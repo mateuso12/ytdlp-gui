@@ -341,6 +341,14 @@
       "title": "Age-restricted video",
       "message": "The site asks you to sign in to confirm your age. Use your browser cookies in Settings."
     },
+    "bot": {
+      "title": "Bot check",
+      "message": "YouTube wants to confirm you are not a bot. Use your browser cookies in Settings."
+    },
+    "forbidden": {
+      "title": "Download refused",
+      "message": "The site refused to send the video (HTTP 403). Updating yt-dlp usually fixes it."
+    },
     "geo": {
       "title": "Not available in your region",
       "message": "This video is not available in your country. A proxy in Settings may help."
@@ -371,7 +379,7 @@
     },
     "unknown": {
       "title": "Something went wrong",
-      "message": "yt-dlp could not analyze this link. The technical detail below may help."
+      "message": "The download failed. The technical detail below may help."
     }
   },
   "onboarding": {

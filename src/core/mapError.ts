@@ -23,9 +23,16 @@ interface Rule {
  * - ffmpeg is anchored on "ERROR: Postprocessing:" / "not found", never on the
  *   bare word "ffmpeg", so a path like C:\ffmpeg\bin in a network error does
  *   not misclassify.
+ * - bot before age: both ask for a sign-in, but the bot check is not about age.
+ * - 403 before network: "unable to download video data: HTTP Error 403" is not a network fault.
  * - the generic `ERROR: [extractor]` rule goes last.
  */
 export const RULES: readonly Rule[] = [
+  {
+    test: /confirm you(?:'|’)?re not a bot/i,
+    code: 'bot',
+    action: 'use_cookies',
+  },
   {
     test: /could not copy chrome cookie database|failed to decrypt with dpapi/i,
     code: 'cookies_chrome',
@@ -57,6 +64,8 @@ export const RULES: readonly Rule[] = [
     code: 'ffmpeg',
     action: 'reinstall_ffmpeg',
   },
+  // Before network: the 403 message also says "unable to download".
+  { test: /http error 403/i, code: 'forbidden', action: 'update_ytdlp' },
   {
     test: /unable to download|getaddrinfo failed|timed out|connection (?:reset|refused|aborted)|name or service not known|temporary failure in name resolution|network is unreachable|urlopen error/i,
     code: 'network',

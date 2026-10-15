@@ -1,0 +1,4 @@
+# hand-written: a 403 from the CDN cannot be reproduced on demand.
+# Source: message from yt-dlp's downloader when a media URL is rejected; seen in yt-dlp issue reports
+[download] Destination: video.f137.mp4
+ERROR: unable to download video data: HTTP Error 403: Forbidden

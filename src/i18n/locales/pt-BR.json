@@ -341,6 +341,14 @@
       "title": "Vídeo com restrição de idade",
       "message": "O site pede login para confirmar a idade. Use os cookies do navegador nas Configurações."
     },
+    "bot": {
+      "title": "Verificação anti-robô",
+      "message": "O YouTube quer confirmar que você não é um robô. Use os cookies do navegador em Configurações."
+    },
+    "forbidden": {
+      "title": "Download recusado",
+      "message": "O site se recusou a enviar o vídeo (HTTP 403). Atualizar o yt-dlp costuma resolver."
+    },
     "geo": {
       "title": "Indisponível na sua região",
       "message": "Esse vídeo não está liberado no seu país. Um proxy nas Configurações pode ajudar."
@@ -371,7 +379,7 @@
     },
     "unknown": {
       "title": "Algo deu errado",
-      "message": "O yt-dlp não conseguiu analisar esse link. O detalhe técnico abaixo pode ajudar."
+      "message": "O download não deu certo. O detalhe técnico abaixo pode ajudar."
     }
   },
   "onboarding": {

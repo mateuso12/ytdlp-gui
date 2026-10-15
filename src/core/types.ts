@@ -92,6 +92,8 @@ export type ErrorCode =
   | 'unsupported'
   | 'private'
   | 'age'
+  | 'bot'
+  | 'forbidden'
   | 'geo'
   | 'extractor'
   | 'rate_limit'
