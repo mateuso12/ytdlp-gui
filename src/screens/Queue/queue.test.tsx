@@ -356,6 +356,53 @@ describe('error job', () => {
       expect(args.join(' ')).toContain('--cookies-from-browser firefox')
     })
 
+    it.each(['use_cookies', 'set_proxy'] as const)(
+      'generic retry after %s picks up the changed settings',
+      async (action) => {
+        const bridge = createMockBridge({ deps: DEPS })
+        const { user } = await setup(
+          [
+            errorJob(
+              1,
+              { code: action === 'use_cookies' ? 'age' : 'geo', action },
+              { opts: OPTS, args: ['--old', 'https://youtu.be/v1'] },
+            ),
+          ],
+          bridge,
+        )
+        useSettings.getState().update({ cookiesBrowser: 'firefox', proxy: 'http://127.0.0.1:8080' })
+        const stop = await startScheduler(bridge)
+        await user.click(screen.getByRole('button', { name: 'Tentar de novo' }))
+        await vi.waitFor(() => expect(bridge.calls.some((c) => c.method === 'run')).toBe(true))
+        stop()
+        const args = bridge.calls.find((c) => c.method === 'run')?.args[1] as string[]
+        expect(args).not.toContain('--old')
+        expect(args.join(' ')).toContain('--cookies-from-browser firefox')
+        expect(args.join(' ')).toContain('--proxy http://127.0.0.1:8080')
+      },
+    )
+
+    it('generic retry of a cancelled job keeps its frozen args', async () => {
+      const bridge = createMockBridge({ deps: DEPS })
+      const { user } = await setup(
+        [
+          makeJob(1, {
+            status: 'cancelled',
+            opts: OPTS,
+            args: ['--old', 'https://youtu.be/v1'],
+          }),
+        ],
+        bridge,
+      )
+      useSettings.getState().update({ cookiesBrowser: 'firefox' })
+      const stop = await startScheduler(bridge)
+      await user.click(screen.getByRole('button', { name: 'Tentar de novo' }))
+      await vi.waitFor(() => expect(bridge.calls.some((c) => c.method === 'run')).toBe(true))
+      stop()
+      const args = bridge.calls.find((c) => c.method === 'run')?.args[1] as string[]
+      expect(args).toEqual(['--old', 'https://youtu.be/v1'])
+    })
+
     it('choose_folder: the retried command uses the new -P folder', async () => {
       const args = await run('choose_folder', 'Escolher outra pasta')
       expect(args).not.toContain('--old')

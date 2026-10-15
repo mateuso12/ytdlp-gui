@@ -16,6 +16,15 @@ import { ProgressBar } from './ProgressBar'
 
 type ErrorAction = NonNullable<FriendlyError['action']>
 
+/** Errors whose fix changes the command: the user may have applied it by hand, so retry rebuilds. */
+const REBUILD_ACTIONS: readonly ErrorAction[] = [
+  'use_cookies',
+  'set_proxy',
+  'use_firefox',
+  'choose_folder',
+  'reinstall_ffmpeg',
+]
+
 function Progress({ job }: { job: Job }) {
   const { t, i18n } = useTranslation()
   const progress = job.progress
@@ -130,6 +139,8 @@ export const QueueItem = memo(function QueueItem({ id }: { id: string }) {
   const genericRetry = status !== 'error' || (action !== 'retry' && action !== 'retry_later')
   const canRetry = status === 'error' || status === 'cancelled' || status === 'interrupted'
   const path = job.filePath
+  // After fixing cookies/proxy/folder in Settings, a plain retry would replay the old command.
+  const rebuildOnRetry = status === 'error' && action !== undefined && REBUILD_ACTIONS.includes(action)
 
   return (
     <li className={styles.row} data-status={status}>
@@ -164,7 +175,11 @@ export const QueueItem = memo(function QueueItem({ id }: { id: string }) {
           </PillButton>
         ) : null}
         {canRetry && genericRetry ? (
-          <PillButton variant="ghost" icon="rotate-ccw" onClick={retry}>
+          <PillButton
+            variant="ghost"
+            icon="rotate-ccw"
+            onClick={rebuildOnRetry ? retryRebuilt : retry}
+          >
             {t('queue.retry')}
           </PillButton>
         ) : null}
