@@ -7,6 +7,7 @@ import { createMockBridge } from '../bridge/mock'
 import i18n from '../i18n'
 import { ProbeProvider } from '../screens/Download/ProbeProvider'
 import { useDeps } from '../stores/deps'
+import { useSettings } from '../stores/settings'
 import { useUi } from '../stores/ui'
 import { ALL_INSTALLED } from '../test/fixtures'
 import { App } from './App'
@@ -49,6 +50,18 @@ describe('App shell', () => {
       await user.click(screen.getByRole('button', { name }))
       expect(screen.getByRole('heading', { level: 1, name })).toBeInTheDocument()
     }
+  })
+
+  it('cycles the theme system -> light -> dark -> system from the top bar', async () => {
+    const user = userEvent.setup()
+    useSettings.getState().update({ theme: 'system' })
+    renderShell(<App />)
+    await user.click(screen.getByRole('button', { name: /^Tema: Do sistema/ }))
+    expect(useSettings.getState().settings.theme).toBe('light')
+    await user.click(screen.getByRole('button', { name: /^Tema: Claro/ }))
+    expect(useSettings.getState().settings.theme).toBe('dark')
+    await user.click(screen.getByRole('button', { name: /^Tema: Escuro/ }))
+    expect(useSettings.getState().settings.theme).toBe('system')
   })
 
   it('collapses the sidebar with the menu button', async () => {

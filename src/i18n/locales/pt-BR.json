@@ -10,6 +10,7 @@
   },
   "topbar": {
     "toggleSidebar": "Alternar menu lateral",
+    "theme": "Tema: {{theme}}. Clique para mudar.",
     "queueBadge_one": "{{count}} download ativo",
     "queueBadge_other": "{{count}} downloads ativos"
   },

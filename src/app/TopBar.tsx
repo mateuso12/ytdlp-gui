@@ -1,7 +1,9 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Icon } from '../components/Icon'
+import type { ThemePref } from '../core/types'
 import { useQueue } from '../stores/queue'
+import { useSettings } from '../stores/settings'
 import { useUi } from '../stores/ui'
 import { APP_NAME } from './brand'
 import styles from './TopBar.module.css'
@@ -14,12 +16,16 @@ interface TopBarProps {
   urlSlot?: ReactNode
 }
 
+const NEXT_THEME: Record<ThemePref, ThemePref> = { system: 'light', light: 'dark', dark: 'system' }
+
 export function TopBar({ urlSlot }: TopBarProps) {
   const { t } = useTranslation()
   const collapsed = useUi((s) => s.sidebarCollapsed)
   const toggleSidebar = useUi((s) => s.toggleSidebar)
   const go = useUi((s) => s.go)
   const activeCount = useQueue((s) => s.activeCount)
+  const theme = useSettings((s) => s.settings.theme)
+  const themeLabel = t('topbar.theme', { theme: t(`settings.appearance.${theme}`) })
 
   return (
     <header className={styles.top}>
@@ -51,6 +57,15 @@ export function TopBar({ urlSlot }: TopBarProps) {
             </span>
           </button>
         ) : null}
+        <button
+          type="button"
+          className={styles.iconBtn}
+          aria-label={themeLabel}
+          title={themeLabel}
+          onClick={() => useSettings.getState().update({ theme: NEXT_THEME[theme] })}
+        >
+          <Icon name="sun-moon" />
+        </button>
       </div>
     </header>
   )
