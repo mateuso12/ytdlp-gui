@@ -10,7 +10,8 @@ export function detectLocale(language: string | undefined): Locale {
   return language?.toLowerCase().startsWith('pt') ? 'pt-BR' : 'en'
 }
 
-// TODO(task 13): read the language from the settings store instead of the navigator.
+// The first paint uses the navigator's language; once the settings are loaded,
+// `startSettingsEffects` (src/stores/settings.ts) takes over and drives i18n.changeLanguage.
 void i18n.use(initReactI18next).init({
   resources: { 'pt-BR': { translation: ptBR }, en: { translation: en } },
   lng: detectLocale(typeof navigator === 'undefined' ? undefined : navigator.language),
