@@ -2,6 +2,7 @@
   "name": "ytdlp-gui",
   "private": true,
   "version": "0.1.0",
+  "packageManager": "pnpm@12.11.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,7 +13,8 @@
     "test:cov": "vitest run --coverage",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p e2e/tsconfig.json",
-    "e2e": "playwright test",
+    "e2e": "playwright test --project=flows",
+    "e2e:all": "playwright test",
     "e2e:flows": "playwright test --project=flows",
     "e2e:visual": "playwright test --project=visual",
     "e2e:update": "playwright test --project=visual --update-snapshots"

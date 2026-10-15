@@ -1,0 +1,35 @@
+name: Bug report
+description: Something does not work as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, what happened instead?
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: App version
+      description: Settings > About
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: System
+      options: [Windows, macOS, Linux]
+    validations:
+      required: true
+  - type: input
+    id: link
+    attributes:
+      label: Link that failed
+      description: Only if it is not private. Remove personal tokens from the URL.
+  - type: textarea
+    id: log
+    attributes:
+      label: Error message or log
+      render: text

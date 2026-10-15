@@ -17,28 +17,36 @@ function e2eEntry(): Plugin {
 }
 
 // https://vite.dev/config/
-export default defineConfig(() => ({
-  plugins: [react(), e2eEntry()],
+export default defineConfig(({ command, mode }) => {
+  // The e2e entry carries a test hook and the mock bridge: it must never be built for shipping.
+  if (command === 'build' && mode === 'e2e') {
+    throw new Error(
+      '`vite build --mode e2e` is not allowed: the e2e entry is for the dev server only.',
+    )
+  }
+  return {
+    plugins: [react(), e2eEntry()],
 
-  // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
-  //
-  // 1. prevent Vite from obscuring rust errors
-  clearScreen: false,
-  // 2. tauri expects a fixed port, fail if that port is not available
-  server: {
-    port: 1420,
-    strictPort: true,
-    host: host || false,
-    hmr: host
-      ? {
-          protocol: 'ws',
-          host,
-          port: 1421,
-        }
-      : undefined,
-    watch: {
-      // 3. tell Vite to ignore watching `src-tauri`
-      ignored: ['**/src-tauri/**'],
+    // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
+    //
+    // 1. prevent Vite from obscuring rust errors
+    clearScreen: false,
+    // 2. tauri expects a fixed port, fail if that port is not available
+    server: {
+      port: 1420,
+      strictPort: true,
+      host: host || false,
+      hmr: host
+        ? {
+            protocol: 'ws',
+            host,
+            port: 1421,
+          }
+        : undefined,
+      watch: {
+        // 3. tell Vite to ignore watching `src-tauri`
+        ignored: ['**/src-tauri/**'],
+      },
     },
-  },
-}))
+  }
+})
