@@ -184,7 +184,7 @@ describe('network: rate limit', () => {
     expect(stored().rateLimit).toBeNull()
   })
 
-  it.each(['abc', 'X5', '-2M', '0'])(
+  it.each(['abc', 'X5', '-2M', '0', '5', '0M', '1.5'])(
     'rejects %s with an inline error and does not save it',
     async (value) => {
       const { user } = await setup({}, { rateLimit: '1M' })

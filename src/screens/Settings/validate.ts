@@ -1,9 +1,9 @@
 export type Validation<T> = { ok: true; value: T } | { ok: false }
 
-const RATE = /^(\d+(?:\.\d+)?)([KMG])?$/i
+const RATE = /^(\d+(?:\.\d+)?)([KMG])$/i
 const PROXY = /^(?:https?|socks4a?|socks5h?):\/\/[^\s/?#]+(?:[/?#]\S*)?$/i
 
-/** `500K`, `2M`, `1.5M`, a plain number of bytes, or empty (no limit). Zero is not a limit. */
+/** `500K`, `2M`, `1.5M`, or empty (no limit). Zero is not a limit. */
 export function validateRateLimit(text: string): Validation<string | null> {
   const value = text.trim()
   if (value === '') return { ok: true, value: null }
