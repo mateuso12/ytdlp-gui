@@ -115,7 +115,7 @@ export const QueueItem = memo(function QueueItem({ id }: { id: string }) {
           break
         case 'reinstall_ffmpeg':
           await bridge.deps.install('ffmpeg')
-          void useDeps.getState().refresh(bridge)
+          await useDeps.getState().refresh(bridge)
           retryRebuilt()
           break
         case 'use_firefox':

@@ -8,6 +8,7 @@ import { bootstrapStores } from './bootstrap'
 import { createHistoryStore } from './history'
 import { createQueueStore, startScheduler, useQueue, type QueueInput } from './queue'
 import { createSettingsStore, defaultSettings, startSettingsEffects, useSettings } from './settings'
+import { ALL_INSTALLED } from '../test/fixtures'
 
 const OPTS: DownloadOptions = {
   mode: 'video',
@@ -1066,6 +1067,39 @@ describe('queue: retryRebuilt', () => {
     r.queue.getState().retryRebuilt('nope')
     expect(job(r, 0).status).toBe('active')
     expect(runCalls(r)).toHaveLength(1)
+    r.stop()
+  })
+})
+
+describe('deps.ensure (cached engine status)', () => {
+  it('reads the status once, then serves the cache while every tool is installed', async () => {
+    const { useDeps } = await import('./deps')
+    const bridge = createMockBridge({ deps: ALL_INSTALLED })
+    const reads = () => bridge.calls.filter((c) => c.method === 'deps.status').length
+    await useDeps.getState().ensure(bridge)
+    await useDeps.getState().ensure(bridge)
+    await useDeps.getState().ensure(bridge)
+    expect(reads()).toBe(1)
+  })
+
+  it('reads again while a tool is missing (it may have been installed since)', async () => {
+    const { useDeps } = await import('./deps')
+    const bridge = createMockBridge()
+    await useDeps.getState().ensure(bridge)
+    await useDeps.getState().ensure(bridge)
+    expect(bridge.calls.filter((c) => c.method === 'deps.status')).toHaveLength(2)
+  })
+})
+
+describe('queue: engine status is cached', () => {
+  it('enqueueing several times does not re-read the status each time', async () => {
+    const r = await rig({ concurrency: 1 })
+    await enqueue(r, 1)
+    r.queue.getState().enqueue([input(2)])
+    await vi.waitFor(() => expect(r.queue.getState().jobs.every((j) => j.args.length > 0)).toBe(true))
+    r.queue.getState().enqueue([input(3)])
+    await vi.waitFor(() => expect(r.queue.getState().jobs.every((j) => j.args.length > 0)).toBe(true))
+    expect(r.bridge.calls.filter((c) => c.method === 'deps.status')).toHaveLength(1)
     r.stop()
   })
 })

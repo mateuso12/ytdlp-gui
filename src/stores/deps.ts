@@ -13,11 +13,17 @@ interface DepsState {
    * never overwrites a newer one.
    */
   refresh(bridge: Bridge): Promise<void>
+  /**
+   * The cached status when every tool is known to be installed; otherwise reads it once (a
+   * missing tool may have been installed since). Use this on hot paths (probe, enqueue) instead
+   * of spawning version checks each time. `null` when the read fails and nothing is cached.
+   */
+  ensure(bridge: Bridge): Promise<DepsStatus | null>
 }
 
 let latest = 0
 
-export const useDeps = create<DepsState>((set) => ({
+export const useDeps = create<DepsState>((set, get) => ({
   status: null,
   failed: false,
   async refresh(bridge) {
@@ -29,5 +35,11 @@ export const useDeps = create<DepsState>((set) => ({
       console.error('could not read the engine status', error)
       if (ticket === latest) set({ failed: true })
     }
+  },
+  async ensure(bridge) {
+    const cached = get().status
+    if (cached?.ytdlp && cached.ffmpeg && cached.deno) return cached
+    await get().refresh(bridge)
+    return get().status
   },
 }))

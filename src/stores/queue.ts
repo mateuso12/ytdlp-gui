@@ -4,6 +4,7 @@ import { buildArgs, type BinPaths } from '../core/buildArgs'
 import { mapError } from '../core/mapError'
 import { parseLine } from '../core/parseProgress'
 import type { DownloadOptions, FriendlyError, ProgressEvent } from '../core/types'
+import { useDeps } from './deps'
 import { useHistory, type HistoryStore } from './history'
 import { createWriter } from './persist'
 import { useSettings, type SettingsStore } from './settings'
@@ -191,11 +192,13 @@ export function createQueueStore(deps: Partial<QueueDeps> = {}) {
       updateJob(job.id, (j) => ({ ...j, status: 'error', error, finishedAt: Date.now() }))
 
     /** Builds the args of jobs that still have `pending` data, from the installed tool paths (R9). */
-    async function prepare(b: Bridge, ids: string[]) {
+    async function prepare(b: Bridge, ids: string[], fresh = false) {
       let bin: BinPaths | null = null
       try {
-        const status = await b.deps.status()
-        if (status.ffmpeg) bin = { ffmpeg: status.ffmpeg.path, deno: status.deno?.path ?? null }
+        // A rebuild after a fix re-reads what is installed; a normal enqueue trusts the cache.
+        if (fresh) await useDeps.getState().refresh(b)
+        const status = fresh ? useDeps.getState().status : await useDeps.getState().ensure(b)
+        if (status?.ffmpeg) bin = { ffmpeg: status.ffmpeg.path, deno: status.deno?.path ?? null }
       } catch {
         // treated like a missing ffmpeg: nothing can run
       }
@@ -334,7 +337,7 @@ export function createQueueStore(deps: Partial<QueueDeps> = {}) {
           startedAt: null,
           finishedAt: null,
         }))
-        void prepare(bridge, [id])
+        void prepare(bridge, [id], true)
       },
 
       clearFinished() {

@@ -7,6 +7,7 @@ import { parseProbe } from '../../core/parseProbe'
 import { splitUrls } from '../../core/splitUrls'
 import type { FriendlyError, Probe } from '../../core/types'
 import { urlKind } from '../../core/urlKind'
+import { useDeps } from '../../stores/deps'
 import { STDERR_TAIL_LINES } from '../../stores/queue'
 import { useSettings } from '../../stores/settings'
 
@@ -63,8 +64,8 @@ const fail = (lines: string[]): Outcome => ({ ok: false, error: mapError(lines) 
  */
 async function probeBins(bridge: Bridge): Promise<BinPaths> {
   try {
-    const status = await bridge.deps.status()
-    return { ffmpeg: status.ffmpeg?.path ?? '', deno: status.deno?.path ?? null }
+    const status = await useDeps.getState().ensure(bridge)
+    return { ffmpeg: status?.ffmpeg?.path ?? '', deno: status?.deno?.path ?? null }
   } catch {
     return { ffmpeg: '', deno: null }
   }
