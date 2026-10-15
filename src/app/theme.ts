@@ -1,4 +1,6 @@
-export type ThemePref = 'system' | 'light' | 'dark'
+import type { ThemePref } from '../core/types'
+
+export type { ThemePref }
 
 /** Resolves the preference to a concrete theme and writes it to `<html data-theme>`. */
 export function applyTheme(pref: ThemePref, systemDark: boolean): 'light' | 'dark' {
