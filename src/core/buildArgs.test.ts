@@ -59,7 +59,13 @@ describe('buildArgs base', () => {
 
   it('has the always-on flags', () => {
     expect(args).toEqual(
-      expect.arrayContaining(['--newline', '--no-colors', '--no-quiet', '--windows-filenames', '--no-playlist']),
+      expect.arrayContaining([
+        '--newline',
+        '--no-colors',
+        '--no-quiet',
+        '--windows-filenames',
+        '--no-playlist',
+      ]),
     )
     expect(hasSeq(args, '--progress-template', 'download:[ytdlp-gui]%(progress)j')).toBe(true)
     expect(hasSeq(args, '--print', 'after_move:[ytdlp-gui-file]%(filepath)s')).toBe(true)
@@ -98,9 +104,15 @@ describe('js runtime (deno)', () => {
   it('adds --js-runtimes deno:<path> as one element, with spaces', () => {
     const deno = 'C:\\Program Files\\deno\\deno.exe'
     const b = { ffmpeg: bin.ffmpeg, deno }
-    expect(hasSeq(buildArgs(URL, opts(), settings(), b), '--js-runtimes', `deno:${deno}`)).toBe(true)
-    expect(hasSeq(buildProbeArgs(URL, 'flat', settings(), b), '--js-runtimes', `deno:${deno}`)).toBe(true)
-    expect(hasSeq(buildProbeArgs(URL, 'full', settings(), b), '--js-runtimes', `deno:${deno}`)).toBe(true)
+    expect(hasSeq(buildArgs(URL, opts(), settings(), b), '--js-runtimes', `deno:${deno}`)).toBe(
+      true,
+    )
+    expect(
+      hasSeq(buildProbeArgs(URL, 'flat', settings(), b), '--js-runtimes', `deno:${deno}`),
+    ).toBe(true)
+    expect(
+      hasSeq(buildProbeArgs(URL, 'full', settings(), b), '--js-runtimes', `deno:${deno}`),
+    ).toBe(true)
   })
 })
 
@@ -113,7 +125,12 @@ describe('video mode', () => {
   })
 
   it('best in MKV has no -S', () => {
-    const a = buildArgs(URL, opts({ video: { maxHeight: 'best', container: 'mkv' } }), settings(), bin)
+    const a = buildArgs(
+      URL,
+      opts({ video: { maxHeight: 'best', container: 'mkv' } }),
+      settings(),
+      bin,
+    )
     expect(hasSeq(a, '-f', 'bv*+ba/b')).toBe(true)
     expect(hasSeq(a, '--merge-output-format', 'mkv')).toBe(true)
     expect(a).not.toContain('-S')
@@ -134,7 +151,12 @@ describe('video mode', () => {
 
 describe('audio mode', () => {
   it('mp3 quality 0', () => {
-    const a = buildArgs(URL, opts({ mode: 'audio', audio: { format: 'mp3', quality: 0 } }), settings(), bin)
+    const a = buildArgs(
+      URL,
+      opts({ mode: 'audio', audio: { format: 'mp3', quality: 0 } }),
+      settings(),
+      bin,
+    )
     expect(a).toContain('-x')
     expect(hasSeq(a, '--audio-format', 'mp3')).toBe(true)
     expect(hasSeq(a, '--audio-quality', '0')).toBe(true)
@@ -155,9 +177,12 @@ describe('advanced mode', () => {
   it('video + audio', () => expect(hasSeq(adv('137', '140'), '-f', '137+140')).toBe(true))
   it('video only', () => expect(hasSeq(adv('137', null), '-f', '137')).toBe(true))
   it('audio only', () => expect(hasSeq(adv(null, '140'), '-f', '140')).toBe(true))
-  it('neither falls back to best', () => expect(hasSeq(adv(null, null), '-f', 'bv*+ba/b')).toBe(true))
+  it('neither falls back to best', () =>
+    expect(hasSeq(adv(null, null), '-f', 'bv*+ba/b')).toBe(true))
   it('missing advanced falls back to best', () =>
-    expect(hasSeq(formatArgs(opts({ mode: 'advanced', advanced: undefined })), '-f', 'bv*+ba/b')).toBe(true))
+    expect(
+      hasSeq(formatArgs(opts({ mode: 'advanced', advanced: undefined })), '-f', 'bv*+ba/b'),
+    ).toBe(true))
 })
 
 describe('subtitles', () => {
@@ -178,7 +203,12 @@ describe('subtitles', () => {
   })
 
   it('emits nothing for empty langs or undefined', () => {
-    const a = buildArgs(URL, opts({ subtitles: { langs: [], embed: true, includeAuto: true } }), settings(), bin)
+    const a = buildArgs(
+      URL,
+      opts({ subtitles: { langs: [], embed: true, includeAuto: true } }),
+      settings(),
+      bin,
+    )
     for (const f of ['--write-subs', '--write-auto-subs', '--sub-langs', '--embed-subs']) {
       expect(a).not.toContain(f)
     }
@@ -198,7 +228,10 @@ describe('sponsorblock', () => {
   })
 
   it('mark', () => {
-    expect(sponsorArgs({ action: 'mark', categories: ['intro'] })).toEqual(['--sponsorblock-mark', 'intro'])
+    expect(sponsorArgs({ action: 'mark', categories: ['intro'] })).toEqual([
+      '--sponsorblock-mark',
+      'intro',
+    ])
   })
 
   it('emits nothing for empty categories or undefined', () => {
@@ -213,11 +246,9 @@ describe('embed flags', () => {
     expect(embedArgs(opts({ embedMetadata: true }))).toEqual(['--embed-metadata'])
     expect(embedArgs(opts({ embedChapters: true }))).toEqual(['--embed-chapters'])
     expect(embedArgs(opts())).toEqual([])
-    expect(embedArgs(opts({ embedThumbnail: true, embedMetadata: true, embedChapters: true }))).toEqual([
-      '--embed-thumbnail',
-      '--embed-metadata',
-      '--embed-chapters',
-    ])
+    expect(
+      embedArgs(opts({ embedThumbnail: true, embedMetadata: true, embedChapters: true })),
+    ).toEqual(['--embed-thumbnail', '--embed-metadata', '--embed-chapters'])
   })
 })
 
@@ -255,7 +286,12 @@ describe('network and cookies', () => {
 
 describe('buildProbeArgs', () => {
   it('flat', () => {
-    const a = buildProbeArgs(URL, 'flat', settings({ cookiesBrowser: 'firefox', proxy: 'http://p:8080' }), bin)
+    const a = buildProbeArgs(
+      URL,
+      'flat',
+      settings({ cookiesBrowser: 'firefox', proxy: 'http://p:8080' }),
+      bin,
+    )
     expect(a).toEqual(expect.arrayContaining(['-J', '--flat-playlist']))
     expect(hasSeq(a, '--cookies-from-browser', 'firefox')).toBe(true)
     expect(hasSeq(a, '--proxy', 'http://p:8080')).toBe(true)
