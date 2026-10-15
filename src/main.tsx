@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { App } from './app/App'
 import { APP_NAME } from './app/brand'
 import { applyTheme } from './app/theme'
+import { bridge, BridgeProvider } from './bridge'
 import './i18n'
 import './styles/global.css'
 
@@ -11,6 +12,8 @@ applyTheme('system', window.matchMedia('(prefers-color-scheme: dark)').matches)
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <App />
+    <BridgeProvider bridge={bridge}>
+      <App />
+    </BridgeProvider>
   </React.StrictMode>,
 )
