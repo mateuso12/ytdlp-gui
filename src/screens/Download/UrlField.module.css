@@ -1,0 +1,118 @@
+.wrap {
+  position: relative;
+  width: 100%;
+}
+
+.field {
+  display: flex;
+  width: 100%;
+}
+
+.inputWrap {
+  flex: 1;
+  min-width: 0;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  border: 1px solid var(--field-line);
+  border-right: 0;
+  border-radius: var(--radius-field) 0 0 var(--radius-field);
+  background: var(--field);
+  overflow: hidden;
+}
+
+.inputWrap:focus-within {
+  border-color: var(--accent);
+}
+
+.ok {
+  display: inline-flex;
+  flex: none;
+  color: var(--success);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text-1);
+  font: inherit;
+  font-size: 15px;
+  text-overflow: ellipsis;
+}
+
+.input::placeholder {
+  color: var(--text-2);
+}
+
+.paste {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 18px;
+  border: 1px solid var(--field-line);
+  border-radius: 0 var(--radius-field) var(--radius-field) 0;
+  background: var(--raised);
+  color: var(--text-1);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+.paste:hover {
+  background: var(--hover);
+}
+
+.suggest {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 6px;
+  border-radius: var(--radius-panel);
+  background: var(--raised);
+  box-shadow: 0 4px 16px var(--line);
+}
+
+.suggestBtn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 40px;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: var(--radius-menu);
+  background: transparent;
+  color: var(--text-1);
+  text-align: left;
+  cursor: pointer;
+}
+
+.suggestBtn:hover {
+  background: var(--hover);
+}
+
+.suggestText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.suggestUrl {
+  color: var(--text-2);
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

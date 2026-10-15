@@ -17,5 +17,76 @@
     "queue": { "title": "Fila" },
     "history": { "title": "Histórico" },
     "settings": { "title": "Configurações" }
+  },
+  "url": {
+    "label": "Link do vídeo ou da playlist",
+    "placeholder": "Cole um link de vídeo ou playlist",
+    "paste": "Colar",
+    "suggestion": "Colar link da área de transferência"
+  },
+  "probe": {
+    "idle": "Cole um link no campo acima para começar.",
+    "loading": "Analisando o link…",
+    "video": "Vídeo único",
+    "videoMode": "Vídeo",
+    "playlist": "Playlist",
+    "itemsOne": "{{n}} item",
+    "itemsOther": "{{n}} itens",
+    "multi": {
+      "count": "{{n}} links",
+      "hint": "Cada link entra na fila com as opções padrão das Configurações.",
+      "confirm": "Adicionar {{n}} à fila"
+    },
+    "ambiguous": {
+      "message": "Este link é um vídeo dentro de uma playlist.",
+      "video": "Só este vídeo",
+      "playlist": "Playlist inteira · {{n}}"
+    }
+  },
+  "errors": {
+    "unsupported": {
+      "title": "Link não suportado",
+      "message": "Esse endereço não parece ser de um site que o yt-dlp reconheça. Confira o link e tente de novo."
+    },
+    "private": {
+      "title": "Vídeo indisponível ou privado",
+      "message": "O vídeo foi removido, é privado ou exige login. Se você tem acesso a ele, use os cookies do navegador nas Configurações."
+    },
+    "age": {
+      "title": "Vídeo com restrição de idade",
+      "message": "O site pede login para confirmar a idade. Use os cookies do navegador nas Configurações."
+    },
+    "geo": {
+      "title": "Indisponível na sua região",
+      "message": "Esse vídeo não está liberado no seu país. Um proxy nas Configurações pode ajudar."
+    },
+    "extractor": {
+      "title": "Falha ao ler o site",
+      "message": "O site mudou ou o yt-dlp está desatualizado. Atualize o motor nas Configurações e tente de novo."
+    },
+    "rate_limit": {
+      "title": "Muitas requisições",
+      "message": "O site pediu para você esperar. Tente de novo em alguns minutos."
+    },
+    "ffmpeg": {
+      "title": "ffmpeg ausente ou com defeito",
+      "message": "O app precisa do ffmpeg para juntar e converter arquivos. Reinstale-o no painel Motor."
+    },
+    "cookies_chrome": {
+      "title": "Não foi possível ler os cookies do Chrome",
+      "message": "No Windows, o Chrome bloqueia o acesso aos cookies. Use o Firefox ou desative os cookies nas Configurações."
+    },
+    "disk": {
+      "title": "Problema com a pasta de destino",
+      "message": "Não há espaço ou permissão para gravar na pasta escolhida. Escolha outra pasta nas Configurações."
+    },
+    "network": {
+      "title": "Falha de conexão",
+      "message": "Não foi possível acessar o site. Verifique sua internet e tente de novo."
+    },
+    "unknown": {
+      "title": "Algo deu errado",
+      "message": "O yt-dlp não conseguiu analisar esse link. O detalhe técnico abaixo pode ajudar."
+    }
   }
 }

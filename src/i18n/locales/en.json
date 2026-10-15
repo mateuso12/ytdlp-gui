@@ -17,5 +17,76 @@
     "queue": { "title": "Queue" },
     "history": { "title": "History" },
     "settings": { "title": "Settings" }
+  },
+  "url": {
+    "label": "Video or playlist link",
+    "placeholder": "Paste a video or playlist link",
+    "paste": "Paste",
+    "suggestion": "Paste link from the clipboard"
+  },
+  "probe": {
+    "idle": "Paste a link in the field above to get started.",
+    "loading": "Analyzing the link…",
+    "video": "Single video",
+    "videoMode": "Video",
+    "playlist": "Playlist",
+    "itemsOne": "{{n}} item",
+    "itemsOther": "{{n}} items",
+    "multi": {
+      "count": "{{n}} links",
+      "hint": "Each link joins the queue with the default options from Settings.",
+      "confirm": "Add {{n}} to the queue"
+    },
+    "ambiguous": {
+      "message": "This link is a video inside a playlist.",
+      "video": "Just this video",
+      "playlist": "Whole playlist · {{n}}"
+    }
+  },
+  "errors": {
+    "unsupported": {
+      "title": "Unsupported link",
+      "message": "This address does not look like a site yt-dlp can read. Check the link and try again."
+    },
+    "private": {
+      "title": "Video unavailable or private",
+      "message": "The video was removed, is private or needs a login. If you have access to it, use your browser cookies in Settings."
+    },
+    "age": {
+      "title": "Age-restricted video",
+      "message": "The site asks you to sign in to confirm your age. Use your browser cookies in Settings."
+    },
+    "geo": {
+      "title": "Not available in your region",
+      "message": "This video is not available in your country. A proxy in Settings may help."
+    },
+    "extractor": {
+      "title": "Could not read the site",
+      "message": "The site changed or yt-dlp is out of date. Update the engine in Settings and try again."
+    },
+    "rate_limit": {
+      "title": "Too many requests",
+      "message": "The site asked you to wait. Try again in a few minutes."
+    },
+    "ffmpeg": {
+      "title": "ffmpeg missing or broken",
+      "message": "The app needs ffmpeg to merge and convert files. Reinstall it from the Engine panel."
+    },
+    "cookies_chrome": {
+      "title": "Could not read Chrome cookies",
+      "message": "On Windows, Chrome blocks access to its cookies. Use Firefox or turn cookies off in Settings."
+    },
+    "disk": {
+      "title": "Problem with the destination folder",
+      "message": "There is no space or permission to write to the chosen folder. Pick another folder in Settings."
+    },
+    "network": {
+      "title": "Connection problem",
+      "message": "Could not reach the site. Check your internet connection and try again."
+    },
+    "unknown": {
+      "title": "Something went wrong",
+      "message": "yt-dlp could not analyze this link. The technical detail below may help."
+    }
   }
 }

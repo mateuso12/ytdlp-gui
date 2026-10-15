@@ -28,7 +28,9 @@ function isEditable(target: EventTarget | null): boolean {
 function useFocusUrlFieldOnPaste() {
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (!(e.ctrlKey || e.metaKey) || e.key.toLowerCase() !== 'v') return
+      if (e.defaultPrevented || e.repeat) return
+      // Plain Ctrl/Cmd+V only: Ctrl+Shift+V (paste as plain text) and Alt combinations are other commands.
+      if (!(e.ctrlKey || e.metaKey) || e.shiftKey || e.altKey || e.key.toLowerCase() !== 'v') return
       if (isEditable(e.target)) return
       document.getElementById('url-field')?.focus()
     }

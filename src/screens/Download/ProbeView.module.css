@@ -1,0 +1,79 @@
+.hint,
+.meta {
+  margin: 0 0 16px;
+  color: var(--text-2);
+  font-size: 13px;
+}
+
+.detected {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 16px;
+  color: var(--text-2);
+  font-size: 12px;
+}
+
+.detected svg {
+  color: var(--text-1);
+}
+
+.title {
+  margin: 0 0 12px;
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 700;
+  letter-spacing: -0.1px;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-2);
+  font-size: 13px;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--line);
+  border-top-color: var(--text-1);
+  border-radius: 50%;
+  animation: spin 800ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error {
+  max-width: 640px;
+  padding: 14px 16px;
+  border-radius: var(--radius-panel);
+  background: var(--raised);
+  border-left: 3px solid var(--signal);
+}
+
+.errorTitle {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.errorMessage {
+  margin: 4px 0 0;
+  color: var(--text-2);
+  font-size: 13px;
+}
+
+.errorDetail {
+  display: block;
+  margin-top: 10px;
+  color: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}

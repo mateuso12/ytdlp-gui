@@ -1,0 +1,22 @@
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding: 10px 10px 10px 14px;
+  border-radius: var(--radius-panel);
+  background: var(--raised);
+  font-size: 13px;
+}
+
+.message {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-1);
+}
+
+.message svg {
+  color: var(--text-2);
+}
