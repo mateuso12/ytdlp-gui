@@ -6,6 +6,7 @@ import { PillButton } from '../../components/PillButton'
 import { useToast } from '../../components/Toast'
 import { formatBytes, formatEta, formatSpeed } from '../../core/format'
 import type { FriendlyError } from '../../core/types'
+import { useDeps } from '../../stores/deps'
 import { useQueue, type Job } from '../../stores/queue'
 import { useSettings } from '../../stores/settings'
 import { useUi } from '../../stores/ui'
@@ -101,11 +102,14 @@ export const QueueItem = memo(function QueueItem({ id }: { id: string }) {
       const settings = useSettings.getState()
       switch (action) {
         case 'use_cookies':
+          useUi.getState().go('settings', { section: 'access' })
+          break
         case 'set_proxy':
-          useUi.getState().go('settings')
+          useUi.getState().go('settings', { section: 'network' })
           break
         case 'update_ytdlp': {
           const version = await bridge.deps.update(settings.settings.channel)
+          void useDeps.getState().refresh(bridge)
           toast.show(t('queue.updated', { version }))
           break
         }
@@ -115,6 +119,7 @@ export const QueueItem = memo(function QueueItem({ id }: { id: string }) {
           break
         case 'reinstall_ffmpeg':
           await bridge.deps.install('ffmpeg')
+          void useDeps.getState().refresh(bridge)
           retryRebuilt()
           break
         case 'use_firefox':

@@ -15,6 +15,10 @@
       "identifier": "opener:allow-open-path",
       "allow": [{ "path": "**" }]
     },
+    {
+      "identifier": "opener:allow-open-url",
+      "allow": [{ "url": "https://github.com/*" }]
+    },
     "opener:allow-reveal-item-in-dir",
     "dialog:allow-open",
     "clipboard-manager:allow-read-text",

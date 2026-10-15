@@ -173,6 +173,9 @@ export function createMockBridge(fixtures: Partial<MockScript> = {}): MockBridge
       async revealPath(path) {
         record('os.revealPath', path)
       },
+      async openUrl(url) {
+        record('os.openUrl', url)
+      },
       async pickFolder() {
         record('os.pickFolder')
         return script.pickedFolder ?? null

@@ -1,0 +1,241 @@
+/* One column, at most 720px wide. */
+.screen {
+  max-width: 720px;
+}
+
+.heading {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.section {
+  padding: 16px 0 8px;
+  border-top: 1px solid var(--line);
+  scroll-margin-top: 8px;
+}
+
+.title {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.title:focus {
+  outline: none;
+}
+
+.title:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: var(--radius-chip);
+}
+
+/* ---- a row: label (and hint) on the left, control on the right ---- */
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 48px;
+  padding: 6px 0;
+}
+
+.text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.label {
+  display: block;
+  color: var(--text-1);
+  font-size: 14px;
+}
+
+.hint {
+  display: block;
+  margin-top: 2px;
+  color: var(--text-2);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.control {
+  display: flex;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  min-width: 0;
+  max-width: 60%;
+}
+
+.stack {
+  align-items: stretch;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stack .control {
+  max-width: 100%;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+/* ---- controls ---- */
+
+.input,
+.select {
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--field-line);
+  border-radius: var(--radius-chip);
+  background: var(--field);
+  color: var(--text-1);
+  font: inherit;
+  font-size: 14px;
+}
+
+.input {
+  width: 240px;
+  max-width: 100%;
+}
+
+.wide {
+  width: 100%;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.input::placeholder {
+  color: var(--text-2);
+}
+
+.input:focus,
+.select:focus {
+  border-color: var(--accent);
+}
+
+.input[aria-invalid='true'] {
+  border-color: var(--signal);
+}
+
+.error {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--signal);
+  font-size: 12px;
+  line-height: 16px;
+  text-align: right;
+}
+
+.stack .error {
+  text-align: left;
+}
+
+.note {
+  margin: 0 0 8px;
+  padding: 10px 12px;
+  border-radius: var(--radius-chip);
+  background: var(--chip);
+  color: var(--text-1);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.preview {
+  display: block;
+  min-width: 0;
+  padding: 8px 12px;
+  border-radius: var(--radius-chip);
+  background: var(--raised);
+  color: var(--text-1);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.path {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.version {
+  color: var(--text-1);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.source {
+  color: var(--text-2);
+  font-size: 12px;
+}
+
+.muted {
+  color: var(--text-2);
+  font-size: 13px;
+}
+
+.status {
+  margin: 4px 0 0;
+  color: var(--text-2);
+  font-size: 12px;
+  line-height: 16px;
+  text-align: right;
+}
+
+.failure {
+  margin: 4px 0 0;
+  color: var(--signal);
+  font-size: 12px;
+  line-height: 16px;
+  text-align: right;
+}
+
+/* ---- about ---- */
+
+.appName {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.link {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.credits {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--text-1);
+  font-size: 13px;
+  line-height: 24px;
+}
+
+.paragraph {
+  margin: 0 0 4px;
+  color: var(--text-2);
+  font-size: 13px;
+}

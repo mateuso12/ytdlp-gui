@@ -87,6 +87,8 @@ export interface Bridge {
   os: {
     openPath(path: string): Promise<void>
     revealPath(path: string): Promise<void>
+    /** Opens an https address in the default browser (the capability allows github.com only). */
+    openUrl(url: string): Promise<void>
     /** Resolves to the chosen folder, or null if the dialog was cancelled. */
     pickFolder(): Promise<string | null>
     readClipboard(): Promise<string>

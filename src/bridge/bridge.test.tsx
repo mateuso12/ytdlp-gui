@@ -175,6 +175,14 @@ describe('tauri bridge: os', () => {
     })
   })
 
+  it('openUrl opens the address with the opener plugin', async () => {
+    const calls = ipc()
+    await bridge.os.openUrl('https://github.com/OWNER/ytdlp-gui')
+    expect(calls.find((c) => c.cmd === 'plugin:opener|open_url')?.args).toMatchObject({
+      url: 'https://github.com/OWNER/ytdlp-gui',
+    })
+  })
+
   it('pickFolder asks for a single directory and passes the result through', async () => {
     const calls = ipc({ 'plugin:dialog|open': () => 'C:\\Videos' })
     await expect(bridge.os.pickFolder()).resolves.toBe('C:\\Videos')
@@ -338,8 +346,9 @@ describe('createMockBridge', () => {
     expect(mock.os.platform()).toBe('macos')
     await mock.os.openPath('p')
     await mock.os.revealPath('p')
+    await mock.os.openUrl('https://github.com/x/y')
     expect(mock.calls.map((c) => c.method)).toEqual(
-      expect.arrayContaining(['os.openPath', 'os.revealPath']),
+      expect.arrayContaining(['os.openPath', 'os.revealPath', 'os.openUrl']),
     )
   })
 

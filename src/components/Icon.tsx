@@ -29,6 +29,7 @@ import {
   ShieldCheck,
   SlidersHorizontal,
   SunMoon,
+  Terminal,
   Trash2,
   Video,
   X,
@@ -69,6 +70,7 @@ export const icons = {
   'alert-circle': AlertCircle,
   'trash-2': Trash2,
   search: Search,
+  terminal: Terminal,
 } as const
 
 export type IconName = keyof typeof icons

@@ -3,7 +3,7 @@ import { listen } from '@tauri-apps/api/event'
 import { videoDir } from '@tauri-apps/api/path'
 import { readText, writeText } from '@tauri-apps/plugin-clipboard-manager'
 import { open } from '@tauri-apps/plugin-dialog'
-import { openPath, revealItemInDir } from '@tauri-apps/plugin-opener'
+import { openPath, openUrl, revealItemInDir } from '@tauri-apps/plugin-opener'
 import { platform } from '@tauri-apps/plugin-os'
 import { Store } from '@tauri-apps/plugin-store'
 import { check } from '@tauri-apps/plugin-updater'
@@ -74,6 +74,7 @@ export function createTauriBridge(): Bridge {
     os: {
       openPath: (path) => openPath(path),
       revealPath: (path) => revealItemInDir(path),
+      openUrl: (url) => openUrl(url),
       pickFolder: () => open({ directory: true, multiple: false }),
       readClipboard: async () => (await readText()) ?? '',
       writeClipboard: (text) => writeText(text),

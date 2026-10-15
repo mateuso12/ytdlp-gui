@@ -14,7 +14,9 @@
     "queueBadge_other": "{{count}} active downloads"
   },
   "engine": {
-    "heading": "Engine"
+    "heading": "Engine",
+    "cookies": "Cookies",
+    "notInstalled": "Not installed"
   },
   "screens": {
     "download": { "title": "Download" },
@@ -227,6 +229,99 @@
     "redownload": "Download again",
     "remove": "Remove from history",
     "actionFailed": "The action failed: {{reason}}"
+  },
+  "settings": {
+    "failed": "Could not finish: {{reason}}",
+    "sections": {
+      "downloads": "Downloads",
+      "network": "Network",
+      "access": "Access",
+      "appearance": "Appearance",
+      "engine": "Engine",
+      "about": "About"
+    },
+    "downloads": {
+      "folder": { "label": "Default folder", "choose": "Choose folder" },
+      "template": {
+        "label": "File name template",
+        "examples": "Examples",
+        "custom": "Custom template",
+        "preview": "Name preview",
+        "hint": "Fields inside %( ) become the video's data. E.g. %(title)s is the title.",
+        "titleId": "Title and ID",
+        "title": "Title only",
+        "channelTitle": "Channel and title",
+        "dateTitle": "Date and title",
+        "errors": { "empty": "Type a template, like %(title)s.%(ext)s" }
+      },
+      "concurrency": "Simultaneous downloads",
+      "mode": "Default mode",
+      "quality": "Default quality",
+      "container": "Default video format",
+      "audioFormat": "Default audio format",
+      "audioQuality": "Default audio quality"
+    },
+    "network": {
+      "rateLimit": {
+        "label": "Speed limit",
+        "placeholder": "No limit",
+        "hint": "Per second. Examples: 500K, 2M.",
+        "error": "Use a number ending in K, M or G, like 500K or 2M."
+      },
+      "proxy": {
+        "label": "Proxy",
+        "placeholder": "http://127.0.0.1:8080",
+        "hint": "Leave empty to use no proxy.",
+        "error": "Use an address starting with http://, https:// or socks5://."
+      },
+      "retries": {
+        "label": "Retries",
+        "hint": "How many times to try again if the connection fails.",
+        "error": "Use a whole number from 0 to 100."
+      }
+    },
+    "access": {
+      "cookies": "Browser cookies",
+      "hint": "For videos that ask you to sign in or confirm your age. Firefox is recommended.",
+      "recommended": "(recommended)",
+      "browsers": {
+        "none": "None",
+        "firefox": "Firefox",
+        "chrome": "Chrome",
+        "edge": "Edge",
+        "brave": "Brave",
+        "chromium": "Chromium",
+        "safari": "Safari"
+      },
+      "chromeWarning": "On Windows, Chrome blocks access to its cookies. Prefer Firefox."
+    },
+    "appearance": {
+      "theme": "Theme",
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark",
+      "language": "Language"
+    },
+    "engine": {
+      "source": { "system": "from the system", "app": "from the app" },
+      "notInstalled": "Not installed",
+      "install": "Install {{name}}",
+      "installing": "Installing…",
+      "channel": "yt-dlp channel",
+      "stable": "Stable",
+      "nightly": "Nightly",
+      "update": "Update now",
+      "updating": "Updating…",
+      "updated": "yt-dlp updated to {{version}}",
+      "upToDate": "Already on the latest version"
+    },
+    "about": {
+      "description": "A simple interface for yt-dlp.",
+      "license": "MIT license",
+      "repo": "Repository on GitHub",
+      "credits": "Credits",
+      "creditsIntro": "Made with free software:"
+    }
   },
   "toast": {
     "label": "Notifications",

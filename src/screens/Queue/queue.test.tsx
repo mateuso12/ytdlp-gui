@@ -1,4 +1,4 @@
-import { act, render, screen, within } from '@testing-library/react'
+import { act, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { BridgeProvider } from '../../bridge/context'
@@ -8,6 +8,7 @@ import { mapError } from '../../core/mapError'
 import type { DownloadOptions, FriendlyError, ProgressEvent } from '../../core/types'
 import i18n from '../../i18n'
 import { renderApp } from '../../test/renderApp'
+import { useDeps } from '../../stores/deps'
 import { startScheduler, useQueue, type Job } from '../../stores/queue'
 import { useSettings } from '../../stores/settings'
 import { useUi } from '../../stores/ui'
@@ -276,6 +277,24 @@ describe('error job', () => {
       }),
     )
     expect(useUi.getState().screen).toBe('settings')
+    // ...and to the section that holds the fix
+    expect(useUi.getState().settingsSection).toBe(action === 'use_cookies' ? 'access' : 'network')
+  })
+
+  it('update_ytdlp and reinstall_ffmpeg refresh the engine status shown in the sidebar', async () => {
+    const bridge = createMockBridge({ deps: { ytdlp: null, ffmpeg: null, deno: null } })
+    const { user } = await setup(
+      [
+        errorJob(1, { code: 'extractor', action: 'update_ytdlp' }),
+        errorJob(2, { code: 'ffmpeg', action: 'reinstall_ffmpeg' }),
+      ],
+      bridge,
+    )
+    useDeps.setState({ status: null })
+    await user.click(screen.getByRole('button', { name: 'Atualizar yt-dlp' }))
+    await waitFor(() => expect(useDeps.getState().status?.ytdlp?.version).toBe('2099.01.01'))
+    await user.click(screen.getByRole('button', { name: 'Reinstalar ffmpeg' }))
+    await waitFor(() => expect(useDeps.getState().status?.ffmpeg?.version).toBe('mock-ffmpeg'))
   })
 
   it.each(['retry', 'retry_later'] as const)('%s retries the job', async (action) => {
