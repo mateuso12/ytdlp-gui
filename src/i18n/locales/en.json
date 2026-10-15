@@ -29,8 +29,8 @@
     "loading": "Analyzing the link…",
     "video": "Single video",
     "playlist": "Playlist",
-    "itemsOne": "{{n}} item",
-    "itemsOther": "{{n}} items",
+    "items_one": "{{count}} item",
+    "items_other": "{{count}} items",
     "multi": {
       "count": "{{n}} links",
       "hint": "Each link joins the queue with the default options from Settings.",
@@ -132,6 +132,39 @@
       "size": "Size"
     },
     "download": "Download"
+  },
+  "playlist": {
+    "list": "Playlist items",
+    "selected_one": "{{count}} selected",
+    "selected_other": "{{count}} selected",
+    "download": "Download {{n}}",
+    "options": "Options",
+    "optionsLabel": "Options for the selected items",
+    "shortcuts": {
+      "label": "Selection shortcuts",
+      "all": "All",
+      "none": "None",
+      "range": "Range…",
+      "notDownloaded": "Not downloaded"
+    },
+    "range": {
+      "label": "Range",
+      "placeholder": "1-3, 7, 10-",
+      "hint": "Numbers separated by commas. “10-” runs to the last item.",
+      "apply": "Select",
+      "errors": {
+        "empty": "Type the items, like 1-3, 7, 10-",
+        "invalid": "Use numbers from 1, like 1-3, 7, 10-",
+        "outOfRange_one": "The playlist has only {{count}} item",
+        "outOfRange_other": "The playlist has only {{count}} items"
+      }
+    },
+    "row": {
+      "select": "Select {{title}}",
+      "untitled": "Untitled",
+      "unavailable": "Unavailable",
+      "downloaded": "Already downloaded"
+    }
   },
   "toast": {
     "label": "Notifications",

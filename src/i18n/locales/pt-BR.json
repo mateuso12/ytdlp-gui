@@ -29,8 +29,8 @@
     "loading": "Analisando o link…",
     "video": "Vídeo único",
     "playlist": "Playlist",
-    "itemsOne": "{{n}} item",
-    "itemsOther": "{{n}} itens",
+    "items_one": "{{count}} item",
+    "items_other": "{{count}} itens",
     "multi": {
       "count": "{{n}} links",
       "hint": "Cada link entra na fila com as opções padrão das Configurações.",
@@ -132,6 +132,39 @@
       "size": "Tamanho"
     },
     "download": "Baixar"
+  },
+  "playlist": {
+    "list": "Itens da playlist",
+    "selected_one": "{{count}} selecionado",
+    "selected_other": "{{count}} selecionados",
+    "download": "Baixar {{n}}",
+    "options": "Opções",
+    "optionsLabel": "Opções dos itens selecionados",
+    "shortcuts": {
+      "label": "Atalhos de seleção",
+      "all": "Todos",
+      "none": "Nenhum",
+      "range": "Intervalo…",
+      "notDownloaded": "Não baixados"
+    },
+    "range": {
+      "label": "Intervalo",
+      "placeholder": "1-3, 7, 10-",
+      "hint": "Números separados por vírgula. “10-” vai até o último item.",
+      "apply": "Selecionar",
+      "errors": {
+        "empty": "Digite os itens, como 1-3, 7, 10-",
+        "invalid": "Use números a partir de 1, como 1-3, 7, 10-",
+        "outOfRange_one": "A playlist tem só {{count}} item",
+        "outOfRange_other": "A playlist tem só {{count}} itens"
+      }
+    },
+    "row": {
+      "select": "Selecionar {{title}}",
+      "untitled": "Sem título",
+      "unavailable": "Indisponível",
+      "downloaded": "Já baixado"
+    }
   },
   "toast": {
     "label": "Notificações",

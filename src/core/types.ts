@@ -35,6 +35,8 @@ export interface PlaylistEntry {
   duration: number | null
   thumbnail: string | null
   available: boolean
+  /** Only when yt-dlp reported one: `--flat-playlist` usually does not. */
+  sizeBytes?: number
 }
 
 export interface PlaylistInfo {

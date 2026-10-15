@@ -25,6 +25,10 @@
   --hover-raised: #303030;
   --menu: #282828; /* popovers and toasts float above --raised */
   --shadow-pop: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+  /* The playlist header card (soft warm gradient) and its secondary text */
+  --pl-grad: linear-gradient(180deg, #3a2f2a 0%, #1d1816 60%, #141110 100%);
+  --pl-text: #d6d0cc;
 }
 
 :root[data-theme='light'] {
@@ -50,6 +54,9 @@
   --hover-raised: rgba(0, 0, 0, 0.12);
   --menu: #ffffff;
   --shadow-pop: 0 4px 16px rgba(0, 0, 0, 0.18);
+
+  --pl-grad: linear-gradient(180deg, #e9dfd8 0%, #f4efeb 60%, #f8f6f4 100%);
+  --pl-text: #5a4f48;
 }
 
 :root {

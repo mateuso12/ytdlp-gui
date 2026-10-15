@@ -108,6 +108,7 @@ function parseEntry(raw: Raw): PlaylistEntry | null {
   if (id === null) return null
 
   const title = str(raw.title)
+  const sizeBytes = num(raw.filesize) ?? num(raw.filesize_approx)
   return {
     id,
     url: url ?? '',
@@ -115,6 +116,7 @@ function parseEntry(raw: Raw): PlaylistEntry | null {
     duration: num(raw.duration),
     thumbnail: str(raw.thumbnail) ?? lastThumbnail(raw.thumbnails),
     available: title !== null && !PLACEHOLDER_TITLE.test(title),
+    ...(sizeBytes !== null && { sizeBytes }),
   }
 }
 

@@ -219,6 +219,20 @@ describe('parseProbe: playlist', () => {
     })
   })
 
+  it('keeps the size of an entry only when yt-dlp reported one', () => {
+    const entries = [
+      { id: 'a', url: 'https://v/a', title: 'A', filesize: 1000 },
+      { id: 'b', url: 'https://v/b', title: 'B', filesize_approx: 2000 },
+      { id: 'c', url: 'https://v/c', title: 'C', filesize: 'big' },
+    ]
+    const parsed = expectPlaylist(
+      parseProbe({ _type: 'playlist', id: 'PL', title: 'P', entries }, 'u'),
+    )
+    expect(parsed.entries.map((e) => e.sizeBytes)).toEqual([1000, 2000, undefined])
+    // The flat fixture has no sizes at all.
+    expect(playlist.entries.every((e) => e.sizeBytes === undefined)).toBe(true)
+  })
+
   it('marks an entry without a title as unavailable instead of failing', () => {
     const entries = [
       { id: 'a', url: 'https://v/a', title: null },

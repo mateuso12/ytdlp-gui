@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Icon } from '../../components/Icon'
 import { PillButton } from '../../components/PillButton'
 import { useToast } from '../../components/Toast'
-import type { DownloadOptions, PlaylistInfo, VideoInfo } from '../../core/types'
+import type { DownloadOptions, VideoInfo } from '../../core/types'
 import { useQueue } from '../../stores/queue'
 import { useSettings } from '../../stores/settings'
 import { useUi } from '../../stores/ui'
@@ -11,6 +11,7 @@ import { AmbiguousBar } from './AmbiguousBar'
 import { DecisionPanel } from './DecisionPanel'
 import { defaultDownloadOptions } from './defaultOptions'
 import styles from './ProbeView.module.css'
+import { PlaylistView } from './PlaylistView'
 import { URL_ERROR_ID } from './UrlField'
 import { useProbe } from './useProbe'
 import { VideoPreview } from './VideoPreview'
@@ -51,18 +52,6 @@ function VideoView({ video }: { video: VideoInfo }) {
           onSectionChange={setSection}
         />
       </div>
-    </div>
-  )
-}
-
-/** Task 16 replaces this with the selectable, virtualised `PlaylistView`. */
-function PlaylistPlaceholder({ playlist }: { playlist: PlaylistInfo }) {
-  const { t } = useTranslation()
-  const n = playlist.entries.length
-  return (
-    <div>
-      <h2 className={styles.title}>{playlist.title}</h2>
-      <p className={styles.meta}>{t(n === 1 ? 'probe.itemsOne' : 'probe.itemsOther', { n })}</p>
     </div>
   )
 }
@@ -156,7 +145,7 @@ export function ProbeView() {
       ) : probe.kind === 'playlist' ? (
         <>
           <Detected icon="list-video">{t('probe.playlist')}</Detected>
-          <PlaylistPlaceholder playlist={probe.playlist} />
+          <PlaylistView key={probe.playlist.id} playlist={probe.playlist} />
         </>
       ) : null}
     </div>
