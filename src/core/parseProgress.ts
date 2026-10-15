@@ -13,6 +13,14 @@ const POSTPROCESSING_TAGS = [
   '[EmbedSubtitle]',
   '[EmbedThumbnail]',
   '[Metadata]',
+  '[ModifyChapters]',
+  '[SplitChapters]',
+  '[ThumbnailsConvertor]',
+  '[SubtitlesConvertor]',
+  '[VideoRemuxer]',
+  '[VideoConvertor]',
+  // Fixup* tags are open-ended (FixupM4a, FixupM3u8, FixupStretched, FixupTimestamp, ...)
+  '[Fixup',
 ]
 
 function num(value: unknown): number | null {

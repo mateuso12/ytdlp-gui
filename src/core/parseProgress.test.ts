@@ -153,15 +153,30 @@ describe('parseLine: phases', () => {
     })
   })
 
-  it.each(['ExtractAudio', 'SponsorBlock', 'EmbedSubtitle', 'EmbedThumbnail', 'Metadata'])(
-    'maps [%s] to postprocessing',
-    (tag) => {
-      expect(parseLine(`[${tag}] something happening`)).toEqual({
-        type: 'phase',
-        phase: 'postprocessing',
-      })
-    },
-  )
+  it.each([
+    'ExtractAudio',
+    'SponsorBlock',
+    'EmbedSubtitle',
+    'EmbedThumbnail',
+    'Metadata',
+    'ModifyChapters',
+    'SplitChapters',
+    'ThumbnailsConvertor',
+    'SubtitlesConvertor',
+    'VideoRemuxer',
+    'VideoConvertor',
+    'FixupM4a',
+    'FixupM3u8',
+    'FixupStretched',
+    'FixupDuplicateMoov',
+    'FixupTimestamp',
+    'FixupDuration',
+  ])('maps [%s] to postprocessing', (tag) => {
+    expect(parseLine(`[${tag}] something happening`)).toEqual({
+      type: 'phase',
+      phase: 'postprocessing',
+    })
+  })
 
   it('recognises the phases in the real fixtures', () => {
     expect(
@@ -173,7 +188,28 @@ describe('parseLine: phases', () => {
       lines(audio)
         .map(parseLine)
         .filter((e) => e?.type === 'phase'),
-    ).toEqual([{ type: 'phase', phase: 'postprocessing' }])
+    ).toEqual([
+      { type: 'phase', phase: 'postprocessing' }, // [FixupM4a]
+      { type: 'phase', phase: 'postprocessing' }, // [ExtractAudio]
+    ])
+  })
+
+  it('maps the real [FixupM4a] fixture line to postprocessing', () => {
+    const fixup = lines(audio).find((l) => l.startsWith('[FixupM4a]'))
+    expect(fixup).toBeDefined()
+    expect(parseLine(fixup ?? '')).toEqual({ type: 'phase', phase: 'postprocessing' })
+  })
+
+  it.each([
+    '[MoveFiles] Moving file "a" to "b"',
+    '[debug] foo',
+    '[youtube] x: y',
+    '[info] x',
+    '[download] Destination: x.mp4',
+    'WARNING: [Metadata] oops',
+    'ERROR: [Fixup] oops',
+  ])('keeps %j as null', (line) => {
+    expect(parseLine(line)).toBeNull()
   })
 
   it('tolerates a trailing carriage return', () => {
