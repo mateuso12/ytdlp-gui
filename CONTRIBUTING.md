@@ -41,6 +41,14 @@ yt-dlp errors become friendly messages in `src/core/mapError.ts`. The `RULES` ta
 3. Add the case to the table in `src/core/mapError.test.ts`.
 4. Add `errors.<code>.title` and `errors.<code>.message` to **both** `src/i18n/locales/en.json` and `pt-BR.json`.
 
+## Content Security Policy
+
+The CSP lives in `src-tauri/tauri.conf.json`: `csp` for release builds and `devCsp` for `tauri dev`. Production is strict (no `unsafe-eval`; scripts are `'self'` only, and the built `index.html` has just one external module script). `devCsp` adds `'unsafe-inline'` scripts (Vite's react-refresh preamble) and `ws://`/`http://localhost:1420` (HMR).
+
+Caveat: Tauri injects nonces/hashes into `script-src` and `style-src` of bundled assets, and a browser ignores `'unsafe-inline'` in a directive that has a nonce. Runtime-inserted `<style>` elements (Radix dialogs, for example) would then be blocked, so `dangerousDisableAssetCspModification` is set to `["style-src"]`. Scripts keep the nonce/hash protection.
+
+In development, blocked requests are logged to the console as `CSP blocked <uri> (<directive>)`.
+
 ## Translations
 
 See [docs/translating.md](docs/translating.md).
