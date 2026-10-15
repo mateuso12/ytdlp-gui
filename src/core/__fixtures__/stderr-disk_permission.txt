@@ -1,0 +1,3 @@
+# hand-written: this error cannot be reproduced on demand.
+# Source: errno 13 raised while opening the output file on Windows; seen in yt-dlp issue reports
+ERROR: unable to open for writing: [Errno 13] Permission denied: 'C:\Windows\System32\aqz-KE-bpKQ.f401.mp4.part'

@@ -14,3 +14,6 @@ dist-ssr
 .DS_Store
 /coverage
 *.tsbuildinfo
+
+# Local tool/media cache for fixture capture
+.cache/

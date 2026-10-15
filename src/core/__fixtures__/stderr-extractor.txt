@@ -1,0 +1,3 @@
+# hand-written: this error cannot be reproduced on demand.
+# Source: generic extractor breakage message; seen throughout yt-dlp issue reports
+ERROR: [youtube:tab] Unable to extract yt initial data; please report this issue on  https://github.com/yt-dlp/yt-dlp/issues?q= , filling out the appropriate issue template. Confirm you are on the latest version using  yt-dlp -U

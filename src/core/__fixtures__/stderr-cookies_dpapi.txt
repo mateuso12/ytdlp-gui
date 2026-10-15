@@ -1,0 +1,3 @@
+# hand-written: this error cannot be reproduced on demand.
+# Source: yt-dlp issue #10927 (Chrome 127+ app-bound encryption on Windows)
+ERROR: Failed to decrypt with DPAPI. See  https://github.com/yt-dlp/yt-dlp/issues/10927  for more info

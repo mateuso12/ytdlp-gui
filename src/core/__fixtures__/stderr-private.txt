@@ -1,0 +1,3 @@
+# hand-written: this error cannot be reproduced on demand.
+# Source: message from yt-dlp's YoutubeIE for private videos; seen in yt-dlp issue reports (no private video available for capture)
+ERROR: [youtube] aqz-KE-bpKQ: Private video. Sign in if you've been granted access to this video

@@ -1,0 +1,3 @@
+# hand-written: this error cannot be reproduced on demand.
+# Source: message from yt-dlp's geo-restriction handling; seen in yt-dlp issue reports (an invalid proxy yields a network error, see stderr-network.txt, not a geo block)
+ERROR: [youtube] aqz-KE-bpKQ: Video unavailable. This video is not available in your country

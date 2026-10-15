@@ -1,0 +1,3 @@
+# hand-written: this error cannot be reproduced on demand.
+# Source: errno 28 raised while opening the output file; seen in yt-dlp issue reports
+ERROR: unable to open for writing: [Errno 28] No space left on device
