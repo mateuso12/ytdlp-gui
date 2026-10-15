@@ -165,7 +165,36 @@ describe('initial selection and shortcuts', () => {
     expect(r2).toHaveAttribute('data-dim', 'true')
     expect(r1).not.toHaveAttribute('data-dim', 'true')
     expect(within(r3).getByRole('checkbox')).toBeDisabled()
-    expect(within(r3).getByText('Indisponível')).toBeInTheDocument()
+    expect(within(r3).getByText('Vídeo indisponível')).toBeInTheDocument()
+  })
+
+  it('shows "Vídeo indisponível" for a missing title, a placeholder title and an empty link', async () => {
+    await setup(
+      entries(4, (k) =>
+        k === 1
+          ? { title: null, available: false }
+          : k === 2
+            ? { title: '[Private video]', available: false }
+            : k === 3
+              ? { url: '' }
+              : {},
+      ),
+    )
+    const [r1, r2, r3, r4] = rows()
+    for (const row of [r1, r2, r3]) {
+      expect(within(row).getByText('Vídeo indisponível')).toBeInTheDocument()
+      expect(within(row).getByRole('checkbox')).toBeDisabled()
+      expect(within(row).getByRole('checkbox')).not.toBeChecked()
+    }
+    expect(screen.queryByText('[Private video]')).not.toBeInTheDocument()
+    expect(within(r4).getByText('Aula 4')).toBeInTheDocument()
+    expect(summary()).toHaveTextContent(/^1 selecionado$/)
+  })
+
+  it('says "Video unavailable" in English', async () => {
+    await act(() => i18n.changeLanguage('en'))
+    await setup(entries(1, () => ({ title: null, available: false })))
+    expect(within(screen.getAllByRole('row')[0]).getByText('Video unavailable')).toBeInTheDocument()
   })
 
   it('"Nenhum" clears the selection', async () => {
@@ -289,12 +318,6 @@ describe('download', () => {
       'https://www.youtube.com/watch?v=vid5',
     ])
     expect(urls).not.toContain('')
-  })
-
-  it('uses the link as the title when an item has none', async () => {
-    const { user, enqueue } = await setup(entries(1, () => ({ title: null, available: true })))
-    await user.click(screen.getByRole('button', { name: 'Baixar 1' }))
-    expect(enqueue.mock.calls[0][0][0].title).toBe('https://www.youtube.com/watch?v=vid1')
   })
 
   it('goes to the queue and says so', async () => {

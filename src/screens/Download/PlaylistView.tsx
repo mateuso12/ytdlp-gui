@@ -53,12 +53,9 @@ const Row = memo(function Row({
   const { t, i18n } = useTranslation()
   const [failed, setFailed] = useState(false)
   const selectable = isSelectable(entry)
-  const title = entry.title ?? t('playlist.row.untitled')
-  const sub = !selectable
-    ? t('playlist.row.unavailable')
-    : downloaded
-      ? t('playlist.row.downloaded')
-      : channel
+  // Whatever yt-dlp put in place of a title (nothing, "[Private video]") is no title to show.
+  const title = selectable ? (entry.title ?? entry.url) : t('playlist.row.unavailable')
+  const sub = !selectable ? null : downloaded ? t('playlist.row.downloaded') : channel
 
   return (
     <div

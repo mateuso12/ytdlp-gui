@@ -161,8 +161,7 @@
     },
     "row": {
       "select": "Select {{title}}",
-      "untitled": "Untitled",
-      "unavailable": "Unavailable",
+      "unavailable": "Video unavailable",
       "downloaded": "Already downloaded"
     }
   },

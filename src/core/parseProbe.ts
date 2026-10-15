@@ -108,7 +108,10 @@ function parseEntry(raw: Raw): PlaylistEntry | null {
   if (id === null) return null
 
   const title = str(raw.title)
-  const sizeBytes = num(raw.filesize) ?? num(raw.filesize_approx)
+  // A size of 0 means yt-dlp does not know it, like a missing one.
+  const sizeBytes = [num(raw.filesize), num(raw.filesize_approx)].find(
+    (n): n is number => n !== null && n > 0,
+  )
   return {
     id,
     url: url ?? '',
@@ -116,7 +119,7 @@ function parseEntry(raw: Raw): PlaylistEntry | null {
     duration: num(raw.duration),
     thumbnail: str(raw.thumbnail) ?? lastThumbnail(raw.thumbnails),
     available: title !== null && !PLACEHOLDER_TITLE.test(title),
-    ...(sizeBytes !== null && { sizeBytes }),
+    ...(sizeBytes !== undefined && { sizeBytes }),
   }
 }
 

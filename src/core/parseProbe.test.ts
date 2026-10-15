@@ -224,11 +224,13 @@ describe('parseProbe: playlist', () => {
       { id: 'a', url: 'https://v/a', title: 'A', filesize: 1000 },
       { id: 'b', url: 'https://v/b', title: 'B', filesize_approx: 2000 },
       { id: 'c', url: 'https://v/c', title: 'C', filesize: 'big' },
+      { id: 'd', url: 'https://v/d', title: 'D', filesize: 0 },
+      { id: 'e', url: 'https://v/e', title: 'E', filesize: 0, filesize_approx: 3000 },
     ]
     const parsed = expectPlaylist(
       parseProbe({ _type: 'playlist', id: 'PL', title: 'P', entries }, 'u'),
     )
-    expect(parsed.entries.map((e) => e.sizeBytes)).toEqual([1000, 2000, undefined])
+    expect(parsed.entries.map((e) => e.sizeBytes)).toEqual([1000, 2000, undefined, undefined, 3000])
     // The flat fixture has no sizes at all.
     expect(playlist.entries.every((e) => e.sizeBytes === undefined)).toBe(true)
   })
