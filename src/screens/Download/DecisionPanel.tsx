@@ -1,4 +1,4 @@
-import { useEffect, useId, useState, type ReactNode } from 'react'
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Chip } from '../../components/Chip'
 import { Icon, type IconName } from '../../components/Icon'
@@ -63,6 +63,13 @@ export interface DecisionPanelProps {
   /** Hides "Avançado" and the file name: per-item formats do not apply to a list of videos. */
   compact?: boolean
   onDownload(opts: DownloadOptions): void
+  /**
+   * Starts from these choices instead of the Settings defaults (a playlist keeps its shared
+   * options across opening and closing the panel).
+   */
+  initialOptions?: DownloadOptions
+  /** Called with the built options whenever the user changes a choice (not on first render). */
+  onOptionsChange?(opts: DownloadOptions): void
   /** Reports the section that is set (`null` while there is none or it is invalid). */
   onSectionChange?(section: { start: string; end: string } | null): void
 }
@@ -88,6 +95,8 @@ export function DecisionPanel({
   video,
   compact = false,
   onDownload,
+  initialOptions,
+  onOptionsChange,
   onSectionChange,
 }: DecisionPanelProps) {
   const { t, i18n } = useTranslation()
@@ -97,20 +106,24 @@ export function DecisionPanel({
   // The defaults are read once, when the panel appears: later changes in Settings apply to the
   // next video, not to a choice the user is in the middle of.
   const [initial] = useState(() => useSettings.getState().settings.defaults)
+  const [seed] = useState(() => initialOptions)
+  const start = seed ?? initial
   const [mode, setMode] = useState<Mode>(
-    compact && initial.mode === 'advanced' ? 'video' : initial.mode,
+    compact && start.mode === 'advanced' ? 'video' : start.mode,
   )
   const [preferredHeight, setPreferredHeight] = useState<QualityHeight>(
-    initial.video?.maxHeight ?? 'best',
+    start.video?.maxHeight ?? 'best',
   )
-  const [container, setContainer] = useState<Container>(initial.video?.container ?? 'mp4')
-  const [audioFormat, setAudioFormat] = useState<AudioFormat>(initial.audio?.format ?? 'mp3')
-  const [audioQuality, setAudioQuality] = useState<AudioQuality>(initial.audio?.quality ?? 0)
+  const [container, setContainer] = useState<Container>(start.video?.container ?? 'mp4')
+  const [audioFormat, setAudioFormat] = useState<AudioFormat>(start.audio?.format ?? 'mp3')
+  const [audioQuality, setAudioQuality] = useState<AudioQuality>(start.audio?.quality ?? 0)
   const [advanced, setAdvanced] = useState<AdvancedChoice>(() => defaultAdvancedChoice(formats))
-  const [subtitles, setSubtitles] = useState<SubtitlesState>(NO_SUBTITLES)
-  const [sponsor, setSponsor] = useState<SponsorBlockState>(DEFAULT_SPONSOR_BLOCK)
-  const [embed, setEmbed] = useState(true)
-  const [sectionText, setSectionText] = useState<SectionText>(NO_SECTION_TEXT)
+  const [subtitles, setSubtitles] = useState<SubtitlesState>(seed?.subtitles ?? NO_SUBTITLES)
+  const [sponsor, setSponsor] = useState<SponsorBlockState>(
+    seed?.sponsorBlock ? { enabled: true, ...seed.sponsorBlock } : DEFAULT_SPONSOR_BLOCK,
+  )
+  const [embed, setEmbed] = useState(seed?.embedMetadata ?? true)
+  const [sectionText, setSectionText] = useState<SectionText>(seed?.section ?? NO_SECTION_TEXT)
 
   const qualityOptions = video ? visibleQualityOptions(formats) : FALLBACK_QUALITY_OPTIONS
   const height = resolveQuality(preferredHeight, qualityOptions)
@@ -154,6 +167,17 @@ export function DecisionPanel({
     if (section.ok && section.section) opts.section = section.section
     return opts
   }
+
+  const optionsKey = JSON.stringify(buildOptions())
+  const emitted = useRef(false)
+  useEffect(() => {
+    // The first render is the starting point, not a change.
+    if (!emitted.current) {
+      emitted.current = true
+      return
+    }
+    onOptionsChange?.(JSON.parse(optionsKey) as DownloadOptions)
+  }, [optionsKey, onOptionsChange])
 
   const modes: Mode[] = compact ? ['video', 'audio'] : ['video', 'audio', 'advanced']
   const extension = mode === 'video' ? container : mode === 'audio' ? audioFormat : null

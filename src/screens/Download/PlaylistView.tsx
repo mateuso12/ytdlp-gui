@@ -1,6 +1,7 @@
 import * as Popover from '@radix-ui/react-popover'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { memo, useCallback, useId, useMemo, useRef, useState, type FormEvent } from 'react'
+import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { Chip } from '../../components/Chip'
 import chipStyles from '../../components/Chip.module.css'
@@ -27,8 +28,41 @@ import {
 } from './selection'
 import { useProbe } from './useProbe'
 
+/** "Só áudio · MP3" / "1080p · MP4": the shared choice, in a few words. */
+function summaryOf(opts: DownloadOptions, t: TFunction): string {
+  if (opts.mode === 'audio') {
+    return [t('panel.mode.audio'), (opts.audio?.format ?? 'mp3').toUpperCase()].join(' · ')
+  }
+  const video = opts.video
+  const quality =
+    !video || video.maxHeight === 'best'
+      ? t('panel.quality.best')
+      : video.maxHeight === 2160
+        ? '4K'
+        : `${video.maxHeight}p`
+  const container = video?.container === 'webm' ? 'WebM' : (video?.container ?? 'mp4').toUpperCase()
+  return `${quality} · ${container}`
+}
+
 /** One row: 8px of padding around a 140px thumbnail (16:9, 79px high). */
 const ROW_HEIGHT = 96
+
+/** Whether the playlist-level options say the same as the defaults (nothing to point out). */
+function sameAsDefaults(opts: DownloadOptions, defaults: DownloadOptions): boolean {
+  const pick = (o: DownloadOptions) =>
+    JSON.stringify([
+      o.mode,
+      o.mode === 'video' ? o.video : null,
+      o.mode === 'audio' ? o.audio : null,
+      o.embedThumbnail,
+      o.embedMetadata,
+      o.embedChapters,
+      o.subtitles ?? null,
+      o.sponsorBlock ?? null,
+      o.section ?? null,
+    ])
+  return pick(opts) === pick(defaults)
+}
 
 interface RowProps {
   /** Position in the playlist, from 1. */
@@ -206,6 +240,11 @@ export function PlaylistView({ playlist }: { playlist: PlaylistInfo }) {
   const toast = useToast()
   const historyItems = useHistory((s) => s.items)
   const [optionsOpen, setOptionsOpen] = useState(false)
+  // The choices made in the options popover belong to the playlist: closing it keeps them, and
+  // "Baixar N" uses them. `null` until the user changes something.
+  const [chosen, setChosen] = useState<DownloadOptions | null>(null)
+  const defaults = defaultDownloadOptions(useSettings.getState().settings)
+  const optionsLabel = chosen && !sameAsDefaults(chosen, defaults) ? summaryOf(chosen, t) : null
   const scrollRef = useRef<HTMLDivElement>(null)
   const headingId = useId()
 
@@ -310,14 +349,18 @@ export function PlaylistView({ playlist }: { playlist: PlaylistInfo }) {
           <p className={styles.summary} data-testid="selection-summary" aria-live="polite">
             {summary}
           </p>
+          {optionsLabel !== null ? (
+            <p className={styles.optionsSummary} data-testid="options-summary">
+              <Icon name="sliders-horizontal" size={16} />
+              {optionsLabel}
+            </p>
+          ) : null}
           <div className={styles.actions}>
             <PillButton
               variant="primary"
               icon="download"
               disabled={count === 0}
-              onClick={() =>
-                enqueueSelected(defaultDownloadOptions(useSettings.getState().settings))
-              }
+              onClick={() => enqueueSelected(chosen ?? defaults)}
             >
               {t('playlist.download', { n: count })}
             </PillButton>
@@ -338,7 +381,10 @@ export function PlaylistView({ playlist }: { playlist: PlaylistInfo }) {
                 >
                   <DecisionPanel
                     compact
+                    initialOptions={chosen ?? undefined}
+                    onOptionsChange={setChosen}
                     onDownload={(opts) => {
+                      setChosen(opts)
                       setOptionsOpen(false)
                       enqueueSelected(opts)
                     }}

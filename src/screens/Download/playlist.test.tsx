@@ -340,6 +340,29 @@ describe('download', () => {
     expect(inputs.every((i) => i.opts.mode === 'audio')).toBe(true)
   })
 
+  it('keeps the options chosen in the popover after it closes; "Baixar N" uses them', async () => {
+    const { user, enqueue } = await setup(entries(3))
+    expect(screen.queryByTestId('options-summary')).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Opções' }))
+    let panel = screen.getByRole('region', { name: 'Opções de download' })
+    await user.click(within(panel).getByRole('button', { name: 'Só áudio' }))
+    await user.click(within(panel).getByRole('button', { name: 'FLAC' }))
+    await user.keyboard('{Escape}')
+    expect(screen.queryByRole('region', { name: 'Opções de download' })).not.toBeInTheDocument()
+    expect(screen.getByTestId('options-summary')).toHaveTextContent('Só áudio · FLAC')
+    // reopening shows the same choices, not the defaults
+    await user.click(screen.getByRole('button', { name: 'Opções' }))
+    panel = screen.getByRole('region', { name: 'Opções de download' })
+    expect(within(panel).getByRole('button', { name: 'FLAC' })).toHaveAttribute('aria-pressed', 'true')
+    await user.keyboard('{Escape}')
+    await user.click(screen.getByRole('button', { name: 'Baixar 3' }))
+    const inputs = enqueue.mock.calls[0][0]
+    expect(inputs).toHaveLength(3)
+    expect(inputs.every((i) => i.opts.mode === 'audio' && i.opts.audio?.format === 'flac')).toBe(
+      true,
+    )
+  })
+
   it('offers the standard heights, without sizes, in the options', async () => {
     const { user } = await setup(entries(3))
     await user.click(screen.getByRole('button', { name: 'Opções' }))
