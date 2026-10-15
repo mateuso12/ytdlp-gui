@@ -1,0 +1,29 @@
+.root {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: var(--radius-chip);
+  background: var(--bg);
+}
+
+.item {
+  padding: 5px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+
+.item:hover {
+  color: var(--text-1);
+}
+
+.item[data-state='on'] {
+  background: var(--text-1);
+  color: var(--bg);
+}

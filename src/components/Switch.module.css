@@ -1,0 +1,41 @@
+.row {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.label {
+  color: var(--text-1);
+  cursor: pointer;
+}
+
+.root {
+  position: relative;
+  flex: none;
+  width: 36px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: var(--switch-off);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+.root[data-state='checked'] {
+  background: var(--accent);
+}
+
+.thumb {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--switch-thumb);
+  transform: translateX(2px);
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.thumb[data-state='checked'] {
+  transform: translateX(18px);
+}

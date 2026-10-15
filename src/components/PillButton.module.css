@@ -1,0 +1,40 @@
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    opacity var(--dur-fast) var(--ease),
+    background-color var(--dur-fast) var(--ease);
+}
+
+.pill:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.primary {
+  background: var(--text-1);
+  color: var(--bg);
+}
+
+.primary:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.ghost {
+  background: var(--ghost);
+  color: var(--text-1);
+}
+
+.ghost:hover:not(:disabled) {
+  background: var(--hover);
+}

@@ -1,0 +1,78 @@
+/* Design tokens (spec section 3.1). Dark is the default; [data-theme] overrides it. */
+:root,
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #0f0f0f;
+  --raised: #212121;
+  --hover: #272727;
+  --chip: rgba(255, 255, 255, 0.1);
+  --line: rgba(255, 255, 255, 0.1);
+  --field: #121212;
+  --field-line: #303030;
+  --text-1: #f1f1f1;
+  --text-2: #aaaaaa;
+  --accent: #3ea6ff;
+  --signal: #ff0033;
+  --success: #2ba640;
+
+  /* Component helpers derived from the approved mockup. */
+  --switch-off: #717171;
+  --switch-thumb: #ffffff;
+  --ghost: rgba(255, 255, 255, 0.12);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #ffffff;
+  --raised: #f2f2f2;
+  --hover: #f2f2f2;
+  --chip: rgba(0, 0, 0, 0.05);
+  --line: rgba(0, 0, 0, 0.1);
+  --field: #ffffff;
+  --field-line: #d3d3d3;
+  --text-1: #0f0f0f;
+  --text-2: #606060;
+  --accent: #065fd4;
+  --signal: #ff0033;
+  --success: #2ba640;
+
+  --switch-off: #c4c4c4;
+  --switch-thumb: #ffffff;
+  --ghost: rgba(0, 0, 0, 0.06);
+}
+
+:root {
+  /* Typography */
+  --font-sans: 'Roboto', Arial, sans-serif;
+  --font-mono: 'Roboto Mono', ui-monospace, Consolas, monospace;
+
+  /* Radii (spec section 3.1) */
+  --radius-field: 40px; /* link field */
+  --radius-menu: 10px; /* menu items */
+  --radius-chip: 8px;
+  --radius-thumb-lg: 12px;
+  --radius-thumb-sm: 8px;
+  --radius-panel: 12px;
+  --radius-pill: 999px; /* primary button */
+
+  /* Motion: 120-200ms, state changes only */
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --ease: ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur-base: 0ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}
