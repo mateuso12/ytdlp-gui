@@ -4,7 +4,17 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
-  { ignores: ['dist', 'coverage', '.cache', 'src-tauri/target', 'src-tauri/gen'] },
+  {
+    ignores: [
+      'dist',
+      'coverage',
+      'test-results',
+      'playwright-report',
+      '.cache',
+      'src-tauri/target',
+      'src-tauri/gen',
+    ],
+  },
   js.configs.recommended,
   tseslint.configs.strict,
   reactHooks.configs.flat.recommended,
@@ -29,6 +39,11 @@ export default tseslint.config(
   {
     files: ['src/bridge/**'],
     rules: { 'no-restricted-imports': 'off' },
+  },
+  {
+    // Playwright fixtures take a `use` callback that the hooks rule mistakes for React's.
+    files: ['e2e/**'],
+    rules: { 'react-hooks/rules-of-hooks': 'off' },
   },
   {
     files: ['*.config.{js,ts}', 'scripts/**/*.mjs'],

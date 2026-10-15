@@ -17,3 +17,7 @@ dist-ssr
 
 # Local tool/media cache for fixture capture
 .cache/
+
+# Playwright
+/test-results/
+/playwright-report/
