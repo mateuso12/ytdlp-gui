@@ -4,6 +4,7 @@ import { Chip } from '../../components/Chip'
 import { Icon, type IconName } from '../../components/Icon'
 import { PillButton } from '../../components/PillButton'
 import { Switch } from '../../components/Switch'
+import { advancedOutputExt, canEmbedThumbnail } from '../../core/compat'
 import { swapExtension } from '../../core/formats'
 import { parseSection } from '../../core/timecode'
 import type { DownloadOptions, VideoInfo } from '../../core/types'
@@ -123,10 +124,23 @@ export function DecisionPanel({
     onSectionChange(sectionKey ? { start, end } : null)
   }, [sectionKey, onSectionChange])
 
+  // The file a download will produce decides whether a cover can go into it (yt-dlp fails the job
+  // after the download otherwise), so the panel never asks for one that cannot be embedded.
+  const output =
+    mode === 'video'
+      ? container
+      : mode === 'audio'
+        ? audioFormat
+        : advancedOutputExt(
+            formats.find((f) => f.id === advanced.videoFormatId)?.ext ?? null,
+            formats.find((f) => f.id === advanced.audioFormatId)?.ext ?? null,
+          )
+  const thumbnailFits = canEmbedThumbnail(output)
+
   const buildOptions = (): DownloadOptions => {
     const opts: DownloadOptions = {
       mode,
-      embedThumbnail: embed,
+      embedThumbnail: embed && thumbnailFits,
       embedMetadata: embed,
       embedChapters: embed,
     }
@@ -233,6 +247,13 @@ export function DecisionPanel({
             onCheckedChange={setEmbed}
           />
         </PlainRow>
+        {embed && !thumbnailFits ? (
+          <p className={styles.hint}>
+            {t('panel.embed.noThumbnail', {
+              format: output === 'webm' ? 'WebM' : output?.toUpperCase(),
+            })}
+          </p>
+        ) : null}
         <SectionRow value={sectionText} result={section} onChange={setSectionText} />
       </div>
 

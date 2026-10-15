@@ -217,6 +217,63 @@ describe('Baixar', () => {
     })
   })
 
+  it('WebM cannot hold a cover: embedThumbnail is false, and the row says so', async () => {
+    const { user, onDownload } = setup()
+    await user.click(chip('WebM'))
+    expect(within(panel()).getByText('A capa não pode ser embutida em WebM.')).toBeInTheDocument()
+    const opts = await lastDownload(user, onDownload)
+    expect(opts).toMatchObject({ embedThumbnail: false, embedMetadata: true, embedChapters: true })
+  })
+
+  it('back to MP4 restores the choice of the switch', async () => {
+    const { user, onDownload } = setup()
+    await user.click(chip('WebM'))
+    await user.click(chip('MP4'))
+    expect(within(panel()).queryByText(/não pode ser embutida/)).not.toBeInTheDocument()
+    const opts = await lastDownload(user, onDownload)
+    expect(opts.embedThumbnail).toBe(true)
+  })
+
+  it('with the switch off, WebM shows no hint and nothing is embedded', async () => {
+    const { user, onDownload } = setup()
+    await user.click(within(panel()).getByRole('switch', { name: 'Embutir capa e capítulos' }))
+    await user.click(chip('WebM'))
+    expect(within(panel()).queryByText(/não pode ser embutida/)).not.toBeInTheDocument()
+    const opts = await lastDownload(user, onDownload)
+    expect(opts).toMatchObject({
+      embedThumbnail: false,
+      embedMetadata: false,
+      embedChapters: false,
+    })
+  })
+
+  it('a WebM default from the settings starts without the thumbnail', async () => {
+    setDefaults({ video: { maxHeight: 1080, container: 'webm' } })
+    const { user, onDownload } = setup()
+    const opts = await lastDownload(user, onDownload)
+    expect(opts.embedThumbnail).toBe(false)
+  })
+
+  it('audio formats embed the cover', async () => {
+    const { user, onDownload } = setup()
+    await user.click(chip('WebM'))
+    await user.click(chip('Só áudio'))
+    await user.click(chip('Opus'))
+    const opts = await lastDownload(user, onDownload)
+    expect(opts.embedThumbnail).toBe(true)
+  })
+
+  it('advanced: a WebM video with WebM audio cannot hold the cover either', async () => {
+    const { user, onDownload } = setup()
+    await user.click(chip('Avançado'))
+    const video = screen.getByRole('table', { name: 'Faixas de vídeo' })
+    const audio = screen.getByRole('table', { name: 'Faixas de áudio' })
+    await user.click(within(video).getByRole('radio', { name: /^315:/ }))
+    await user.click(within(audio).getByRole('radio', { name: /^251:/ }))
+    expect(within(panel()).getByText('A capa não pode ser embutida em WebM.')).toBeInTheDocument()
+    expect((await lastDownload(user, onDownload)).embedThumbnail).toBe(false)
+  })
+
   it('no subtitles, SponsorBlock or section unless asked for', async () => {
     const { user, onDownload } = setup()
     const opts = await lastDownload(user, onDownload)

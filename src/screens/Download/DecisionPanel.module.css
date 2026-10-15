@@ -59,3 +59,10 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.hint {
+  margin: -2px 4px 4px 34px;
+  color: var(--text-2);
+  font-size: 12px;
+  line-height: 16px;
+}
