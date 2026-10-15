@@ -886,3 +886,62 @@ describe('startup is resilient to failing reads', () => {
     expect(store.getState().settings.concurrency).toBe(2)
   })
 })
+
+const jobFixture = (n: number) => ({
+  id: `stored-${n}`,
+  url: `https://youtu.be/s${n}`,
+  title: `Stored ${n}`,
+  thumbnail: null,
+  extractor: 'youtube',
+  videoId: `s${n}`,
+  args: ['--newline', `https://youtu.be/s${n}`],
+  status: 'done',
+  attempt: 1,
+  progress: null,
+  phase: null,
+  filePath: null,
+  error: null,
+  stderrTail: [],
+  startedAt: null,
+  finishedAt: 1,
+})
+
+describe('queue: remove', () => {
+  it('drops a finished, errored, cancelled or interrupted job, and persists it', async () => {
+    const stored = ['done', 'error', 'cancelled', 'interrupted'].map((status, n) => ({
+      ...jobFixture(n),
+      status,
+    }))
+    const r = await rig({ store: { queue: stored } })
+    expect(r.queue.getState().jobs).toHaveLength(4)
+    r.queue.getState().remove(stored[3].id)
+    r.queue.getState().remove(stored[0].id)
+    expect(r.queue.getState().jobs.map((j) => j.id)).toEqual([stored[1].id, stored[2].id])
+    await r.queue.getState().flush()
+    expect((lastQueueWrite(r.bridge) as { id: string }[]).map((j) => j.id)).toEqual([
+      stored[1].id,
+      stored[2].id,
+    ])
+    r.stop()
+  })
+
+  it('leaves an active job alone (cancel it first) and ignores unknown ids', async () => {
+    const r = await rig({ concurrency: 1 })
+    const [j] = await enqueue(r, 1)
+    await flush()
+    expect(job(r, 0).status).toBe('active')
+    r.queue.getState().remove(j.id)
+    r.queue.getState().remove('nope')
+    expect(r.queue.getState().jobs).toHaveLength(1)
+    expect(r.queue.getState().activeCount).toBe(1)
+    r.stop()
+  })
+
+  it('clearFinished keeps interrupted jobs', async () => {
+    const stored = ['done', 'interrupted'].map((status, n) => ({ ...jobFixture(n), status }))
+    const r = await rig({ store: { queue: stored } })
+    r.queue.getState().clearFinished()
+    expect(r.queue.getState().jobs.map((j) => j.status)).toEqual(['interrupted'])
+    r.stop()
+  })
+})

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Icon } from '../components/Icon'
+import { useQueue } from '../stores/queue'
 import { useUi } from '../stores/ui'
 import { APP_NAME } from './brand'
 import styles from './TopBar.module.css'
@@ -17,6 +18,8 @@ export function TopBar({ urlSlot }: TopBarProps) {
   const { t } = useTranslation()
   const collapsed = useUi((s) => s.sidebarCollapsed)
   const toggleSidebar = useUi((s) => s.toggleSidebar)
+  const go = useUi((s) => s.go)
+  const activeCount = useQueue((s) => s.activeCount)
 
   return (
     <header className={styles.top}>
@@ -34,7 +37,21 @@ export function TopBar({ urlSlot }: TopBarProps) {
         <span className={styles.name}>{APP_NAME}</span>
       </div>
       <div className={styles.urlSlot}>{urlSlot}</div>
-      <div className={styles.right} />
+      <div className={styles.right}>
+        {activeCount > 0 ? (
+          <button
+            type="button"
+            className={`${styles.iconBtn} ${styles.queueBtn}`}
+            aria-label={t('topbar.queueBadge', { count: activeCount })}
+            onClick={() => go('queue')}
+          >
+            <Icon name="arrow-down-to-line" />
+            <span className={styles.badge} aria-hidden="true">
+              {activeCount}
+            </span>
+          </button>
+        ) : null}
+      </div>
     </header>
   )
 }

@@ -4,10 +4,14 @@
     "download": "Download",
     "queue": "Queue",
     "history": "History",
-    "settings": "Settings"
+    "settings": "Settings",
+    "active_one": "{{count}} active",
+    "active_other": "{{count}} active"
   },
   "topbar": {
-    "toggleSidebar": "Toggle sidebar"
+    "toggleSidebar": "Toggle sidebar",
+    "queueBadge_one": "{{count}} active download",
+    "queueBadge_other": "{{count}} active downloads"
   },
   "engine": {
     "heading": "Engine"
@@ -163,6 +167,51 @@
       "select": "Select {{title}}",
       "unavailable": "Video unavailable",
       "downloaded": "Already downloaded"
+    }
+  },
+  "queue": {
+    "empty": "No downloads in the queue.",
+    "list": "Downloads",
+    "clear": "Clear finished",
+    "status": {
+      "queued": "Queued",
+      "done": "Done",
+      "cancelled": "Cancelled",
+      "interrupted": "Interrupted"
+    },
+    "phase": {
+      "downloading": "Downloading…",
+      "section": "Downloading section…",
+      "merging": "Merging video and audio",
+      "postprocessing": "Post-processing…"
+    },
+    "cancel": "Cancel",
+    "retry": "Try again",
+    "remove": "Remove",
+    "open": "Open",
+    "reveal": "Show in folder",
+    "technicalDetails": "View technical details",
+    "action": {
+      "use_cookies": "Use browser cookies",
+      "set_proxy": "Set up a proxy",
+      "update_ytdlp": "Update yt-dlp",
+      "retry_later": "Try again later",
+      "reinstall_ffmpeg": "Reinstall ffmpeg",
+      "use_firefox": "Use Firefox",
+      "choose_folder": "Choose another folder",
+      "retry": "Try again"
+    },
+    "updated": "yt-dlp updated to {{version}}",
+    "actionFailed": "The action failed: {{reason}}",
+    "details": {
+      "title": "Technical details",
+      "description": "The command that ran (cookies and proxy hidden) and yt-dlp's error output.",
+      "command": "Command",
+      "stderr": "Error output",
+      "noStderr": "yt-dlp wrote nothing to the error output.",
+      "copy": "Copy",
+      "copied": "Copied",
+      "close": "Close"
     }
   },
   "toast": {

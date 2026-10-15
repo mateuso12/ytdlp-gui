@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Icon, type IconName } from '../components/Icon'
+import { useQueue } from '../stores/queue'
 import { useUi, type Screen } from '../stores/ui'
 import styles from './Sidebar.module.css'
 
@@ -14,6 +15,7 @@ export function Sidebar() {
   const current = useUi((s) => s.screen)
   const collapsed = useUi((s) => s.sidebarCollapsed)
   const go = useUi((s) => s.go)
+  const activeCount = useQueue((s) => s.activeCount)
 
   const item = (screen: Screen, icon: IconName) => (
     <button
@@ -25,6 +27,9 @@ export function Sidebar() {
     >
       <Icon name={icon} />
       <span className={styles.label}>{t(`nav.${screen}`)}</span>
+      {screen === 'queue' && activeCount > 0 ? (
+        <span className={styles.cnt}>{t('nav.active', { count: activeCount })}</span>
+      ) : null}
     </button>
   )
 

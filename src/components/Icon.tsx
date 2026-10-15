@@ -28,6 +28,7 @@ import {
   ShieldCheck,
   SlidersHorizontal,
   SunMoon,
+  Trash2,
   Video,
   X,
 } from 'lucide-react'
@@ -65,6 +66,7 @@ export const icons = {
   'external-link': ExternalLink,
   'folder-open': FolderOpen,
   'alert-circle': AlertCircle,
+  'trash-2': Trash2,
 } as const
 
 export type IconName = keyof typeof icons

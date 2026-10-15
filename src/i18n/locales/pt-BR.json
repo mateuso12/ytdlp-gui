@@ -4,10 +4,14 @@
     "download": "Baixar",
     "queue": "Fila",
     "history": "Histórico",
-    "settings": "Configurações"
+    "settings": "Configurações",
+    "active_one": "{{count}} ativo",
+    "active_other": "{{count}} ativos"
   },
   "topbar": {
-    "toggleSidebar": "Alternar menu lateral"
+    "toggleSidebar": "Alternar menu lateral",
+    "queueBadge_one": "{{count}} download ativo",
+    "queueBadge_other": "{{count}} downloads ativos"
   },
   "engine": {
     "heading": "Motor"
@@ -163,6 +167,51 @@
       "select": "Selecionar {{title}}",
       "unavailable": "Vídeo indisponível",
       "downloaded": "Já baixado"
+    }
+  },
+  "queue": {
+    "empty": "Nenhum download na fila.",
+    "list": "Downloads",
+    "clear": "Limpar concluídos",
+    "status": {
+      "queued": "Na fila",
+      "done": "Concluído",
+      "cancelled": "Cancelado",
+      "interrupted": "Interrompido"
+    },
+    "phase": {
+      "downloading": "Baixando…",
+      "section": "Baixando trecho…",
+      "merging": "Juntando vídeo e áudio",
+      "postprocessing": "Pós-processando…"
+    },
+    "cancel": "Cancelar",
+    "retry": "Tentar de novo",
+    "remove": "Remover",
+    "open": "Abrir",
+    "reveal": "Mostrar na pasta",
+    "technicalDetails": "Ver detalhes técnicos",
+    "action": {
+      "use_cookies": "Usar cookies do navegador",
+      "set_proxy": "Configurar proxy",
+      "update_ytdlp": "Atualizar yt-dlp",
+      "retry_later": "Tentar de novo mais tarde",
+      "reinstall_ffmpeg": "Reinstalar ffmpeg",
+      "use_firefox": "Usar Firefox",
+      "choose_folder": "Escolher outra pasta",
+      "retry": "Tentar de novo"
+    },
+    "updated": "yt-dlp atualizado para {{version}}",
+    "actionFailed": "A ação falhou: {{reason}}",
+    "details": {
+      "title": "Detalhes técnicos",
+      "description": "O comando executado (com cookies e proxy ocultos) e a saída de erro do yt-dlp.",
+      "command": "Comando",
+      "stderr": "Saída de erro",
+      "noStderr": "O yt-dlp não escreveu nada na saída de erro.",
+      "copy": "Copiar",
+      "copied": "Copiado",
+      "close": "Fechar"
     }
   },
   "toast": {

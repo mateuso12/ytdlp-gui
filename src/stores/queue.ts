@@ -68,6 +68,8 @@ export interface QueueState {
   retry(id: string): void
   /** Drops done, cancelled and errored jobs from the list (history keeps the finished downloads). */
   clearFinished(): void
+  /** Drops one job that is not running (cancel an active one first). Unknown ids are ignored. */
+  remove(id: string): void
   /** Resolves when every pending write has reached the store. */
   flush(): Promise<void>
 
@@ -302,6 +304,12 @@ export function createQueueStore(deps: Partial<QueueDeps> = {}) {
       clearFinished() {
         const finished = ['done', 'error', 'cancelled']
         set((s) => patch(s.jobs.filter((j) => !finished.includes(j.status))))
+      },
+
+      remove(id) {
+        const job = get().jobs.find((j) => j.id === id)
+        if (!job || job.status === 'active') return
+        set((s) => patch(s.jobs.filter((j) => j.id !== id)))
       },
 
       flush: () => writer.settled(),

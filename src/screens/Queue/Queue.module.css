@@ -1,0 +1,254 @@
+.screen {
+  container-type: inline-size;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.heading {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.empty {
+  margin: 48px 0;
+  color: var(--text-2);
+  text-align: center;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  padding: 8px;
+  border-radius: var(--radius-menu);
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+.row:hover {
+  background: var(--hover);
+}
+
+.thumb {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius-thumb-sm);
+  background: var(--raised);
+}
+
+.thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.body {
+  min-width: 0;
+}
+
+.title {
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin-top: 4px;
+  color: var(--text-2);
+  font-size: 12px;
+}
+
+.phase {
+  color: var(--text-1);
+}
+
+.ok {
+  color: var(--success);
+}
+
+/* ---- progress ---- */
+
+.bar {
+  position: relative;
+  height: 4px;
+  margin-top: 8px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--chip);
+}
+
+.fill {
+  height: 100%;
+  background: var(--signal);
+  transition: width var(--dur-base) var(--ease);
+}
+
+/* Unknown progress: a segment slides across instead of a number that would be a lie. */
+.bar[data-indeterminate='true'] .fill {
+  width: 35%;
+  animation: slide 1.4s ease-in-out infinite;
+}
+
+@keyframes slide {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(300%);
+  }
+}
+
+/* ---- error ---- */
+
+.error {
+  margin-top: 2px;
+}
+
+.errorTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.errorTitle svg {
+  flex: none;
+  color: var(--signal);
+}
+
+.errorMessage {
+  margin: 4px 0 6px;
+  color: var(--text-2);
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+@container (max-width: 640px) {
+  .row {
+    grid-template-columns: 96px minmax(0, 1fr);
+  }
+
+  .actions {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+}
+
+/* ---- technical details dialog ---- */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 91;
+  box-sizing: border-box;
+  width: 640px;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 64px);
+  overflow-y: auto;
+  padding: 20px;
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-panel);
+  background: var(--menu);
+  box-shadow: var(--shadow-pop);
+}
+
+.dialog:focus-visible {
+  outline: none;
+}
+
+.dialogTitle {
+  margin: 0 0 4px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.dialogHint {
+  margin: 0 0 16px;
+  color: var(--text-2);
+  font-size: 13px;
+}
+
+.dialogLabel {
+  margin: 12px 0 6px;
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.code {
+  max-height: 220px;
+  margin: 0;
+  padding: 10px 12px;
+  overflow: auto;
+  border-radius: var(--radius-chip);
+  background: var(--field);
+  color: var(--text-1);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 18px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.dialogFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+}
