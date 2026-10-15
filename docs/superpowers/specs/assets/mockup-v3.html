@@ -1,0 +1,213 @@
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+<style>
+  .yt { --bg:#0f0f0f; --raised:#212121; --hover:#272727; --chip:rgba(255,255,255,.1); --line:rgba(255,255,255,.1);
+        --field:#121212; --fieldline:#303030; --t1:#f1f1f1; --t2:#aaa; --inv:#0f0f0f; --invsub:#606060;
+        --red:#ff0033; --blue:#3ea6ff; --ok:#2ba640; --swoff:#717171;
+        --plgrad:linear-gradient(180deg,#3a2f2a 0%,#1d1816 60%,#141110 100%); --pltext:#d6d0cc; --ghost:rgba(255,255,255,.12);
+        background:var(--bg); color:var(--t1); font-family:Roboto,Arial,sans-serif; border-radius:12px; overflow:hidden;
+        border:1px solid #2a2a2a; font-size:14px; }
+  .yt.light { --bg:#ffffff; --raised:#f2f2f2; --hover:#f2f2f2; --chip:rgba(0,0,0,.05); --line:rgba(0,0,0,.1);
+        --field:#ffffff; --fieldline:#d3d3d3; --t1:#0f0f0f; --t2:#606060; --inv:#ffffff; --invsub:#c8c8c8;
+        --blue:#065fd4; --swoff:#c4c4c4;
+        --plgrad:linear-gradient(180deg,#e9dfd8 0%,#f4efeb 60%,#f8f6f4 100%); --pltext:#5a4f48; --ghost:rgba(0,0,0,.06);
+        border-color:#e5e5e5; }
+  .yt * { box-sizing:border-box; }
+  .yt svg.lucide { width:20px; height:20px; stroke-width:1.75; flex:none; }
+  .top { height:56px; display:grid; grid-template-columns:240px 1fr 240px; align-items:center; padding:0 16px; }
+  .brand { display:flex; align-items:center; gap:14px; font-weight:700; font-size:17px; letter-spacing:-.3px; }
+  .brand .ph { color:var(--t2); font-weight:500; border:1px dashed var(--line); border-radius:6px; padding:2px 8px; font-size:13px; letter-spacing:0; }
+  .iconbtn { width:40px; height:40px; border-radius:50%; display:grid; place-items:center; position:relative; color:var(--t1); }
+  .search { display:flex; max-width:640px; width:100%; margin:0 auto; }
+  .search .in { flex:1; height:40px; border:1px solid var(--fieldline); border-right:0; border-radius:40px 0 0 40px; background:var(--field);
+                padding:0 16px; display:flex; align-items:center; gap:10px; color:var(--t1); font-size:15px; white-space:nowrap; overflow:hidden; }
+  .search .in svg { color:var(--ok); width:18px; height:18px; }
+  .search .btn { height:40px; padding:0 18px; border:1px solid var(--fieldline); border-radius:0 40px 40px 0; background:var(--raised);
+                 display:flex; align-items:center; gap:6px; color:var(--t1); font-size:13px; font-weight:500; }
+  .search .btn svg { width:18px; height:18px; }
+  .right { display:flex; justify-content:flex-end; gap:4px; align-items:center; }
+  .badge { position:absolute; top:3px; right:2px; background:var(--red); color:#fff; font-size:10px; font-weight:500; padding:0 5px; border-radius:9px; line-height:16px; }
+  .body { display:grid; grid-template-columns:240px 1fr; min-height:600px; }
+  .guide { padding:12px; }
+  .gi { height:40px; display:flex; align-items:center; gap:24px; padding:0 12px; border-radius:10px; color:var(--t1); }
+  .gi.on { background:var(--raised); font-weight:500; }
+  .gi .cnt { margin-left:auto; color:var(--t2); font-size:12px; }
+  .sep { border-top:1px solid var(--line); margin:12px 0; }
+  .ghead { padding:6px 12px; font-weight:500; font-size:16px; }
+  .gdep { padding:4px 12px; color:var(--t2); font-size:12px; line-height:20px; display:flex; gap:8px; align-items:center; }
+  .gdep svg.lucide { width:14px; height:14px; }
+  .gdep b { color:var(--t1); font-weight:400; font-family:'Roboto Mono',monospace; font-size:11px; }
+  .main { padding:24px 32px 32px; }
+  .detected { display:inline-flex; align-items:center; gap:8px; color:var(--t2); font-size:12px; margin-bottom:16px; }
+  .detected svg.lucide { width:16px; height:16px; color:var(--t1); }
+  .watch { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:24px; }
+  .thumb { aspect-ratio:16/9; border-radius:12px; position:relative; overflow:hidden;
+           background:radial-gradient(120% 90% at 30% 20%,#3b4a5c 0%,#1d2530 45%,#0d1117 100%); }
+  .thumb .dur { position:absolute; right:8px; bottom:8px; background:rgba(0,0,0,.8); color:#fff; padding:1px 4px; border-radius:4px; font-size:12px; font-weight:500; }
+  .thumb .clip { position:absolute; left:0; right:0; bottom:0; height:3px; background:rgba(255,255,255,.25); }
+  .thumb .clip i { position:absolute; left:22%; width:30%; top:0; bottom:0; background:var(--red); }
+  h1.title { font-size:20px; line-height:28px; font-weight:700; margin:12px 0 8px; letter-spacing:-.1px; }
+  .chan { display:flex; align-items:center; gap:12px; }
+  .avatar { width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#6b7a8f,#3b4656); }
+  .chan b { font-weight:500; font-size:15px; display:block; }
+  .chan span { color:var(--t2); font-size:12px; }
+  .meta-row { display:flex; gap:8px; margin-top:14px; flex-wrap:wrap; }
+  .pill-meta { background:var(--chip); border-radius:8px; padding:8px 12px; font-size:12px; color:var(--t1); display:flex; gap:6px; align-items:center; }
+  .pill-meta svg.lucide { width:15px; height:15px; color:var(--t2); }
+  .panel { background:var(--raised); border-radius:12px; padding:16px; align-self:start; }
+  .flabel { font-size:12px; color:var(--t2); margin:0 0 8px; font-weight:500; }
+  .chips { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; }
+  .chip { white-space:nowrap; height:32px; padding:0 12px; border-radius:8px; background:var(--chip); display:inline-flex; align-items:center; font-weight:500; font-size:14px; gap:6px; }
+  .light .panel .chip { background:rgba(0,0,0,.07); }
+  .chip svg.lucide { width:16px; height:16px; }
+  .chip.on { background:var(--t1) !important; color:var(--inv); }
+  .chip small { font-weight:400; color:var(--t2); font-size:12px; }
+  .chip.on small { color:var(--invsub); }
+  .opts { border-top:1px solid var(--line); padding-top:12px; }
+  .opt { display:flex; align-items:center; justify-content:space-between; height:40px; padding:0 4px; gap:12px; }
+  .opt span { color:var(--t1); font-size:13px; display:flex; align-items:center; gap:12px; }
+  .opt span svg.lucide { width:18px; height:18px; color:var(--t2); }
+  .opt b { font-weight:400; font-size:13px; color:var(--t2); display:flex; gap:2px; align-items:center; white-space:nowrap; }
+  .opt b svg.lucide { width:16px; height:16px; }
+  .sw { width:36px; height:20px; border-radius:10px; background:var(--swoff); position:relative; flex:none; }
+  .sw.on { background:var(--blue); }
+  .sw::after { content:''; position:absolute; width:16px; height:16px; border-radius:50%; background:#fff; top:2px; left:2px; }
+  .sw.on::after { left:18px; }
+  .dest { display:flex; justify-content:space-between; align-items:center; margin-top:16px; gap:12px; }
+  .dest .path { font-family:'Roboto Mono',monospace; font-size:11px; color:var(--t2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:flex; gap:6px; align-items:center; }
+  .dest .path svg.lucide { width:15px; height:15px; }
+  .go { height:36px; padding:0 18px 0 14px; border-radius:18px; background:var(--t1); color:var(--inv); font-weight:500; display:inline-flex; align-items:center; gap:8px; white-space:nowrap; }
+  .go svg.lucide { width:18px; height:18px; }
+  .pl { display:grid; grid-template-columns:340px 1fr; gap:24px; }
+  .plhead { border-radius:16px; padding:20px; background:var(--plgrad); }
+  .plhead .thumb { border-radius:10px; }
+  .plhead h2 { font-size:24px; line-height:30px; font-weight:700; margin:16px 0 6px; }
+  .plhead p { margin:0; color:var(--pltext); font-size:13px; }
+  .plhead .sel { margin-top:16px; display:flex; gap:8px; }
+  .plhead .go { flex:1; justify-content:center; }
+  .ghost { height:36px; padding:0 14px; border-radius:18px; background:var(--ghost); display:inline-flex; align-items:center; gap:6px; font-weight:500; }
+  .ghost svg.lucide { width:18px; height:18px; }
+  .ambig { background:var(--raised); border-radius:12px; padding:10px 10px 10px 14px; display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; font-size:13px; }
+  .ambig span { color:var(--t1); display:flex; gap:10px; align-items:center; }
+  .ambig span svg.lucide { width:18px; height:18px; color:var(--t2); }
+  .seg { display:inline-flex; background:var(--bg); border-radius:8px; padding:3px; }
+  .seg i { font-style:normal; padding:5px 12px; border-radius:6px; font-weight:500; font-size:13px; color:var(--t2); }
+  .seg i.on { background:var(--t1); color:var(--inv); }
+  .row { display:grid; grid-template-columns:24px 20px 140px 1fr auto; gap:12px; align-items:center; padding:8px; border-radius:10px; }
+  .row.hov { background:var(--hover); }
+  .row .n { color:var(--t2); font-size:12px; text-align:center; }
+  .cb { width:18px; height:18px; border-radius:4px; border:2px solid var(--t2); display:grid; place-items:center; }
+  .cb.on { background:var(--t1); border-color:var(--t1); color:var(--inv); }
+  .cb svg.lucide { width:14px; height:14px; stroke-width:3; }
+  .row .thumb { border-radius:8px; }
+  .row .thumb .dur { font-size:11px; right:4px; bottom:4px; }
+  .row b { display:block; font-weight:500; font-size:14px; line-height:20px; }
+  .row small { color:var(--t2); font-size:12px; }
+  .row .st { font-size:12px; color:var(--t2); display:flex; align-items:center; gap:4px; }
+  .row .st svg.lucide { width:16px; height:16px; }
+  .row.off { opacity:.45; }
+  .caption { color:#888; font-size:13px; margin:28px 0 10px; }
+</style>
+
+<h2>Direção YouTube: versão 2, escura e clara</h2>
+<p class="subtitle">Sem nenhum símbolo do YouTube. O nome fica como espaço reservado. Os ícones são da biblioteca Lucide, explico o motivo no terminal. Os tons do tema claro também vieram do YouTube: fundo branco, superfícies #f2f2f2, texto #0f0f0f e #606060, e o azul #065fd4 nos interruptores.</p>
+
+<template id="screen1">
+  <div class="top">
+    <div class="brand"><div class="iconbtn"><i data-lucide="menu"></i></div><span class="ph">Nome do app</span></div>
+    <div class="search"><div class="in"><i data-lucide="circle-check"></i>https://www.youtube.com/watch?v=aqz-KE-bpKQ</div><div class="btn"><i data-lucide="clipboard"></i>Colar</div></div>
+    <div class="right"><div class="iconbtn"><i data-lucide="arrow-down-to-line"></i><span class="badge">2</span></div><div class="iconbtn"><i data-lucide="sun-moon"></i></div></div>
+  </div>
+  <div class="body">
+    <div class="guide">
+      <div class="gi on"><i data-lucide="download"></i>Baixar</div>
+      <div class="gi"><i data-lucide="list-video"></i>Fila<span class="cnt">2 ativos</span></div>
+      <div class="gi"><i data-lucide="history"></i>Histórico</div>
+      <div class="sep"></div>
+      <div class="gi"><i data-lucide="settings-2"></i>Configurações</div>
+      <div class="sep"></div>
+      <div class="ghead">Motor</div>
+      <div class="gdep"><i data-lucide="cpu"></i>yt-dlp <b>2026.10.09</b></div>
+      <div class="gdep"><i data-lucide="film"></i>ffmpeg <b>7.1</b></div>
+      <div class="gdep"><i data-lucide="cookie"></i>Cookies <b>Firefox</b></div>
+    </div>
+    <div class="main">
+      <div class="detected"><i data-lucide="video"></i>Vídeo único · 12 formatos · legendas em 8 idiomas · 6 capítulos</div>
+      <div class="watch">
+        <div>
+          <div class="thumb"><span class="dur">14:48</span><div class="clip"><i></i></div></div>
+          <h1 class="title">Big Buck Bunny 60fps 4K: versão oficial do Blender Foundation</h1>
+          <div class="chan"><div class="avatar"></div><div><b>Blender</b><span>Publicado em 10 de nov. de 2014</span></div></div>
+          <div class="meta-row">
+            <div class="pill-meta"><i data-lucide="monitor-play"></i>2160p60</div>
+            <div class="pill-meta"><i data-lucide="audio-lines"></i>Opus 160k</div>
+            <div class="pill-meta"><i data-lucide="scissors"></i>3:15 → 7:40</div>
+          </div>
+        </div>
+        <div class="panel">
+          <p class="flabel">Baixar como</p>
+          <div class="chips"><span class="chip on"><i data-lucide="clapperboard"></i>Vídeo</span><span class="chip"><i data-lucide="music-2"></i>Só áudio</span><span class="chip"><i data-lucide="sliders-horizontal"></i>Avançado</span></div>
+          <p class="flabel">Qualidade</p>
+          <div class="chips"><span class="chip">4K <small>~1,9 GB</small></span><span class="chip on">1080p <small>~420 MB</small></span><span class="chip">720p <small>~190 MB</small></span><span class="chip">480p</span></div>
+          <p class="flabel">Formato</p>
+          <div class="chips"><span class="chip on">MP4</span><span class="chip">MKV</span><span class="chip">WebM</span></div>
+          <div class="opts">
+            <div class="opt"><span><i data-lucide="captions"></i>Legendas</span><b>Português, Inglês<i data-lucide="chevron-right"></i></b></div>
+            <div class="opt"><span><i data-lucide="shield-check"></i>Remover patrocínios</span><div class="sw on"></div></div>
+            <div class="opt"><span><i data-lucide="image"></i>Embutir capa e capítulos</span><div class="sw on"></div></div>
+            <div class="opt"><span><i data-lucide="scissors"></i>Baixar só um trecho</span><b>3:15 → 7:40<i data-lucide="chevron-right"></i></b></div>
+          </div>
+          <div class="dest"><span class="path"><i data-lucide="folder"></i>~/Vídeos/Blender/Big Buck Bunny.mp4</span><span class="go"><i data-lucide="download"></i>Baixar</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<p class="caption">Tela 1, tema escuro: vídeo único</p>
+<div class="yt" data-use="screen1"></div>
+
+<p class="caption">Tela 1, tema claro: vídeo único</p>
+<div class="yt light" data-use="screen1"></div>
+
+<p class="caption">Tela 2, tema claro: playlist</p>
+<div class="yt light">
+  <div class="top">
+    <div class="brand"><div class="iconbtn"><i data-lucide="menu"></i></div><span class="ph">Nome do app</span></div>
+    <div class="search"><div class="in"><i data-lucide="circle-check"></i>https://www.youtube.com/watch?v=…&amp;list=PL4cUxeGkcC9g…</div><div class="btn"><i data-lucide="clipboard"></i>Colar</div></div>
+    <div class="right"><div class="iconbtn"><i data-lucide="arrow-down-to-line"></i><span class="badge">2</span></div><div class="iconbtn"><i data-lucide="sun-moon"></i></div></div>
+  </div>
+  <div class="body" style="min-height:500px">
+    <div class="guide">
+      <div class="gi on"><i data-lucide="download"></i>Baixar</div>
+      <div class="gi"><i data-lucide="list-video"></i>Fila<span class="cnt">2 ativos</span></div>
+      <div class="gi"><i data-lucide="history"></i>Histórico</div>
+      <div class="sep"></div>
+      <div class="gi"><i data-lucide="settings-2"></i>Configurações</div>
+    </div>
+    <div class="main">
+      <div class="ambig"><span><i data-lucide="list-video"></i>Este link é um vídeo dentro de uma playlist.</span><div class="seg"><i>Só este vídeo</i><i class="on">Playlist inteira · 24</i></div></div>
+      <div class="pl">
+        <div class="plhead">
+          <div class="thumb" style="background:radial-gradient(120% 90% at 70% 30%,#7a5a45,#2a1d16 70%)"></div>
+          <h2>Curso completo de React</h2>
+          <p>Net Ninja · 24 vídeos · 6 h 12 min</p>
+          <p style="margin-top:10px;color:var(--t1)">18 selecionados · ~3,4 GB em 1080p</p>
+          <div class="sel"><span class="go"><i data-lucide="download"></i>Baixar 18</span><span class="ghost"><i data-lucide="sliders-horizontal"></i>Opções</span></div>
+        </div>
+        <div>
+          <div style="display:flex;gap:8px;margin-bottom:10px"><span class="chip on">Todos</span><span class="chip">Nenhum</span><span class="chip">Intervalo…</span><span class="chip">Não baixados</span></div>
+          <div class="row"><span class="n">1</span><div class="cb on"><i data-lucide="check"></i></div><div class="thumb" style="background:linear-gradient(135deg,#4a5568,#1a202c)"><span class="dur">11:02</span></div><div><b>Introdução e configuração do ambiente</b><small>Net Ninja</small></div><span class="st">~120 MB</span></div>
+          <div class="row hov"><span class="n">2</span><div class="cb on"><i data-lucide="check"></i></div><div class="thumb" style="background:linear-gradient(135deg,#55606f,#1f2630)"><span class="dur">14:37</span></div><div><b>Componentes e JSX</b><small>Net Ninja</small></div><span class="st">~160 MB</span></div>
+          <div class="row off"><span class="n">3</span><div class="cb"></div><div class="thumb" style="background:linear-gradient(135deg,#3f4a59,#161b22)"><span class="dur">9:51</span></div><div><b>Estilizando componentes</b><small>Já baixado em 12/09</small></div><span class="st"><i data-lucide="check-circle-2"></i></span></div>
+          <div class="row"><span class="n">4</span><div class="cb on"><i data-lucide="check"></i></div><div class="thumb" style="background:linear-gradient(135deg,#5a6472,#202833)"><span class="dur">17:20</span></div><div><b>Eventos e estado com useState</b><small>Net Ninja</small></div><span class="st">~190 MB</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('[data-use]').forEach(el => { el.innerHTML = document.getElementById(el.dataset.use).innerHTML; });
+  (function draw(){ if (window.lucide) lucide.createIcons(); else setTimeout(draw, 100); })();
+</script>
