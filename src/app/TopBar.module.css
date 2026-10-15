@@ -1,0 +1,51 @@
+.top {
+  height: 56px;
+  display: grid;
+  grid-template-columns: 240px 1fr 240px;
+  align-items: center;
+  padding: 0 16px;
+  flex: none;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: -0.3px;
+}
+
+.name {
+  white-space: nowrap;
+}
+
+.iconBtn {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  color: var(--text-1);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+.iconBtn:hover {
+  background: var(--hover);
+}
+
+.urlSlot {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
+}

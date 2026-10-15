@@ -1,0 +1,21 @@
+{
+  "nav": {
+    "label": "Navegação principal",
+    "download": "Baixar",
+    "queue": "Fila",
+    "history": "Histórico",
+    "settings": "Configurações"
+  },
+  "topbar": {
+    "toggleSidebar": "Alternar menu lateral"
+  },
+  "engine": {
+    "heading": "Motor"
+  },
+  "screens": {
+    "download": { "title": "Baixar" },
+    "queue": { "title": "Fila" },
+    "history": { "title": "Histórico" },
+    "settings": { "title": "Configurações" }
+  }
+}

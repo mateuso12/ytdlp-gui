@@ -1,0 +1,21 @@
+{
+  "nav": {
+    "label": "Main navigation",
+    "download": "Download",
+    "queue": "Queue",
+    "history": "History",
+    "settings": "Settings"
+  },
+  "topbar": {
+    "toggleSidebar": "Toggle sidebar"
+  },
+  "engine": {
+    "heading": "Engine"
+  },
+  "screens": {
+    "download": { "title": "Download" },
+    "queue": { "title": "Queue" },
+    "history": { "title": "History" },
+    "settings": { "title": "Settings" }
+  }
+}
