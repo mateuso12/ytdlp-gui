@@ -1,6 +1,6 @@
 import type { MouseEvent, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { APP_NAME, REPO_URL } from '../../app/brand'
+import { APP_AUTHOR, APP_NAME, REPO_URL } from '../../app/brand'
 import { useBridge } from '../../bridge/context'
 import { useToast } from '../../components/Toast'
 import { Section } from './parts'
@@ -44,6 +44,7 @@ export function AboutSection() {
         {' · '}
         {t('settings.about.description')}
       </p>
+      <p className={styles.paragraph}>{t('settings.about.author', { author: APP_AUTHOR })}</p>
       <p className={styles.paragraph}>
         <ExternalLink href={REPO_URL}>{t('settings.about.repo')}</ExternalLink>
       </p>

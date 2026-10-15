@@ -11,7 +11,7 @@ import i18n from '../../i18n'
 import { useDeps } from '../../stores/deps'
 import { startSettingsEffects, useSettings } from '../../stores/settings'
 import { useUi } from '../../stores/ui'
-import { APP_NAME, REPO_URL } from '../../app/brand'
+import { APP_AUTHOR, APP_NAME, REPO_URL } from '../../app/brand'
 import { SettingsScreen } from './index'
 
 vi.mock('../../app/theme', { spy: true })
@@ -373,6 +373,7 @@ describe('about', () => {
     const about = section('Sobre')
     expect(within(about).getByText(APP_NAME)).toBeInTheDocument()
     expect(within(about).getByText('Licença MIT')).toBeInTheDocument()
+    expect(within(about).getByText(`Criado por ${APP_AUTHOR}`)).toBeInTheDocument()
     const credits = within(about).getByRole('list', { name: 'Créditos' })
     expect(credits).toHaveTextContent('yt-dlp (Unlicense)')
     expect(credits).toHaveTextContent('ffmpeg (LGPL/GPL)')

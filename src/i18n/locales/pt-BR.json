@@ -316,6 +316,7 @@
       "upToDate": "Já está na versão mais recente"
     },
     "about": {
+      "author": "Criado por {{author}}",
       "description": "Uma interface simples para o yt-dlp.",
       "license": "Licença MIT",
       "repo": "Repositório no GitHub",
