@@ -20,6 +20,11 @@
   --switch-off: #717171;
   --switch-thumb: #ffffff;
   --ghost: rgba(255, 255, 255, 0.12);
+  /* chips on a --raised panel */
+  --chip-raised: rgba(255, 255, 255, 0.1);
+  --hover-raised: #303030;
+  --menu: #282828; /* popovers and toasts float above --raised */
+  --shadow-pop: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 :root[data-theme='light'] {
@@ -41,6 +46,10 @@
   --switch-off: #c4c4c4;
   --switch-thumb: #ffffff;
   --ghost: rgba(0, 0, 0, 0.06);
+  --chip-raised: rgba(0, 0, 0, 0.07);
+  --hover-raised: rgba(0, 0, 0, 0.12);
+  --menu: #ffffff;
+  --shadow-pop: 0 4px 16px rgba(0, 0, 0, 0.18);
 }
 
 :root {
@@ -56,6 +65,10 @@
   --radius-thumb-sm: 8px;
   --radius-panel: 12px;
   --radius-pill: 999px; /* primary button */
+
+  /* Over a picture (duration badge): the same in both themes */
+  --overlay: rgba(0, 0, 0, 0.8);
+  --on-overlay: #ffffff;
 
   /* Motion: 120-200ms, state changes only */
   --dur-fast: 120ms;

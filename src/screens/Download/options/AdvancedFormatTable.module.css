@@ -1,0 +1,89 @@
+.root {
+  margin-bottom: 18px;
+}
+
+.heading {
+  margin: 0 0 8px;
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.scroll {
+  max-height: 188px;
+  margin-bottom: 14px;
+  overflow: auto;
+  border-radius: var(--radius-chip);
+  background: var(--bg);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.table th {
+  position: sticky;
+  top: 0;
+  padding: 8px 8px;
+  background: var(--bg);
+  color: var(--text-2);
+  font-weight: 500;
+  text-align: left;
+}
+
+.table td {
+  padding: 0 8px;
+  height: 32px;
+  color: var(--text-1);
+}
+
+.table tbody tr {
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+.table tbody tr:hover {
+  background: var(--chip);
+}
+
+.table tbody tr[data-checked='true'] {
+  background: var(--chip);
+}
+
+.table tbody tr[data-checked='true'] td {
+  font-weight: 500;
+}
+
+.select {
+  width: 28px;
+  padding-right: 0;
+}
+
+.select input {
+  display: block;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.mono {
+  color: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.num {
+  text-align: right;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

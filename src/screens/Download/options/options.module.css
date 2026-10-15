@@ -1,0 +1,246 @@
+/* One line of the option list: 40px, icon and name on the left, state on the right. */
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 40px;
+  padding: 0 4px;
+  border-radius: var(--radius-chip);
+  font-size: 13px;
+}
+
+.rowButton {
+  border: 0;
+  background: transparent;
+  color: var(--text-1);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+.rowButton:hover,
+.rowButton[data-state='open'] {
+  background: var(--chip);
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  color: var(--text-1);
+  font-size: 13px;
+}
+
+.label svg {
+  flex: none;
+  color: var(--text-2);
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  color: var(--text-2);
+  font-size: 13px;
+}
+
+.summaryText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.summary svg {
+  flex: none;
+}
+
+/* The summary beside a switch is a button of its own. */
+.summaryButton {
+  flex: none;
+  max-width: 55%;
+  height: 28px;
+  padding: 0 2px 0 8px;
+  border: 0;
+  border-radius: var(--radius-chip);
+  background: transparent;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+.summaryButton:hover,
+.summaryButton[data-state='open'] {
+  background: var(--chip);
+}
+
+.invalid {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-1);
+  font-weight: 500;
+}
+
+.invalid svg {
+  color: var(--signal);
+}
+
+/* Popover */
+.popover {
+  z-index: 50;
+  box-sizing: border-box;
+  width: 320px;
+  max-width: calc(100vw - 32px);
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-panel);
+  background: var(--menu);
+  color: var(--text-1);
+  box-shadow: var(--shadow-pop);
+  font-size: 13px;
+}
+
+.popover:focus-visible {
+  outline: none;
+}
+
+.heading {
+  margin: 0 0 8px;
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.group {
+  margin-top: 16px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  max-height: 220px;
+  overflow-y: auto;
+  margin: 0 -8px;
+}
+
+.note {
+  margin: 0;
+  color: var(--text-2);
+  line-height: 20px;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 36px;
+  padding: 0 8px;
+  border-radius: var(--radius-chip);
+  cursor: pointer;
+}
+
+.check:hover {
+  background: var(--chip);
+}
+
+.box {
+  position: relative;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  border: 2px solid var(--text-2);
+  border-radius: 4px;
+  background: transparent;
+  appearance: none;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+
+.box:checked {
+  border-color: var(--text-1);
+  background: var(--text-1);
+}
+
+.box:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 0;
+  width: 4px;
+  height: 9px;
+  border: solid var(--menu);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* Section */
+.fields {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.field {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.fieldLabel {
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--field-line);
+  border-radius: var(--radius-chip);
+  background: var(--field);
+  color: var(--text-1);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.input::placeholder {
+  color: var(--text-2);
+}
+
+.input[aria-invalid='true'] {
+  border-color: var(--signal);
+}
+
+.arrow {
+  padding-bottom: 8px;
+  color: var(--text-2);
+}
+
+.error {
+  margin: 12px 0 0;
+  padding-left: 10px;
+  border-left: 3px solid var(--signal);
+  color: var(--text-1);
+  line-height: 20px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.fields + .note {
+  margin-top: 12px;
+}

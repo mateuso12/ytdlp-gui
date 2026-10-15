@@ -1,4 +1,5 @@
 import { useEffect, type ReactNode } from 'react'
+import { ToastProvider } from '../components/Toast'
 import { DownloadScreen } from '../screens/Download'
 import { HistoryScreen } from '../screens/History'
 import { QueueScreen } from '../screens/Queue'
@@ -50,14 +51,16 @@ export function App({ urlSlot }: AppProps) {
   useFocusUrlFieldOnPaste()
 
   return (
-    <div className={styles.app}>
-      <TopBar urlSlot={urlSlot} />
-      <div className={styles.body}>
-        <Sidebar />
-        <main className={styles.main}>
-          <Current />
-        </main>
+    <ToastProvider>
+      <div className={styles.app}>
+        <TopBar urlSlot={urlSlot} />
+        <div className={styles.body}>
+          <Sidebar />
+          <main className={styles.main}>
+            <Current />
+          </main>
+        </div>
       </div>
-    </div>
+    </ToastProvider>
   )
 }

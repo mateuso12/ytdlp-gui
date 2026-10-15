@@ -28,7 +28,6 @@
     "idle": "Cole um link no campo acima para começar.",
     "loading": "Analisando o link…",
     "video": "Vídeo único",
-    "videoMode": "Vídeo",
     "playlist": "Playlist",
     "itemsOne": "{{n}} item",
     "itemsOther": "{{n}} itens",
@@ -42,6 +41,100 @@
       "video": "Só este vídeo",
       "playlist": "Playlist inteira · {{n}}"
     }
+  },
+  "preview": {
+    "published": "Publicado em {{date}}"
+  },
+  "panel": {
+    "label": "Opções de download",
+    "mode": {
+      "label": "Baixar como",
+      "video": "Vídeo",
+      "audio": "Só áudio",
+      "advanced": "Avançado"
+    },
+    "quality": {
+      "label": "Qualidade",
+      "best": "Melhor"
+    },
+    "container": {
+      "label": "Formato"
+    },
+    "audio": {
+      "format": "Formato",
+      "quality": "Qualidade do áudio",
+      "q0": "Máxima",
+      "q2": "Alta",
+      "q5": "Média"
+    },
+    "subtitles": {
+      "label": "Legendas",
+      "none": "Nenhuma",
+      "more": "+{{n}}",
+      "empty": "Este vídeo não tem legendas.",
+      "onlyAuto": "Este vídeo só tem legendas automáticas.",
+      "auto": "Incluir legendas automáticas",
+      "autoGroup": "Automáticas",
+      "languages": "Idiomas",
+      "how": "Como salvar",
+      "embed": "Embutir no vídeo",
+      "separate": "Arquivo separado"
+    },
+    "sponsor": {
+      "remove": "Remover patrocínios",
+      "mark": "Marcar patrocínios",
+      "none": "Nenhuma categoria",
+      "one": "{{n}} categoria",
+      "other": "{{n}} categorias",
+      "action": "Ação",
+      "actionRemove": "Remover do vídeo",
+      "actionMark": "Só marcar capítulos",
+      "categories": "Categorias",
+      "category": {
+        "sponsor": "Patrocínio",
+        "selfpromo": "Autopromoção",
+        "interaction": "Pedido de interação",
+        "intro": "Introdução",
+        "outro": "Encerramento",
+        "preview": "Prévia e recapitulação",
+        "music_offtopic": "Música fora do tema",
+        "filler": "Enchimento"
+      }
+    },
+    "embed": {
+      "label": "Embutir capa e capítulos"
+    },
+    "section": {
+      "label": "Baixar só um trecho",
+      "off": "Vídeo inteiro",
+      "invalid": "Trecho inválido",
+      "start": "Início",
+      "end": "Fim",
+      "hint": "Deixe o início vazio para começar do zero e o fim vazio para ir até o final.",
+      "clear": "Limpar",
+      "untilEnd": "fim",
+      "errors": {
+        "format": "Use m:ss, h:mm:ss ou segundos.",
+        "order": "O fim precisa ser depois do início.",
+        "beyond": "O início passa do fim do vídeo."
+      }
+    },
+    "advanced": {
+      "videoTracks": "Faixas de vídeo",
+      "audioTracks": "Faixas de áudio",
+      "select": "Escolher",
+      "id": "ID",
+      "resolution": "Resolução",
+      "fps": "FPS",
+      "codec": "Codec",
+      "bitrate": "Bitrate",
+      "size": "Tamanho"
+    },
+    "download": "Baixar"
+  },
+  "toast": {
+    "label": "Notificações",
+    "addedToQueue": "Adicionado à fila"
   },
   "errors": {
     "unsupported": {

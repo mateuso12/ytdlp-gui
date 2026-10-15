@@ -1,30 +1,56 @@
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Chip } from '../../components/Chip'
 import { Icon } from '../../components/Icon'
 import { PillButton } from '../../components/PillButton'
-import type { PlaylistInfo, VideoInfo } from '../../core/types'
+import { useToast } from '../../components/Toast'
+import type { DownloadOptions, PlaylistInfo, VideoInfo } from '../../core/types'
 import { useQueue } from '../../stores/queue'
 import { useSettings } from '../../stores/settings'
 import { useUi } from '../../stores/ui'
 import { AmbiguousBar } from './AmbiguousBar'
+import { DecisionPanel } from './DecisionPanel'
 import { defaultDownloadOptions } from './defaultOptions'
 import styles from './ProbeView.module.css'
 import { URL_ERROR_ID } from './UrlField'
 import { useProbe } from './useProbe'
+import { VideoPreview } from './VideoPreview'
 
-/**
- * Task 15 replaces this with the thumbnail, details and `DecisionPanel`. Until then it shows the
- * title and the "Vídeo" mode chip.
- */
-function VideoPlaceholder({ video }: { video: VideoInfo }) {
+/** The preview of one video next to the panel that decides how to download it (spec 2.1). */
+function VideoView({ video }: { video: VideoInfo }) {
   const { t } = useTranslation()
+  const { reset } = useProbe()
+  const go = useUi((s) => s.go)
+  const toast = useToast()
+  const [section, setSection] = useState<{ start: string; end: string } | null>(null)
+
+  const download = (opts: DownloadOptions) => {
+    useQueue.getState().enqueue([
+      {
+        url: video.url,
+        title: video.title,
+        thumbnail: video.thumbnail,
+        extractor: video.extractor,
+        videoId: video.id,
+        opts,
+      },
+    ])
+    // Like the multi-link confirm: the link is done with, so the screen is ready for the next one.
+    reset()
+    go('queue')
+    toast.show(t('toast.addedToQueue'))
+  }
+
   return (
-    <div>
-      <h2 className={styles.title}>{video.title}</h2>
-      <Chip selected onClick={() => undefined}>
-        {t('probe.videoMode')}
-      </Chip>
+    <div className={styles.watchHost}>
+      <div className={styles.watch}>
+        <VideoPreview video={video} section={section} />
+        <DecisionPanel
+          key={video.url}
+          video={video}
+          onDownload={download}
+          onSectionChange={setSection}
+        />
+      </div>
     </div>
   )
 }
@@ -125,7 +151,7 @@ export function ProbeView() {
       {probe.kind === 'video' ? (
         <>
           <Detected icon="video">{t('probe.video')}</Detected>
-          <VideoPlaceholder video={probe.video} />
+          <VideoView video={probe.video} />
         </>
       ) : probe.kind === 'playlist' ? (
         <>

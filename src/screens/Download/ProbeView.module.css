@@ -18,6 +18,23 @@
   color: var(--text-1);
 }
 
+.watchHost {
+  container-type: inline-size;
+}
+
+.watch {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 24px;
+}
+
+/* A narrow window (or an open sidebar) stacks the preview above the panel. */
+@container (max-width: 760px) {
+  .watch {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .title {
   margin: 0 0 12px;
   font-size: 20px;

@@ -1,0 +1,61 @@
+.panel {
+  align-self: start;
+  padding: 16px;
+  border-radius: var(--radius-panel);
+  background: var(--raised);
+  /* Chips on this surface need a little more contrast than on the page. */
+  --chip: var(--chip-raised);
+  --hover: var(--hover-raised);
+}
+
+.label {
+  margin: 0 0 8px;
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.chips svg {
+  flex: none;
+}
+
+.options {
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.path {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  color: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+
+.path svg {
+  flex: none;
+}
+
+.pathText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

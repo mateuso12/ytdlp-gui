@@ -28,7 +28,6 @@
     "idle": "Paste a link in the field above to get started.",
     "loading": "Analyzing the link…",
     "video": "Single video",
-    "videoMode": "Video",
     "playlist": "Playlist",
     "itemsOne": "{{n}} item",
     "itemsOther": "{{n}} items",
@@ -42,6 +41,100 @@
       "video": "Just this video",
       "playlist": "Whole playlist · {{n}}"
     }
+  },
+  "preview": {
+    "published": "Published {{date}}"
+  },
+  "panel": {
+    "label": "Download options",
+    "mode": {
+      "label": "Download as",
+      "video": "Video",
+      "audio": "Audio only",
+      "advanced": "Advanced"
+    },
+    "quality": {
+      "label": "Quality",
+      "best": "Best"
+    },
+    "container": {
+      "label": "Format"
+    },
+    "audio": {
+      "format": "Format",
+      "quality": "Audio quality",
+      "q0": "Best",
+      "q2": "High",
+      "q5": "Medium"
+    },
+    "subtitles": {
+      "label": "Subtitles",
+      "none": "None",
+      "more": "+{{n}}",
+      "empty": "This video has no subtitles.",
+      "onlyAuto": "This video only has automatic subtitles.",
+      "auto": "Include automatic subtitles",
+      "autoGroup": "Automatic",
+      "languages": "Languages",
+      "how": "How to save",
+      "embed": "Embed in the video",
+      "separate": "Separate file"
+    },
+    "sponsor": {
+      "remove": "Remove sponsors",
+      "mark": "Mark sponsors",
+      "none": "No categories",
+      "one": "{{n}} category",
+      "other": "{{n}} categories",
+      "action": "Action",
+      "actionRemove": "Remove from the video",
+      "actionMark": "Only mark as chapters",
+      "categories": "Categories",
+      "category": {
+        "sponsor": "Sponsor",
+        "selfpromo": "Self-promotion",
+        "interaction": "Interaction reminder",
+        "intro": "Intro",
+        "outro": "Outro",
+        "preview": "Preview and recap",
+        "music_offtopic": "Off-topic music",
+        "filler": "Filler"
+      }
+    },
+    "embed": {
+      "label": "Embed cover and chapters"
+    },
+    "section": {
+      "label": "Download only a section",
+      "off": "Whole video",
+      "invalid": "Invalid section",
+      "start": "Start",
+      "end": "End",
+      "hint": "Leave the start empty to begin at zero and the end empty to go to the end.",
+      "clear": "Clear",
+      "untilEnd": "end",
+      "errors": {
+        "format": "Use m:ss, h:mm:ss or seconds.",
+        "order": "The end must be after the start.",
+        "beyond": "The start is past the end of the video."
+      }
+    },
+    "advanced": {
+      "videoTracks": "Video tracks",
+      "audioTracks": "Audio tracks",
+      "select": "Select",
+      "id": "ID",
+      "resolution": "Resolution",
+      "fps": "FPS",
+      "codec": "Codec",
+      "bitrate": "Bitrate",
+      "size": "Size"
+    },
+    "download": "Download"
+  },
+  "toast": {
+    "label": "Notifications",
+    "addedToQueue": "Added to the queue"
   },
   "errors": {
     "unsupported": {
