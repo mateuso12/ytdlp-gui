@@ -27,6 +27,9 @@ export default defineConfig(({ command, mode }) => {
   return {
     plugins: [react(), e2eEntry()],
 
+    // WKWebView on macOS 11-13 is Safari 14-16.3: compile syntax down to what it parses.
+    build: { target: ['es2020', 'safari14'] },
+
     // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
     //
     // 1. prevent Vite from obscuring rust errors

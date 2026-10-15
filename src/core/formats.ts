@@ -74,5 +74,5 @@ export function codecLabel(codec: string | null): string {
 
 /** Replaces the extension of the file name (the last path segment) with `ext`. */
 export function swapExtension(path: string, ext: string): string {
-  return path.replace(/(?<=[^\\/])\.[A-Za-z0-9]{1,5}$/, `.${ext}`)
+  return path.replace(/([^\\/])\.[A-Za-z0-9]{1,5}$/, (_all, before: string) => `${before}.${ext}`)
 }

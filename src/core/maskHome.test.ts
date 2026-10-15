@@ -26,3 +26,19 @@ describe('maskHome', () => {
     expect(maskHome(input)).toBe(input)
   })
 })
+
+describe('browser compatibility', () => {
+  // WKWebView before Safari 16.4 throws a SyntaxError on regexp lookbehind, at module load.
+  it('no source file under src uses regexp lookbehind', () => {
+    const files = import.meta.glob<string>(['../**/*.{ts,tsx}', '!../**/*.test.{ts,tsx}'], {
+      eager: true,
+      query: '?raw',
+      import: 'default',
+    })
+    expect(Object.keys(files).length).toBeGreaterThan(20)
+    const offenders = Object.entries(files)
+      .filter(([, source]) => /\(\?<[=!]/.test(source.replace(/String\.raw`[^`]*`/g, '')))
+      .map(([path]) => path)
+    expect(offenders).toEqual([])
+  })
+})
