@@ -945,3 +945,89 @@ describe('queue: remove', () => {
     r.stop()
   })
 })
+
+describe('queue: retryRebuilt', () => {
+  const runCalls = (r: Rig) => r.bridge.calls.filter((c) => c.method === 'run')
+
+  async function failedJob(r: Rig) {
+    await enqueue(r, 1)
+    await vi.waitFor(() => expect(r.runIds()).toHaveLength(1))
+    r.bridge.emitExit({ jobId: r.runIds()[0], code: 1 })
+    expect(job(r, 0).status).toBe('error')
+  }
+
+  it('keeps the options on the job after its args are built', async () => {
+    const r = await rig({ concurrency: 1 })
+    await enqueue(r, 1)
+    expect(job(r, 0).opts).toEqual(OPTS)
+    expect(job(r, 0).pending).toBeUndefined()
+    r.stop()
+  })
+
+  it('rebuilds the args with the current cookies browser and output folder, then runs them', async () => {
+    const r = await rig({ concurrency: 1 })
+    await failedJob(r)
+    const before = job(r, 0).args
+    expect(before).not.toContain('--cookies-from-browser')
+
+    r.settings.getState().update({ cookiesBrowser: 'firefox', outputDir: 'D:\\Novo' })
+    r.queue.getState().retryRebuilt(job(r, 0).id)
+    await vi.waitFor(() => expect(runCalls(r)).toHaveLength(2))
+
+    const args = runCalls(r)[1].args[1] as string[]
+    expect(args).toEqual(
+      buildArgs('https://youtu.be/v1', OPTS, r.settings.getState().settings, {
+        ffmpeg: '/bin/ffmpeg',
+        deno: '/bin/deno',
+      }),
+    )
+    expect(args.join(' ')).toContain('--cookies-from-browser firefox')
+    expect(args).toContain('D:\\Novo')
+    expect(job(r, 0)).toMatchObject({ status: 'active', attempt: 2, error: null })
+    expect(job(r, 0).pending).toBeUndefined()
+    r.stop()
+  })
+
+  it('plain retry still reuses the frozen args', async () => {
+    const r = await rig({ concurrency: 1 })
+    await failedJob(r)
+    const before = job(r, 0).args
+    r.settings.getState().update({ cookiesBrowser: 'firefox' })
+    r.queue.getState().retry(job(r, 0).id)
+    await vi.waitFor(() => expect(runCalls(r)).toHaveLength(2))
+    expect(runCalls(r)[1].args[1]).toEqual(before)
+    r.stop()
+  })
+
+  it('falls back to a plain retry (same args) for a job saved without options', async () => {
+    const stored = { ...jobFixture(1), status: 'error' }
+    const r = await rig({ concurrency: 1, store: { queue: [stored] } })
+    expect(job(r, 0).opts).toBeUndefined()
+    r.settings.getState().update({ cookiesBrowser: 'firefox' })
+    r.queue.getState().retryRebuilt(stored.id)
+    await vi.waitFor(() => expect(runCalls(r)).toHaveLength(1))
+    expect(runCalls(r)[0].args[1]).toEqual(stored.args)
+    r.stop()
+  })
+
+  it('errors with ffmpeg when it is missing, keeping the job retryable', async () => {
+    const r = await rig({ concurrency: 1 })
+    await failedJob(r)
+    r.bridge.deps.status = () => Promise.resolve({ ytdlp: DEPS.ytdlp, ffmpeg: null, deno: null })
+    r.queue.getState().retryRebuilt(job(r, 0).id)
+    await vi.waitFor(() => expect(job(r, 0).error?.code).toBe('ffmpeg'))
+    expect(job(r, 0).pending?.opts).toEqual(OPTS)
+    r.stop()
+  })
+
+  it('ignores active, done and unknown jobs', async () => {
+    const r = await rig({ concurrency: 1 })
+    const [j] = await enqueue(r, 1)
+    await vi.waitFor(() => expect(job(r, 0).status).toBe('active'))
+    r.queue.getState().retryRebuilt(j.id)
+    r.queue.getState().retryRebuilt('nope')
+    expect(job(r, 0).status).toBe('active')
+    expect(runCalls(r)).toHaveLength(1)
+    r.stop()
+  })
+})

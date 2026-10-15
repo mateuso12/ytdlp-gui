@@ -72,10 +72,14 @@
   --radius-thumb-sm: 8px;
   --radius-panel: 12px;
   --radius-pill: 999px; /* primary button */
+  --radius-badge: 9px; /* counter on an icon button */
+  --radius-bar: 2px; /* progress bar */
 
   /* Over a picture (duration badge): the same in both themes */
   --overlay: rgba(0, 0, 0, 0.8);
   --on-overlay: #ffffff;
+  /* Behind a modal dialog */
+  --scrim: rgba(0, 0, 0, 0.6);
 
   /* Motion: 120-200ms, state changes only */
   --dur-fast: 120ms;

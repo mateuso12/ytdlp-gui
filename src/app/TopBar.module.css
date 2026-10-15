@@ -61,9 +61,9 @@
   min-width: 16px;
   padding: 0 5px;
   box-sizing: border-box;
-  border-radius: 9px;
+  border-radius: var(--radius-badge);
   background: var(--signal);
-  color: #fff;
+  color: var(--on-overlay);
   font-size: 10px;
   font-weight: 500;
   line-height: 16px;

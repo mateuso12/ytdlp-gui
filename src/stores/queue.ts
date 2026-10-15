@@ -41,6 +41,11 @@ export interface Job {
    * settings and tool paths).
    */
   pending?: { opts: DownloadOptions }
+  /**
+   * What the user asked for, kept for the life of the job so `retryRebuilt` can build fresh args.
+   * Missing on jobs saved by older versions: those can only be retried with their frozen args.
+   */
+  opts?: DownloadOptions
 }
 
 export interface QueueInput {
@@ -66,6 +71,12 @@ export interface QueueState {
   enqueue(inputs: QueueInput[]): void
   cancel(id: string): void
   retry(id: string): void
+  /**
+   * Like `retry`, but builds the args again from the job's options, the current settings and the
+   * installed tools: for fixes that change the command (another cookies browser or folder, a
+   * reinstalled ffmpeg). Jobs without saved options fall back to `retry`.
+   */
+  retryRebuilt(id: string): void
   /** Drops done, cancelled and errored jobs from the list (history keeps the finished downloads). */
   clearFinished(): void
   /** Drops one job that is not running (cancel an active one first). Unknown ids are ignored. */
@@ -244,6 +255,7 @@ export function createQueueStore(deps: Partial<QueueDeps> = {}) {
             startedAt: null,
             finishedAt: null,
             pending: { opts },
+            opts,
           }
           return job
         })
@@ -299,6 +311,30 @@ export function createQueueStore(deps: Partial<QueueDeps> = {}) {
           finishedAt: null,
         }))
         if (job.args.length === 0 && bridge) void prepare(bridge, [id])
+      },
+
+      retryRebuilt(id) {
+        const job = get().jobs.find((j) => j.id === id)
+        if (!job || !['error', 'cancelled', 'interrupted'].includes(job.status)) return
+        const opts = job.opts ?? job.pending?.opts
+        if (!opts || !bridge) {
+          get().retry(id)
+          return
+        }
+        updateJob(id, (j) => ({
+          ...j,
+          args: [],
+          pending: { opts },
+          status: 'queued',
+          progress: null,
+          phase: null,
+          filePath: null,
+          error: null,
+          stderrTail: [],
+          startedAt: null,
+          finishedAt: null,
+        }))
+        void prepare(bridge, [id])
       },
 
       clearFinished() {

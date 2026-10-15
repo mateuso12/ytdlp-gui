@@ -1,14 +1,14 @@
 import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { BridgeProvider } from '../../bridge/context'
 import { createMockBridge, type MockBridge } from '../../bridge/mock'
 import { ToastProvider } from '../../components/Toast'
 import { mapError } from '../../core/mapError'
-import type { FriendlyError, ProgressEvent } from '../../core/types'
+import type { DownloadOptions, FriendlyError, ProgressEvent } from '../../core/types'
 import i18n from '../../i18n'
 import { renderApp } from '../../test/renderApp'
-import { useQueue, type Job } from '../../stores/queue'
+import { startScheduler, useQueue, type Job } from '../../stores/queue'
 import { useSettings } from '../../stores/settings'
 import { useUi } from '../../stores/ui'
 import { maskArgs } from './ErrorDetails'
@@ -295,6 +295,52 @@ describe('error job', () => {
     await screen.findByText('Na fila')
     expect(bridge.calls.find((c) => c.method === 'deps.install')?.args).toEqual(['ffmpeg'])
     expect(useQueue.getState().jobs[0].status).toBe('queued')
+  })
+
+  describe('actions that change the command rebuild it', () => {
+    const OPTS: DownloadOptions = {
+      mode: 'video',
+      video: { maxHeight: 1080, container: 'mp4' },
+      embedThumbnail: true,
+      embedMetadata: true,
+      embedChapters: true,
+    }
+    const DEPS = {
+      ytdlp: { path: '/bin/yt-dlp', version: '1' },
+      ffmpeg: { path: '/bin/ffmpeg', version: '1', source: 'app' as const },
+      deno: { path: '/bin/deno', version: '1', source: 'app' as const },
+    }
+
+    async function run(action: 'use_firefox' | 'choose_folder', name: string) {
+      const bridge = createMockBridge({ deps: DEPS, pickedFolder: 'D:\\Novo' })
+      const { user } = await setup(
+        [
+          errorJob(
+            1,
+            { code: 'disk', action },
+            { opts: OPTS, args: ['--old', 'https://youtu.be/v1'] },
+          ),
+        ],
+        bridge,
+      )
+      const stop = await startScheduler(bridge)
+      await user.click(screen.getByRole('button', { name }))
+      await vi.waitFor(() => expect(bridge.calls.some((c) => c.method === 'run')).toBe(true))
+      stop()
+      return bridge.calls.find((c) => c.method === 'run')?.args[1] as string[]
+    }
+
+    it('use_firefox: the retried command carries --cookies-from-browser firefox', async () => {
+      const args = await run('use_firefox', 'Usar Firefox')
+      expect(args).not.toContain('--old')
+      expect(args.join(' ')).toContain('--cookies-from-browser firefox')
+    })
+
+    it('choose_folder: the retried command uses the new -P folder', async () => {
+      const args = await run('choose_folder', 'Escolher outra pasta')
+      expect(args).not.toContain('--old')
+      expect(args[args.indexOf('-P') + 1]).toBe('D:\\Novo')
+    })
   })
 
   it('use_firefox switches the cookies browser and retries', async () => {

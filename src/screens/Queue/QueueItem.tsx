@@ -80,6 +80,8 @@ export const QueueItem = memo(function QueueItem({ id }: { id: string }) {
   if (!job) return null
 
   const retry = () => useQueue.getState().retry(id)
+  // These fixes change the command, so the retry must build it again (a plain retry keeps the old args).
+  const retryRebuilt = () => useQueue.getState().retryRebuilt(id)
 
   const attempt = async (work: () => Promise<void> | void) => {
     setBusy(true)
@@ -113,17 +115,17 @@ export const QueueItem = memo(function QueueItem({ id }: { id: string }) {
           break
         case 'reinstall_ffmpeg':
           await bridge.deps.install('ffmpeg')
-          retry()
+          retryRebuilt()
           break
         case 'use_firefox':
           settings.update({ cookiesBrowser: 'firefox' })
-          retry()
+          retryRebuilt()
           break
         case 'choose_folder': {
           const dir = await bridge.os.pickFolder()
           if (dir) {
             settings.update({ outputDir: dir })
-            retry()
+            retryRebuilt()
           }
           break
         }
