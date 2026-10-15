@@ -158,6 +158,19 @@ describe('download again', () => {
     expect(useUi.getState().screen).toBe('queue')
   })
 
+  it('repeats the options the item was downloaded with', async () => {
+    const opts = {
+      mode: 'audio' as const,
+      audio: { format: 'flac' as const, quality: 0 as const },
+      embedThumbnail: false,
+      embedMetadata: true,
+      embedChapters: true,
+    }
+    const { user, enqueue } = await setup([item(1, { opts })])
+    await user.click(screen.getByRole('button', { name: 'Baixar de novo' }))
+    expect(enqueue.mock.calls[0][0][0].opts).toEqual(opts)
+  })
+
   it('is hidden for an item saved without a url', async () => {
     await setup([item(1, { url: undefined })])
     expect(screen.queryByRole('button', { name: 'Baixar de novo' })).not.toBeInTheDocument()

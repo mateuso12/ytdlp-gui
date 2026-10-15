@@ -112,6 +112,13 @@ const FFMPEG_MISSING: FriendlyError = {
   lastLine: 'ffmpeg is not installed',
 }
 
+/** The file name of a path without its folders or extension; `''` when there is none. */
+export function fileStem(path: string): string {
+  const name = path.slice(Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\')) + 1)
+  const dot = name.lastIndexOf('.')
+  return dot > 0 ? name.slice(0, dot) : name
+}
+
 /** Jobs saved as `active` were cut off by the app closing; they come back as `interrupted`. */
 function restoreJob(raw: Job): Job {
   const job: Job = { ...raw, attempt: raw.attempt ?? 0, stderrTail: raw.stderrTail ?? [] }
@@ -417,16 +424,20 @@ export function createQueueStore(deps: Partial<QueueDeps> = {}) {
         }
         const finishedAt = Date.now()
         updateJob(job.id, (j) => ({ ...j, status: 'done', error: null, finishedAt }))
+        // A link added without a probe has its URL as a placeholder title; the file name is better.
+        const stem = job.title === job.url && job.filePath ? fileStem(job.filePath) : ''
+        const opts = job.opts ?? job.pending?.opts
         historyStore.getState().add({
           id: job.id,
           extractor: job.extractor,
           videoId: job.videoId,
-          title: job.title,
+          title: stem || job.title,
           thumbnail: job.thumbnail,
           path: job.filePath ?? '',
           sizeBytes: job.progress?.totalBytes ?? null,
           finishedAt,
           url: job.url,
+          ...(opts ? { opts } : {}),
         })
       },
 

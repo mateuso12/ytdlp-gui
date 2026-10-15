@@ -68,7 +68,7 @@ const Row = memo(function Row({ item, position, total, top, formatDate }: RowPro
         thumbnail: item.thumbnail,
         extractor: item.extractor,
         videoId: item.videoId,
-        opts: defaultDownloadOptions(useSettings.getState().settings),
+        opts: item.opts ?? defaultDownloadOptions(useSettings.getState().settings),
       },
     ])
     useUi.getState().go('queue')

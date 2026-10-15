@@ -1,5 +1,6 @@
 import { create, type StoreApi, type UseBoundStore } from 'zustand'
 import type { Bridge } from '../bridge/types'
+import type { DownloadOptions } from '../core/types'
 import { createWriter } from './persist'
 
 export interface HistoryItem {
@@ -17,6 +18,8 @@ export interface HistoryItem {
    * saved before it existed lack it; those cannot be downloaded again.
    */
   url?: string
+  /** What was chosen for the download, so "download again" repeats it. Missing on older items. */
+  opts?: DownloadOptions
 }
 
 /** Lower case with the accents taken off, so "acao" finds "Ação" and "CAFÉ" finds "café". */

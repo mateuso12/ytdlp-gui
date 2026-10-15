@@ -411,6 +411,33 @@ describe('queue store + scheduler', () => {
     r.stop()
   })
 
+  it('keeps the job options in the history item, for "download again"', async () => {
+    const r = await rig({ concurrency: 1 })
+    await enqueue(r, 1)
+    await flush()
+    const run = r.runIds()[0]
+    r.bridge.emitLine({ jobId: run, stream: 'stdout', line: `${FILE_MARK}/v/Video 1.mp4` })
+    r.bridge.emitExit({ jobId: run, code: 0 })
+    expect(r.history.getState().items[0].opts).toEqual(OPTS)
+    r.stop()
+  })
+
+  it('titles a placeholder-titled job (title === url) from the file name', async () => {
+    const r = await rig({ concurrency: 1 })
+    r.queue.getState().enqueue([{ ...input(1), title: input(1).url }])
+    await vi.waitFor(() => expect(job(r, 0).args.length).toBeGreaterThan(0))
+    await flush()
+    const run = r.runIds()[0]
+    r.bridge.emitLine({
+      jobId: run,
+      stream: 'stdout',
+      line: `${FILE_MARK}C:\\Videos\\Aula de Ação [abc].mp4`,
+    })
+    r.bridge.emitExit({ jobId: run, code: 0 })
+    expect(r.history.getState().items[0].title).toBe('Aula de Ação [abc]')
+    r.stop()
+  })
+
   it('exit 1 marks error with the code from mapError(stderrTail)', async () => {
     const r = await rig({ concurrency: 1 })
     await enqueue(r, 1)
