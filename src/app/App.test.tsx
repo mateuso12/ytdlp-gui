@@ -6,13 +6,17 @@ import { BridgeProvider } from '../bridge/context'
 import { createMockBridge } from '../bridge/mock'
 import i18n from '../i18n'
 import { ProbeProvider } from '../screens/Download/ProbeProvider'
+import { useDeps } from '../stores/deps'
 import { useUi } from '../stores/ui'
+import { ALL_INSTALLED } from '../test/fixtures'
 import { App } from './App'
 
 /** The Download screen reads the probe state, so the shell needs the providers `main.tsx` adds. */
 function renderShell(ui: ReactElement) {
+  // Seeded, so the first render is the shell and not the "checking the engine" screen.
+  useDeps.setState({ status: ALL_INSTALLED, failed: false })
   return render(
-    <BridgeProvider bridge={createMockBridge()}>
+    <BridgeProvider bridge={createMockBridge({ deps: ALL_INSTALLED })}>
       <ProbeProvider>{ui}</ProbeProvider>
     </BridgeProvider>,
   )

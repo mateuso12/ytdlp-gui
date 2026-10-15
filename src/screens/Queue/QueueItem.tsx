@@ -12,6 +12,7 @@ import { useSettings } from '../../stores/settings'
 import { useUi } from '../../stores/ui'
 import { ErrorDetails } from './ErrorDetails'
 import styles from './Queue.module.css'
+import { ProgressBar } from './ProgressBar'
 
 type ErrorAction = NonNullable<FriendlyError['action']>
 
@@ -31,21 +32,7 @@ function Progress({ job }: { job: Job }) {
 
   return (
     <>
-      <div
-        className={styles.bar}
-        role="progressbar"
-        aria-label={job.title}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={percent ?? undefined}
-        aria-valuetext={percent === null ? phaseText : `${percent}%`}
-        data-indeterminate={percent === null}
-      >
-        <div
-          className={styles.fill}
-          style={percent === null ? undefined : { width: `${percent}%` }}
-        />
-      </div>
+      <ProgressBar label={job.title} percent={percent} unknownText={phaseText} />
       <div className={styles.meta}>
         <span className={styles.phase}>{phaseText}</span>
         {percent !== null ? <span>{`${percent}%`}</span> : null}

@@ -1,0 +1,89 @@
+.screen {
+  max-width: 480px;
+  margin: 0 auto;
+  padding-top: 12vh;
+}
+
+.title {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.intro {
+  margin: 0 0 24px;
+  color: var(--text-2);
+  font-size: 14px;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+
+.rowHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.name {
+  font-weight: 500;
+}
+
+.state {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-2);
+}
+
+.stateFailed {
+  color: var(--signal);
+}
+
+.bytes {
+  display: block;
+  margin-top: 6px;
+  color: var(--text-2);
+  font-size: 12px;
+}
+
+.live {
+  min-height: 20px;
+  margin: 16px 0 0;
+  color: var(--text-2);
+  font-size: 14px;
+}
+
+.problem {
+  margin-top: 8px;
+  padding: 16px;
+  border-radius: var(--radius-panel);
+  background: var(--raised);
+}
+
+.problemText {
+  margin: 0 0 4px;
+  font-size: 14px;
+}
+
+.reason {
+  margin: 0 0 4px;
+  color: var(--text-2);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.problem button {
+  margin-top: 12px;
+}

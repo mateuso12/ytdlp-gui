@@ -372,5 +372,33 @@
       "title": "Something went wrong",
       "message": "yt-dlp could not analyze this link. The technical detail below may help."
     }
+  },
+  "onboarding": {
+    "title": "Preparing the engine",
+    "intro": "First run only: the app downloads the tools it uses to download and convert videos.",
+    "checking": "Checking the engine…",
+    "tools": "Engine tools",
+    "installing": "Installing {{name}}…",
+    "progressLabel": "Installing {{name}}",
+    "state": {
+      "waiting": "Waiting",
+      "installing": "Installing…",
+      "installed": "Installed",
+      "system": "Already installed on the system",
+      "failed": "Failed"
+    },
+    "failed": "Could not install {{name}}. Check your internet connection and try again.",
+    "notFound": "The install finished, but the tool was not found.",
+    "readFailed": "Could not check the installed engine. Try again.",
+    "retry": "Try again"
+  },
+  "update": {
+    "label": "App update",
+    "available": "New version {{version}} available",
+    "install": "Update",
+    "installing": "Updating…",
+    "installed": "Update installed. Restart the app to use the new version.",
+    "dismiss": "Dismiss",
+    "failed": "Could not update the app. Try again later."
   }
 }

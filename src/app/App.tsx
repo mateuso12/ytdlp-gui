@@ -1,13 +1,17 @@
 import { useEffect, type ReactNode } from 'react'
+import { useBridge } from '../bridge/context'
 import { ToastProvider } from '../components/Toast'
 import { DownloadScreen } from '../screens/Download'
 import { HistoryScreen } from '../screens/History'
+import { needsSetup, Onboarding } from '../screens/Onboarding'
 import { QueueScreen } from '../screens/Queue'
 import { SettingsScreen } from '../screens/Settings'
+import { useDeps } from '../stores/deps'
 import { useUi, type Screen } from '../stores/ui'
 import styles from './App.module.css'
 import { Sidebar } from './Sidebar'
 import { TopBar } from './TopBar'
+import { UpdateBanner } from './UpdateBanner'
 
 const SCREENS: Record<Screen, () => ReactNode> = {
   download: DownloadScreen,
@@ -46,20 +50,37 @@ interface AppProps {
 }
 
 export function App({ urlSlot }: AppProps) {
+  const bridge = useBridge()
   const screen = useUi((s) => s.screen)
+  const setup = useDeps((s) => needsSetup(s.status))
   const Current = SCREENS[screen]
   useFocusUrlFieldOnPaste()
+
+  // The first read of what is installed. Until it answers, or while a tool is missing, the setup
+  // screen stands in for the shell. It gates the UI only: the stores bootstrap underneath.
+  useEffect(() => {
+    void useDeps.getState().refresh(bridge)
+  }, [bridge])
 
   return (
     <ToastProvider>
       <div className={styles.app}>
-        <TopBar urlSlot={urlSlot} />
-        <div className={styles.body}>
-          <Sidebar />
-          <main className={styles.main}>
-            <Current />
+        <UpdateBanner />
+        {setup ? (
+          <main className={styles.setup}>
+            <Onboarding />
           </main>
-        </div>
+        ) : (
+          <>
+            <TopBar urlSlot={urlSlot} />
+            <div className={styles.body}>
+              <Sidebar />
+              <main className={styles.main}>
+                <Current />
+              </main>
+            </div>
+          </>
+        )}
       </div>
     </ToastProvider>
   )

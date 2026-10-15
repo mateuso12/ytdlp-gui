@@ -372,5 +372,33 @@
       "title": "Algo deu errado",
       "message": "O yt-dlp não conseguiu analisar esse link. O detalhe técnico abaixo pode ajudar."
     }
+  },
+  "onboarding": {
+    "title": "Preparando o motor",
+    "intro": "Só na primeira vez: o app baixa as ferramentas que usa para baixar e converter os vídeos.",
+    "checking": "Verificando o motor…",
+    "tools": "Ferramentas do motor",
+    "installing": "Instalando {{name}}…",
+    "progressLabel": "Instalando {{name}}",
+    "state": {
+      "waiting": "Aguardando",
+      "installing": "Instalando…",
+      "installed": "Instalado",
+      "system": "Já instalado no sistema",
+      "failed": "Falhou"
+    },
+    "failed": "Não foi possível instalar {{name}}. Confira a conexão com a internet e tente de novo.",
+    "notFound": "A instalação terminou, mas a ferramenta não foi encontrada.",
+    "readFailed": "Não foi possível verificar o motor instalado. Tente de novo.",
+    "retry": "Tentar de novo"
+  },
+  "update": {
+    "label": "Atualização do app",
+    "available": "Nova versão {{version}} disponível",
+    "install": "Atualizar",
+    "installing": "Atualizando…",
+    "installed": "Atualização instalada. Reinicie o app para usar a nova versão.",
+    "dismiss": "Dispensar",
+    "failed": "Não foi possível atualizar o app. Tente de novo mais tarde."
   }
 }

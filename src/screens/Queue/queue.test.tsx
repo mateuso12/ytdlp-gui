@@ -7,6 +7,7 @@ import { ToastProvider } from '../../components/Toast'
 import { mapError } from '../../core/mapError'
 import type { DownloadOptions, FriendlyError, ProgressEvent } from '../../core/types'
 import i18n from '../../i18n'
+import { ALL_INSTALLED } from '../../test/fixtures'
 import { renderApp } from '../../test/renderApp'
 import { useDeps } from '../../stores/deps'
 import { startScheduler, useQueue, type Job } from '../../stores/queue'
@@ -478,7 +479,7 @@ describe('maskArgs', () => {
 })
 
 describe('top bar badge and sidebar', () => {
-  const shell = () => renderApp(createMockBridge(), null)
+  const shell = () => renderApp(createMockBridge({ deps: ALL_INSTALLED }), null)
 
   it('shows the active count in the top bar and "N ativos" in the sidebar', () => {
     setJobs([
