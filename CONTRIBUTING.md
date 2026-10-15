@@ -10,8 +10,16 @@ You need Node.js 22, [pnpm](https://pnpm.io) (the version is pinned in `package.
 pnpm install
 pnpm tauri dev      # the desktop app
 pnpm dev            # the UI alone in a browser (no Tauri APIs)
-pnpm tauri build    # a release build with installers
+pnpm tauri build    # a release build with installers (see the note below)
 ```
+
+`tauri.conf.json` turns on `bundle.createUpdaterArtifacts`, so a plain `pnpm tauri build` stops at the end asking for the updater signing key (`TAURI_SIGNING_PRIVATE_KEY`, which only the release workflow has). For a local build without it, turn the updater artifacts off for that run. The Tauri CLI has no flag for this, so use a config override:
+
+```sh
+pnpm tauri build --config '{"bundle":{"createUpdaterArtifacts":false}}'
+```
+
+On Windows PowerShell, write the JSON with doubled quotes inside single quotes: `'{""bundle"":{""createUpdaterArtifacts"":false}}'`, or pass the path of a small JSON file with the same content.
 
 ## Running the tests
 
