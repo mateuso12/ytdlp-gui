@@ -131,27 +131,37 @@ export function Onboarding() {
       ? t('onboarding.installing', { name: nameOf(installing) })
       : ''
 
+  // Nothing is known to be missing yet: say only that the engine is being checked, so the
+  // first-run copy never flashes at someone who already has everything installed.
+  if (checking) {
+    return (
+      <section className={styles.screen} aria-busy="true">
+        <p className={styles.live} role="status">
+          {liveText}
+        </p>
+      </section>
+    )
+  }
+
   return (
     <section className={styles.screen} aria-labelledby="onboarding-title">
       <h1 id="onboarding-title" className={styles.title}>
         {t('onboarding.title')}
       </h1>
       <p className={styles.intro}>{t('onboarding.intro')}</p>
-      {checking ? null : (
-        <ul className={styles.list} aria-label={t('onboarding.tools')}>
-          {TOOLS.map(({ which, name }) => (
-            <ToolRow
-              key={which}
-              name={name}
-              tool={status?.[which] ?? null}
-              installing={installing === which}
-              failed={shown?.kind === 'step' && shown.which === which}
-              progress={progress[which]}
-              language={i18n.language}
-            />
-          ))}
-        </ul>
-      )}
+      <ul className={styles.list} aria-label={t('onboarding.tools')}>
+        {TOOLS.map(({ which, name }) => (
+          <ToolRow
+            key={which}
+            name={name}
+            tool={status?.[which] ?? null}
+            installing={installing === which}
+            failed={shown?.kind === 'step' && shown.which === which}
+            progress={progress[which]}
+            language={i18n.language}
+          />
+        ))}
+      </ul>
       <p className={styles.live} role="status">
         {liveText}
       </p>

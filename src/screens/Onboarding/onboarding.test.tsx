@@ -158,6 +158,34 @@ describe('first run: engine setup', () => {
     expect(await downloadTitle()).toBeInTheDocument()
   })
 
+  it('shows only the neutral checking line (no first-run copy) while the status is unknown', async () => {
+    const bridge = createMockBridge({ deps: ALL_INSTALLED })
+    const answer = deferred()
+    const original = bridge.deps.status
+    bridge.deps.status = async () => {
+      await answer.promise
+      return original()
+    }
+    renderShell(bridge)
+    expect(screen.getByRole('status')).toHaveTextContent('Verificando o motor')
+    expect(screen.queryByText('Preparando o motor')).not.toBeInTheDocument()
+    expect(screen.queryByText(/Só na primeira vez/)).not.toBeInTheDocument()
+    await act(async () => answer.resolve())
+    expect(await downloadTitle()).toBeInTheDocument()
+  })
+
+  it('offers a visible retry when the first status read fails, and recovers', async () => {
+    const bridge = createMockBridge({ deps: ALL_INSTALLED })
+    const original = bridge.deps.status
+    bridge.deps.status = () => Promise.reject(new Error('x'))
+    const user = userEvent.setup()
+    renderShell(bridge)
+    expect(await screen.findByRole('alert')).toHaveTextContent('Não foi possível verificar')
+    bridge.deps.status = original
+    await user.click(screen.getByRole('button', { name: 'Tentar de novo' }))
+    expect(await downloadTitle()).toBeInTheDocument()
+  })
+
   it('lands on the Download screen with the focus on the link field when it finishes', async () => {
     useUi.setState({ screen: 'settings' })
     renderShell(createMockBridge())
