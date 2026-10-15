@@ -8,6 +8,7 @@ import { createMockBridge, type MockBridge } from '../../bridge/mock'
 import type { DepName } from '../../bridge/types'
 import i18n from '../../i18n'
 import { useDeps } from '../../stores/deps'
+import { useQueue } from '../../stores/queue'
 import { useUi } from '../../stores/ui'
 import { ALL_INSTALLED } from '../../test/fixtures'
 import { ProbeProvider } from '../Download/ProbeProvider'
@@ -312,6 +313,20 @@ describe('app update banner', () => {
 
     await user.click(within(banner).getByRole('button', { name: 'Atualizar' }))
     await waitFor(() => expect(bridge.calls.some((c) => c.method === 'updater.install')).toBe(true))
+  })
+
+  it('warns and asks for a second click when downloads are running', async () => {
+    const bridge = withUpdate()
+    const user = userEvent.setup()
+    renderShell(bridge)
+    const banner = await screen.findByRole('region', { name: bannerName })
+    act(() => useQueue.setState({ activeCount: 2 }))
+    await user.click(within(banner).getByRole('button', { name: 'Atualizar' }))
+    expect(within(banner).getByRole('alert')).toHaveTextContent('downloads em andamento')
+    expect(bridge.calls.some((c) => c.method === 'updater.install')).toBe(false)
+    await user.click(within(banner).getByRole('button', { name: 'Atualizar mesmo assim' }))
+    await waitFor(() => expect(bridge.calls.some((c) => c.method === 'updater.install')).toBe(true))
+    act(() => useQueue.setState({ activeCount: 0 }))
   })
 
   it('is not modal: the app stays usable and the banner can be dismissed', async () => {

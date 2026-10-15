@@ -406,6 +406,8 @@
     "available": "Nova versão {{version}} disponível",
     "install": "Atualizar",
     "installing": "Atualizando…",
+    "activeWarning": "Há downloads em andamento. Atualizar fecha o app e interrompe os downloads.",
+    "confirm": "Atualizar mesmo assim",
     "installed": "Atualização instalada. Reinicie o app para usar a nova versão.",
     "dismiss": "Dispensar",
     "failed": "Não foi possível atualizar o app. Tente de novo mais tarde."

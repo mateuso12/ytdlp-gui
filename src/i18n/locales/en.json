@@ -406,6 +406,8 @@
     "available": "New version {{version}} available",
     "install": "Update",
     "installing": "Updating…",
+    "activeWarning": "There are downloads in progress. Updating closes the app and stops them.",
+    "confirm": "Update anyway",
     "installed": "Update installed. Restart the app to use the new version.",
     "dismiss": "Dismiss",
     "failed": "Could not update the app. Try again later."

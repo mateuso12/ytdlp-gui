@@ -5,6 +5,7 @@ import type { AvailableUpdate } from '../bridge/types'
 import { Icon } from '../components/Icon'
 import { PillButton } from '../components/PillButton'
 import { useToast } from '../components/Toast'
+import { useQueue } from '../stores/queue'
 import styles from './UpdateBanner.module.css'
 
 type Phase = 'offer' | 'installing' | 'installed'
@@ -21,6 +22,9 @@ export function UpdateBanner() {
   const [update, setUpdate] = useState<AvailableUpdate | null>(null)
   const [phase, setPhase] = useState<Phase>('offer')
   const [dismissed, setDismissed] = useState(false)
+  // Installing restarts the app, which would kill running downloads: ask twice when there are some.
+  const activeCount = useQueue((s) => s.activeCount)
+  const [confirming, setConfirming] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -40,6 +44,10 @@ export function UpdateBanner() {
   if (!update || dismissed) return null
 
   const install = async () => {
+    if (activeCount > 0 && !confirming) {
+      setConfirming(true)
+      return
+    }
     setPhase('installing')
     try {
       await update.install()
@@ -58,13 +66,22 @@ export function UpdateBanner() {
           ? t('update.installed')
           : t('update.available', { version: update.version })}
       </p>
+      {phase === 'offer' && activeCount > 0 && confirming ? (
+        <p className={styles.warning} role="alert">
+          {t('update.activeWarning', { count: activeCount })}
+        </p>
+      ) : null}
       {phase === 'installed' ? null : (
         <PillButton
           variant="primary"
           disabled={phase === 'installing'}
           onClick={() => void install()}
         >
-          {phase === 'installing' ? t('update.installing') : t('update.install')}
+          {phase === 'installing'
+            ? t('update.installing')
+            : confirming && activeCount > 0
+              ? t('update.confirm')
+              : t('update.install')}
         </PillButton>
       )}
       <button
