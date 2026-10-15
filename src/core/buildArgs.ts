@@ -13,6 +13,9 @@ const BEST = 'bv*+ba/b'
 /** Flags shared by every download, independent of the user's choices. */
 export function baseArgs(s: Settings, bin: BinPaths): string[] {
   return [
+    // PyInstaller builds ignore PYTHONIOENCODING; without this, non-ASCII paths come back mangled.
+    '--encoding',
+    'utf-8',
     '--newline',
     '--no-colors',
     // --print implies quiet, which would hide progress and [Merger] lines.
@@ -68,10 +71,10 @@ export function formatArgs(opts: DownloadOptions): string[] {
   const selector =
     video.maxHeight === 'best'
       ? BEST
-      : `bv*[height<=${video.maxHeight}]+ba/b[height<=${video.maxHeight}]`
+      : `bv*[height<=?${video.maxHeight}]+ba/b[height<=?${video.maxHeight}]`
   const args = ['-f', selector, '--merge-output-format', video.container]
-  // Prefer codecs MP4 players accept natively, so no re-encode is needed.
-  if (video.container === 'mp4') args.push('-S', 'vcodec:h264,acodec:m4a')
+  // Resolution first; h264/m4a only break ties so MP4 players accept the result without re-encode.
+  if (video.container === 'mp4') args.push('-S', 'res,vcodec:h264,acodec:m4a')
   return args
 }
 
@@ -145,5 +148,5 @@ export function buildProbeArgs(
   bin: BinPaths,
 ): string[] {
   const modeArgs = mode === 'flat' ? ['--flat-playlist'] : ['--no-playlist', ...outputArgs(s)]
-  return ['-J', ...modeArgs, ...jsRuntimeArgs(bin), ...connectionArgs(s), url]
+  return ['-J', '--encoding', 'utf-8', ...modeArgs, ...jsRuntimeArgs(bin), ...connectionArgs(s), url]
 }

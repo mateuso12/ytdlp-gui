@@ -76,6 +76,12 @@ describe('buildArgs base', () => {
     expect(hasSeq(args, '--retries', '10')).toBe(true)
   })
 
+  it('forces utf-8 output encoding (PyInstaller ignores PYTHONIOENCODING)', () => {
+    expect(hasSeq(args, '--encoding', 'utf-8')).toBe(true)
+    expect(hasSeq(buildProbeArgs(URL, 'flat', settings(), bin), '--encoding', 'utf-8')).toBe(true)
+    expect(hasSeq(buildProbeArgs(URL, 'full', settings(), bin), '--encoding', 'utf-8')).toBe(true)
+  })
+
   it('puts the URL last', () => {
     expect(args[args.length - 1]).toBe(URL)
     expect(args.filter((a) => a === URL)).toHaveLength(1)
@@ -119,9 +125,9 @@ describe('js runtime (deno)', () => {
 describe('video mode', () => {
   it('1080p in MP4', () => {
     const a = buildArgs(URL, opts(), settings(), bin)
-    expect(hasSeq(a, '-f', 'bv*[height<=1080]+ba/b[height<=1080]')).toBe(true)
+    expect(hasSeq(a, '-f', 'bv*[height<=?1080]+ba/b[height<=?1080]')).toBe(true)
     expect(hasSeq(a, '--merge-output-format', 'mp4')).toBe(true)
-    expect(hasSeq(a, '-S', 'vcodec:h264,acodec:m4a')).toBe(true)
+    expect(hasSeq(a, '-S', 'res,vcodec:h264,acodec:m4a')).toBe(true)
   })
 
   it('best in MKV has no -S', () => {

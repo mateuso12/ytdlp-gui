@@ -775,7 +775,7 @@ describe('on the Download screen', () => {
     })
     // The args are built right after enqueueing, from the options chosen in the panel.
     await waitFor(() => {
-      expect(useQueue.getState().jobs[0].args).toContain('bv*[height<=720]+ba/b[height<=720]')
+      expect(useQueue.getState().jobs[0].args).toContain('bv*[height<=?720]+ba/b[height<=?720]')
     })
     expect(useQueue.getState().jobs[0].args.slice(-1)[0]).toBe(VIDEO_URL)
     expect(useUi.getState().screen).toBe('queue')

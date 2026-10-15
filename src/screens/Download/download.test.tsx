@@ -200,7 +200,7 @@ describe('detection', () => {
     for (const job of jobs) {
       // The URL stands in for the title until a probe is done.
       expect(job.title).toBe(job.url)
-      expect(job.args).toContain(`bv*[height<=${String(height)}]+ba/b[height<=${String(height)}]`)
+      expect(job.args).toContain(`bv*[height<=?${String(height)}]+ba/b[height<=?${String(height)}]`)
       expect(job.args[job.args.length - 1]).toBe(job.url)
     }
     expect(useUi.getState().screen).toBe('queue')
