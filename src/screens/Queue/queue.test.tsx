@@ -13,7 +13,7 @@ import { useDeps } from '../../stores/deps'
 import { startScheduler, useQueue, type Job } from '../../stores/queue'
 import { useSettings } from '../../stores/settings'
 import { useUi } from '../../stores/ui'
-import { maskArgs } from './ErrorDetails'
+import { formatCommand, maskArgs, maskHome, maskStderr } from './ErrorDetails'
 import { QueueScreen } from './index'
 
 const MB = 1024 * 1024
@@ -507,6 +507,49 @@ describe('technical details', () => {
     ])
     await user.click(screen.getByRole('button', { name: 'Ver detalhes técnicos' }))
     expect(await screen.findByRole('dialog')).not.toHaveTextContent('secret')
+  })
+})
+
+describe('home folder masking', () => {
+  it.each([
+    ['C:\\Users\\Mateus Amaro\\Videos\\x.mp4', '~\\Videos\\x.mp4'],
+    ['C:/Users/ana/Videos/x.mp4', '~/Videos/x.mp4'],
+    ['/home/ana/Downloads/x.mp4', '~/Downloads/x.mp4'],
+    ['/Users/ana/Movies/x.mp4', '~/Movies/x.mp4'],
+    ['/usr/local/bin/ffmpeg', '/usr/local/bin/ffmpeg'],
+  ])('maskHome(%s)', (input, expected) => {
+    expect(maskHome(input)).toBe(expected)
+  })
+
+  it('hides the account name in the command and in stderr', () => {
+    expect(maskArgs(['-P', 'C:\\Users\\Mateus Amaro\\Videos'])).toEqual(['-P', '~\\Videos'])
+    expect(formatCommand(['-P', '/home/ana/v'])).toBe('yt-dlp -P ~/v')
+    expect(maskStderr(['ERROR: [Errno 13] Permission denied: /home/ana/v/x.mp4'])).toEqual([
+      'ERROR: [Errno 13] Permission denied: ~/v/x.mp4',
+    ])
+  })
+
+  it('keeps the account name out of the dialog and the copied report', async () => {
+    const bridge = createMockBridge()
+    const { user } = await setup(
+      [
+        errorJob(
+          1,
+          { code: 'disk' },
+          {
+            args: ['-P', 'C:\\Users\\Mateus Amaro\\Videos', 'https://youtu.be/v1'],
+            stderrTail: ['ERROR: Permission denied: C:\\Users\\Mateus Amaro\\Videos\\x.mp4'],
+          },
+        ),
+      ],
+      bridge,
+    )
+    await user.click(screen.getByRole('button', { name: 'Ver detalhes técnicos' }))
+    const dialog = await screen.findByRole('dialog')
+    expect(dialog).not.toHaveTextContent('Mateus')
+    await user.click(within(dialog).getByRole('button', { name: 'Copiar' }))
+    const copied = bridge.calls.find((c) => c.method === 'os.writeClipboard')
+    expect(String(copied?.args[0])).not.toContain('Mateus')
   })
 })
 

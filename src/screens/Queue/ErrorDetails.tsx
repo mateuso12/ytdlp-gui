@@ -9,6 +9,14 @@ const MASK = '•••'
 /** Flags whose value is private: it never reaches the screen or the clipboard. */
 const SECRET_FLAGS = ['--cookies-from-browser', '--proxy']
 
+/**
+ * The user's home folder (`C:\Users\<name>`, `/Users/<name>`, `/home/<name>`) as `~`, so a pasted
+ * report does not carry the account name. The name may hold spaces, so it runs to the next
+ * separator.
+ */
+const HOME = /(?:[A-Za-z]:[\\/]Users[\\/]|\/Users\/|\/home\/)[^\\/"'\r\n]+/g
+export const maskHome = (text: string): string => text.replace(HOME, '~')
+
 /** The argv with the value of every secret flag replaced by `•••` (both `--flag value` and `--flag=value`). */
 export function maskArgs(args: readonly string[]): string[] {
   const out: string[] = []
@@ -21,7 +29,7 @@ export function maskArgs(args: readonly string[]): string[] {
       out.push(arg, MASK)
       i++
     } else {
-      out.push(arg)
+      out.push(maskHome(arg))
     }
   }
   return out
@@ -35,7 +43,9 @@ export function formatCommand(args: readonly string[]): string {
 
 /** yt-dlp echoes the proxy URL in some errors; the user:password part must not leak either. */
 export function maskStderr(lines: readonly string[]): string[] {
-  return lines.map((line) => line.replace(/([a-z][a-z0-9+.-]*:\/\/)[^\s/@]+@/gi, `$1${MASK}@`))
+  return lines.map((line) =>
+    maskHome(line.replace(/([a-z][a-z0-9+.-]*:\/\/)[^\s/@]+@/gi, `$1${MASK}@`)),
+  )
 }
 
 interface ErrorDetailsProps {
