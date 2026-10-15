@@ -47,6 +47,11 @@
   text-overflow: ellipsis;
 }
 
+.input:focus-visible {
+  /* The pill (:focus-within on .inputWrap) is the focus ring; no second outline on the input. */
+  outline: 0;
+}
+
 .input::placeholder {
   color: var(--text-2);
 }

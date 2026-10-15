@@ -1,6 +1,7 @@
 /* One column, at most 720px wide. */
 .screen {
   max-width: 720px;
+  margin: 0 auto;
 }
 
 .heading {

@@ -226,6 +226,32 @@ describe('initial selection and shortcuts', () => {
     expect(checkboxOf('Aula 3')).not.toBeChecked()
   })
 
+  it('lights only the shortcut chip that matches the selection', async () => {
+    const pressed = (name: string) =>
+      screen.getByRole('button', { name }).getAttribute('aria-pressed') === 'true'
+    // nothing downloaded yet: "Todos" and "Não baixados" are the same set, only "Todos" shows
+    const { user } = await setup(entries(3))
+    expect(pressed('Todos')).toBe(true)
+    expect(pressed('Não baixados')).toBe(false)
+    expect(pressed('Nenhum')).toBe(false)
+    await user.click(screen.getByRole('button', { name: 'Nenhum' }))
+    expect(pressed('Nenhum')).toBe(true)
+    expect(pressed('Todos')).toBe(false)
+  })
+
+  it('lights "Não baixados" when it differs from everything', async () => {
+    useHistory.setState({ items: [history('vid2')] })
+    const { user } = await setup(entries(3))
+    // the initial selection already is the not-downloaded set
+    const pressed = (name: string) =>
+      screen.getByRole('button', { name }).getAttribute('aria-pressed') === 'true'
+    expect(pressed('Não baixados')).toBe(true)
+    expect(pressed('Todos')).toBe(false)
+    await user.click(screen.getByRole('button', { name: 'Todos' }))
+    expect(pressed('Todos')).toBe(true)
+    expect(pressed('Não baixados')).toBe(false)
+  })
+
   it('does not count a download from another site as the same video', async () => {
     useHistory.setState({ items: [history('vid1', 'vimeo')] })
     await setup(entries(2))

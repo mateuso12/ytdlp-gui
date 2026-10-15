@@ -23,7 +23,9 @@
 }
 
 .list {
-  margin: 0;
+  /* Rows carry 8px of padding for their hover background; pull them out so the thumbnails line up
+     with the heading and the buttons above. */
+  margin: 0 -8px;
   padding: 0;
   list-style: none;
 }
@@ -79,7 +81,9 @@
 }
 
 .phase {
+  flex: none;
   color: var(--text-1);
+  white-space: nowrap;
 }
 
 .ok {
@@ -170,12 +174,29 @@
   gap: 8px;
 }
 
+/* An error row has a long message and up to three buttons: the buttons go under the message
+   instead of squeezing it into a narrow column. */
+.row[data-status='error'] {
+  grid-template-columns: 140px minmax(0, 1fr);
+  align-items: start;
+}
+
+.row[data-status='error'] .actions {
+  grid-column: 2;
+  justify-content: flex-start;
+}
+
 @container (max-width: 640px) {
   .row {
     grid-template-columns: 96px minmax(0, 1fr);
   }
 
-  .actions {
+  .row[data-status='error'] {
+    grid-template-columns: 96px minmax(0, 1fr);
+  }
+
+  .actions,
+  .row[data-status='error'] .actions {
     grid-column: 1 / -1;
     justify-content: flex-start;
   }

@@ -413,7 +413,9 @@ export function PlaylistView({ playlist }: { playlist: PlaylistInfo }) {
               }
             />
             <Chip
-              selected={notDownloaded.length > 0 && sameAs(notDownloaded)}
+              selected={
+                notDownloaded.length > 0 && sameAs(notDownloaded) && !sameAs(selectable)
+              }
               onClick={() => setSelected(new Set(notDownloaded))}
             >
               {t('playlist.shortcuts.notDownloaded')}
