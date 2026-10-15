@@ -36,7 +36,7 @@ Baixe o instalador do seu sistema na [última versão](https://github.com/mateus
 A versão 1 sai sem certificado de assinatura de código, então o sistema avisa na primeira vez que você abrir o app.
 
 - **Windows (SmartScreen):** clique em **Mais informações** e depois em **Executar assim mesmo**.
-- **macOS (Gatekeeper):** abra **Ajustes do Sistema**, depois **Privacidade e Segurança**, e clique em **Abrir mesmo assim** ao lado do app bloqueado.
+- **macOS (Gatekeeper):** o app tem apenas assinatura ad-hoc, então o macOS pode se recusar a abri-lo. Tente **Ajustes do Sistema**, depois **Privacidade e Segurança**, e clique em **Abrir mesmo assim** ao lado do app bloqueado. Se não funcionar, o caminho mais confiável é remover a marca de quarentena no Terminal: `xattr -dr com.apple.quarantine /Applications/ytdlp-gui.app`.
 - **Controle Inteligente de Aplicativos do Windows (Smart App Control):** se estiver ligado, o Windows bloqueia por completo os apps sem assinatura e não existe o botão "Executar assim mesmo". Você pode [compilar a partir do código-fonte](CONTRIBUTING.md#local-setup) ou esperar por uma versão assinada. A assinatura no Windows pelo SignPath Foundation está nos planos (veja [docs/signing.md](docs/signing.md)).
 
 ## Uso responsável

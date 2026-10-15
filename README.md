@@ -36,7 +36,7 @@ Download the installer for your system from the [latest release](https://github.
 Version 1 ships without a code-signing certificate, so your system warns you the first time you open it.
 
 - **Windows (SmartScreen):** click **More info**, then **Run anyway**.
-- **macOS (Gatekeeper):** open **System Settings**, then **Privacy & Security**, and click **Open Anyway** next to the blocked app.
+- **macOS (Gatekeeper):** the app is only ad-hoc signed, so macOS may refuse to open it. Try **System Settings**, then **Privacy & Security**, and click **Open Anyway** next to the blocked app. If that does not work, the most reliable fallback is to remove the quarantine flag in Terminal: `xattr -dr com.apple.quarantine /Applications/ytdlp-gui.app`.
 - **Windows Smart App Control:** if Smart App Control is on, Windows blocks unsigned apps entirely and there is no "Run anyway" button. Either [build from source](CONTRIBUTING.md#local-setup) or wait for a signed release. Windows code signing through the SignPath Foundation is planned (see [docs/signing.md](docs/signing.md)).
 
 ## Responsible use
