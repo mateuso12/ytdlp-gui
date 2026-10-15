@@ -269,6 +269,23 @@ describe('history store', () => {
     expect(h.getState().items[0].url).toBeUndefined()
   })
 
+  it('drops a malformed opts on load but keeps the item and a valid opts', async () => {
+    const bridge = createMockBridge()
+    const good = { mode: 'audio', embedThumbnail: false, embedMetadata: true, embedChapters: true }
+    await bridge.store.set('history', [
+      { ...item('1', 'a'), opts: { mode: 'nope' } },
+      { ...item('2', 'b'), opts: 'junk' },
+      { ...item('3', 'c'), opts: good },
+    ])
+    const h = createHistoryStore()
+    await h.getState().load(bridge)
+    const items = h.getState().items
+    expect(items.map((i) => i.id)).toEqual(['1', '2', '3'])
+    expect(items[0].opts).toBeUndefined()
+    expect(items[1].opts).toBeUndefined()
+    expect(items[2].opts).toEqual(good)
+  })
+
   it('persists on add/remove and reloads', async () => {
     const bridge = createMockBridge()
     const h = createHistoryStore()

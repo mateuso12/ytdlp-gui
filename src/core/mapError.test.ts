@@ -32,6 +32,7 @@ const cases: [string, ErrorCode, Action][] = [
   ['cookies_dpapi', 'cookies_chrome', 'use_firefox'],
   ['disk', 'disk', 'choose_folder'],
   ['disk_permission', 'disk', 'choose_folder'],
+  ['disk_permission_repr', 'disk', 'choose_folder'],
   ['network', 'network', 'retry'],
 ]
 

@@ -380,7 +380,7 @@
     },
     "unknown": {
       "title": "Algo deu errado",
-      "message": "O download não deu certo. O detalhe técnico abaixo pode ajudar."
+      "message": "O detalhe técnico abaixo pode ajudar."
     }
   },
   "onboarding": {

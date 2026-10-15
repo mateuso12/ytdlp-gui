@@ -1,0 +1,3 @@
+# hand-written: a permission error on a Windows folder cannot be reproduced on demand.
+# Source: shape of yt-dlp's OSError report, which prints the path as a Python repr (doubled backslashes)
+ERROR: unable to open for writing: [Errno 13] Permission denied: 'C:\\Users\\Mateus Amaro\\Videos\\x.mp4'

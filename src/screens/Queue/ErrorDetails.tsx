@@ -3,19 +3,12 @@ import { useTranslation } from 'react-i18next'
 import { useBridge } from '../../bridge/context'
 import { PillButton } from '../../components/PillButton'
 import { useToast } from '../../components/Toast'
+import { maskHome } from '../../core/maskHome'
 import styles from './Queue.module.css'
 
 const MASK = '•••'
 /** Flags whose value is private: it never reaches the screen or the clipboard. */
 const SECRET_FLAGS = ['--cookies-from-browser', '--proxy']
-
-/**
- * The user's home folder (`C:\Users\<name>`, `/Users/<name>`, `/home/<name>`) as `~`, so a pasted
- * report does not carry the account name. The name may hold spaces, so it runs to the next
- * separator.
- */
-const HOME = /(?:[A-Za-z]:[\\/]Users[\\/]|\/Users\/|\/home\/)[^\\/"'\r\n]+/g
-export const maskHome = (text: string): string => text.replace(HOME, '~')
 
 /** The argv with the value of every secret flag replaced by `•••` (both `--flag value` and `--flag=value`). */
 export function maskArgs(args: readonly string[]): string[] {

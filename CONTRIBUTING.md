@@ -19,7 +19,15 @@ pnpm tauri build    # a release build with installers (see the note below)
 pnpm tauri build --config '{"bundle":{"createUpdaterArtifacts":false}}'
 ```
 
-On Windows PowerShell, write the JSON with doubled quotes inside single quotes: `'{""bundle"":{""createUpdaterArtifacts"":false}}'`, or pass the path of a small JSON file with the same content.
+Quoting JSON on the command line differs between shells, so a file is the safe way on Windows. Create `override.json` (anywhere outside the repo, or keep it untracked) with this content and pass its path:
+
+```json
+{ "bundle": { "createUpdaterArtifacts": false } }
+```
+
+```sh
+pnpm tauri build --config path/to/override.json
+```
 
 ## Running the tests
 

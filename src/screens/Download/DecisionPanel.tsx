@@ -169,13 +169,12 @@ export function DecisionPanel({
   }
 
   const optionsKey = JSON.stringify(buildOptions())
-  const emitted = useRef(false)
+  // Notify only when the options differ from the last ones known (initially the starting ones), so
+  // a re-run of the effect (StrictMode) or a re-render never reports a change nobody made.
+  const known = useRef(optionsKey)
   useEffect(() => {
-    // The first render is the starting point, not a change.
-    if (!emitted.current) {
-      emitted.current = true
-      return
-    }
+    if (optionsKey === known.current) return
+    known.current = optionsKey
     onOptionsChange?.(JSON.parse(optionsKey) as DownloadOptions)
   }, [optionsKey, onOptionsChange])
 

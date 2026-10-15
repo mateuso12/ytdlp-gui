@@ -1,5 +1,6 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { StrictMode } from 'react'
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { BridgeProvider } from '../../bridge/context'
 import { createMockBridge } from '../../bridge/mock'
@@ -74,22 +75,23 @@ const history = (videoId: string, extractor = 'youtube') => ({
   finishedAt: 1,
 })
 
-async function setup(list: PlaylistEntry[], { stubQueue = true } = {}) {
+async function setup(list: PlaylistEntry[], { stubQueue = true, strict = false } = {}) {
   const bridge = createMockBridge({})
   await useSettings.getState().load(bridge)
   await useQueue.getState().load(bridge)
   const enqueue = vi.fn<(inputs: QueueInput[]) => void>()
   if (stubQueue) useQueue.setState({ enqueue })
   const user = userEvent.setup()
-  render(
+  const tree = (
     <BridgeProvider bridge={bridge}>
       <ToastProvider>
         <ProbeProvider>
           <PlaylistView playlist={playlistOf(list)} />
         </ProbeProvider>
       </ToastProvider>
-    </BridgeProvider>,
+    </BridgeProvider>
   )
+  render(strict ? <StrictMode>{tree}</StrictMode> : tree)
   return { user, enqueue, bridge }
 }
 
@@ -390,6 +392,14 @@ describe('download', () => {
     expect(inputs.every((i) => i.opts.mode === 'audio' && i.opts.audio?.format === 'flac')).toBe(
       true,
     )
+  })
+
+  it('opening and closing the options untouched reports no change, even under StrictMode', async () => {
+    const { user } = await setup(entries(3), { strict: true })
+    await user.click(screen.getByRole('button', { name: 'Opções' }))
+    expect(screen.getByRole('region', { name: 'Opções de download' })).toBeInTheDocument()
+    await user.keyboard('{Escape}')
+    expect(screen.queryByTestId('options-summary')).not.toBeInTheDocument()
   })
 
   it('offers the standard heights, without sizes, in the options', async () => {

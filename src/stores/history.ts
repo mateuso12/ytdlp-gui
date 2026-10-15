@@ -38,6 +38,20 @@ function isStoredItem(v: unknown): v is HistoryItem {
   )
 }
 
+const MODES: readonly unknown[] = ['video', 'audio', 'advanced']
+
+/** Keeps `opts` only when it looks like download options; a bad one is dropped, the item stays. */
+function sanitize(item: HistoryItem): HistoryItem {
+  const opts: unknown = item.opts
+  if (opts === undefined) return item
+  const ok =
+    typeof opts === 'object' && opts !== null && MODES.includes((opts as { mode?: unknown }).mode)
+  if (ok) return item
+  const copy = { ...item }
+  delete copy.opts
+  return copy
+}
+
 export interface HistoryState {
   /** Newest first. */
   items: HistoryItem[]
@@ -74,7 +88,7 @@ export function createHistoryStore() {
         console.error('could not read the saved history; starting empty', error)
       }
       if (!Array.isArray(stored)) return
-      const valid = stored.filter(isStoredItem)
+      const valid = stored.filter(isStoredItem).map(sanitize)
       // Merge: anything added while the read was in flight stays on top.
       set((s) => ({
         items: [...s.items, ...valid.filter((i) => !s.items.some((x) => x.id === i.id))],

@@ -380,7 +380,7 @@
     },
     "unknown": {
       "title": "Something went wrong",
-      "message": "The download failed. The technical detail below may help."
+      "message": "The technical detail below may help."
     }
   },
   "onboarding": {
