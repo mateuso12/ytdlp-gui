@@ -129,6 +129,8 @@ export function startSettingsEffects(store: SettingsStore = useSettings): () => 
   const apply = () => {
     const { theme, language } = store.getState().settings
     applyTheme(theme, media.matches)
+    // Screen readers and the browser's hyphenation/spell-check pick the voice from this.
+    document.documentElement.lang = language
     if (i18n.language !== language) void i18n.changeLanguage(language)
   }
   apply()

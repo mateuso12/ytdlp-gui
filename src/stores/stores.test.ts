@@ -183,8 +183,10 @@ describe('settings store', () => {
 
       store.getState().update({ language: 'pt-BR' })
       await vi.waitFor(() => expect(i18n.language).toBe('pt-BR'))
+      expect(document.documentElement.lang).toBe('pt-BR')
       store.getState().update({ language: 'en' })
       await vi.waitFor(() => expect(i18n.language).toBe('en'))
+      expect(document.documentElement.lang).toBe('en')
 
       stop()
       expect(listeners).toHaveLength(0)
