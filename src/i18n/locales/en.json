@@ -214,6 +214,20 @@
       "close": "Close"
     }
   },
+  "history": {
+    "list": "Finished downloads",
+    "search": "Search history",
+    "searchPlaceholder": "Search by title",
+    "empty": "Nothing downloaded yet",
+    "emptyHint": "Finished downloads show up here.",
+    "goDownload": "Go to Download",
+    "noResults": "No results for “{{query}}”.",
+    "open": "Open",
+    "reveal": "Show in folder",
+    "redownload": "Download again",
+    "remove": "Remove from history",
+    "actionFailed": "The action failed: {{reason}}"
+  },
   "toast": {
     "label": "Notifications",
     "addedToQueue": "Added to the queue"

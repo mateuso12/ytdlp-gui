@@ -12,6 +12,16 @@ export interface HistoryItem {
   path: string
   sizeBytes: number | null
   finishedAt: number
+  /**
+   * The link that was downloaded, so "download again" can queue it. Optional only because items
+   * saved before it existed lack it; those cannot be downloaded again.
+   */
+  url?: string
+}
+
+/** Lower case with the accents taken off, so "acao" finds "Ação" and "CAFÉ" finds "café". */
+export function fold(text: string): string {
+  return text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()
 }
 
 function isStoredItem(v: unknown): v is HistoryItem {
@@ -82,9 +92,9 @@ export function createHistoryStore() {
       get().items.some((i) => i.extractor === extractor && i.videoId === videoId),
 
     search(q) {
-      const needle = q.trim().toLowerCase()
+      const needle = fold(q.trim())
       if (!needle) return get().items
-      return get().items.filter((i) => i.title.toLowerCase().includes(needle))
+      return get().items.filter((i) => fold(i.title).includes(needle))
     },
 
     flush: () => writer.settled(),

@@ -23,6 +23,7 @@ import {
   MonitorPlay,
   Music2,
   RotateCcw,
+  Search,
   Scissors,
   Settings2,
   ShieldCheck,
@@ -67,6 +68,7 @@ export const icons = {
   'folder-open': FolderOpen,
   'alert-circle': AlertCircle,
   'trash-2': Trash2,
+  search: Search,
 } as const
 
 export type IconName = keyof typeof icons

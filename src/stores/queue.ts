@@ -423,6 +423,7 @@ export function createQueueStore(deps: Partial<QueueDeps> = {}) {
           path: job.filePath ?? '',
           sizeBytes: job.progress?.totalBytes ?? null,
           finishedAt,
+          url: job.url,
         })
       },
 

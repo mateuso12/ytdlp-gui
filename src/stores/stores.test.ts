@@ -229,6 +229,43 @@ describe('history store', () => {
     expect(h.getState().search('  ')).toHaveLength(2)
   })
 
+  it('searches ignoring case and accents, in both directions', () => {
+    const h = createHistoryStore()
+    h.getState().add(item('1', 'a', 'Big Buck Bunny'))
+    h.getState().add(item('2', 'b', 'Ação e Emoção'))
+    h.getState().add(item('3', 'c', 'Cafe com leite'))
+    const ids = (q: string) =>
+      h
+        .getState()
+        .search(q)
+        .map((i) => i.id)
+    expect(ids('BUNNY')).toEqual(['1'])
+    expect(ids('acao')).toEqual(['2'])
+    expect(ids('EMOÇÃO')).toEqual(['2'])
+    expect(ids('café')).toEqual(['3'])
+    expect(ids('nada')).toEqual([])
+  })
+
+  it('keeps the url of a history item through a save and a reload (R18)', async () => {
+    const bridge = createMockBridge()
+    const h = createHistoryStore()
+    await h.getState().load(bridge)
+    h.getState().add({ ...item('1', 'a'), url: 'https://youtu.be/a' })
+    await h.getState().flush()
+    const h2 = createHistoryStore()
+    await h2.getState().load(bridge)
+    expect(h2.getState().items[0].url).toBe('https://youtu.be/a')
+  })
+
+  it('loads saved items that have no url (R18)', async () => {
+    const bridge = createMockBridge()
+    await bridge.store.set('history', [item('1', 'a')])
+    const h = createHistoryStore()
+    await h.getState().load(bridge)
+    expect(h.getState().items.map((i) => i.id)).toEqual(['1'])
+    expect(h.getState().items[0].url).toBeUndefined()
+  })
+
   it('persists on add/remove and reloads', async () => {
     const bridge = createMockBridge()
     const h = createHistoryStore()
@@ -367,6 +404,7 @@ describe('queue store + scheduler', () => {
       title: 'Video 1',
       path: '/v/Video 1.mp4',
       sizeBytes: 200,
+      url: 'https://youtu.be/v1',
     })
     expect(r.history.getState().has('youtube', 'v1')).toBe(true)
     r.stop()

@@ -214,6 +214,20 @@
       "close": "Fechar"
     }
   },
+  "history": {
+    "list": "Downloads concluídos",
+    "search": "Buscar no histórico",
+    "searchPlaceholder": "Buscar por título",
+    "empty": "Nada baixado ainda",
+    "emptyHint": "Os downloads concluídos aparecem aqui.",
+    "goDownload": "Ir para Baixar",
+    "noResults": "Nenhum resultado para “{{query}}”.",
+    "open": "Abrir",
+    "reveal": "Mostrar na pasta",
+    "redownload": "Baixar de novo",
+    "remove": "Remover do histórico",
+    "actionFailed": "A ação falhou: {{reason}}"
+  },
   "toast": {
     "label": "Notificações",
     "addedToQueue": "Adicionado à fila"
