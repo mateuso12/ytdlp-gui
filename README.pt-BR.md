@@ -6,10 +6,10 @@ Uma interface de desktop simples e amigável para o [yt-dlp](https://github.com/
 
 > `ytdlp-gui` é um nome provisório.
 
-| Claro | Escuro |
-| --- | --- |
+| Claro                                                                | Escuro                                                               |
+| -------------------------------------------------------------------- | -------------------------------------------------------------------- |
 | ![Tela de download, tema claro](docs/screenshots/download-light.png) | ![Tela de download, tema escuro](docs/screenshots/download-dark.png) |
-| ![Fila, tema claro](docs/screenshots/queue-light.png) | ![Fila, tema escuro](docs/screenshots/queue-dark.png) |
+| ![Fila, tema claro](docs/screenshots/queue-light.png)                | ![Fila, tema escuro](docs/screenshots/queue-dark.png)                |
 
 ## Recursos
 
@@ -25,11 +25,11 @@ Uma interface de desktop simples e amigável para o [yt-dlp](https://github.com/
 
 Baixe o instalador do seu sistema na [última versão](https://github.com/mateuso12/ytdlp-gui/releases/latest).
 
-| Sistema | Arquivo |
-| --- | --- |
-| Windows | `.msi` ou `.exe` |
-| macOS (Apple silicon e Intel) | `.dmg` |
-| Linux | `.AppImage`, `.deb` ou `.rpm` |
+| Sistema                       | Arquivo                       |
+| ----------------------------- | ----------------------------- |
+| Windows                       | `.msi` ou `.exe`              |
+| macOS (Apple silicon e Intel) | `.dmg`                        |
+| Linux                         | `.AppImage`, `.deb` ou `.rpm` |
 
 ### O app ainda não tem assinatura de código
 

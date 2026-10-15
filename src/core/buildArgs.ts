@@ -148,5 +148,13 @@ export function buildProbeArgs(
   bin: BinPaths,
 ): string[] {
   const modeArgs = mode === 'flat' ? ['--flat-playlist'] : ['--no-playlist', ...outputArgs(s)]
-  return ['-J', '--encoding', 'utf-8', ...modeArgs, ...jsRuntimeArgs(bin), ...connectionArgs(s), url]
+  return [
+    '-J',
+    '--encoding',
+    'utf-8',
+    ...modeArgs,
+    ...jsRuntimeArgs(bin),
+    ...connectionArgs(s),
+    url,
+  ]
 }

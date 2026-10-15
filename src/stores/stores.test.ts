@@ -1125,9 +1125,13 @@ describe('queue: engine status is cached', () => {
     const r = await rig({ concurrency: 1 })
     await enqueue(r, 1)
     r.queue.getState().enqueue([input(2)])
-    await vi.waitFor(() => expect(r.queue.getState().jobs.every((j) => j.args.length > 0)).toBe(true))
+    await vi.waitFor(() =>
+      expect(r.queue.getState().jobs.every((j) => j.args.length > 0)).toBe(true),
+    )
     r.queue.getState().enqueue([input(3)])
-    await vi.waitFor(() => expect(r.queue.getState().jobs.every((j) => j.args.length > 0)).toBe(true))
+    await vi.waitFor(() =>
+      expect(r.queue.getState().jobs.every((j) => j.args.length > 0)).toBe(true),
+    )
     expect(r.bridge.calls.filter((c) => c.method === 'deps.status')).toHaveLength(1)
     r.stop()
   })

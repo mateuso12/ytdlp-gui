@@ -379,7 +379,10 @@ describe('download', () => {
     // reopening shows the same choices, not the defaults
     await user.click(screen.getByRole('button', { name: 'Opções' }))
     panel = screen.getByRole('region', { name: 'Opções de download' })
-    expect(within(panel).getByRole('button', { name: 'FLAC' })).toHaveAttribute('aria-pressed', 'true')
+    expect(within(panel).getByRole('button', { name: 'FLAC' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
     await user.keyboard('{Escape}')
     await user.click(screen.getByRole('button', { name: 'Baixar 3' }))
     const inputs = enqueue.mock.calls[0][0]

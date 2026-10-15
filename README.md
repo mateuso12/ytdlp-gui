@@ -6,10 +6,10 @@ A simple, friendly desktop interface for [yt-dlp](https://github.com/yt-dlp/yt-d
 
 > `ytdlp-gui` is a working title.
 
-| Light | Dark |
-| --- | --- |
+| Light                                                                | Dark                                                               |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------ |
 | ![Download screen, light theme](docs/screenshots/download-light.png) | ![Download screen, dark theme](docs/screenshots/download-dark.png) |
-| ![Queue, light theme](docs/screenshots/queue-light.png) | ![Queue, dark theme](docs/screenshots/queue-dark.png) |
+| ![Queue, light theme](docs/screenshots/queue-light.png)              | ![Queue, dark theme](docs/screenshots/queue-dark.png)              |
 
 ## Features
 
@@ -25,11 +25,11 @@ A simple, friendly desktop interface for [yt-dlp](https://github.com/yt-dlp/yt-d
 
 Download the installer for your system from the [latest release](https://github.com/mateuso12/ytdlp-gui/releases/latest).
 
-| System | File |
-| --- | --- |
-| Windows | `.msi` or `.exe` |
-| macOS (Apple silicon and Intel) | `.dmg` |
-| Linux | `.AppImage`, `.deb` or `.rpm` |
+| System                          | File                          |
+| ------------------------------- | ----------------------------- |
+| Windows                         | `.msi` or `.exe`              |
+| macOS (Apple silicon and Intel) | `.dmg`                        |
+| Linux                           | `.AppImage`, `.deb` or `.rpm` |
 
 ### The app is not code-signed yet
 

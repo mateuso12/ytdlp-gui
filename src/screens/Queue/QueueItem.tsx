@@ -140,7 +140,8 @@ export const QueueItem = memo(function QueueItem({ id }: { id: string }) {
   const canRetry = status === 'error' || status === 'cancelled' || status === 'interrupted'
   const path = job.filePath
   // After fixing cookies/proxy/folder in Settings, a plain retry would replay the old command.
-  const rebuildOnRetry = status === 'error' && action !== undefined && REBUILD_ACTIONS.includes(action)
+  const rebuildOnRetry =
+    status === 'error' && action !== undefined && REBUILD_ACTIONS.includes(action)
 
   return (
     <li className={styles.row} data-status={status}>

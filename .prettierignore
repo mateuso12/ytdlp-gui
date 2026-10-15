@@ -1,2 +1,7 @@
 src/core/__fixtures__
 .cache
+pnpm-lock.yaml
+src-tauri/gen
+src-tauri/target
+docs/superpowers/specs/assets
+e2e/visual.spec.ts-snapshots

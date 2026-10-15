@@ -38,22 +38,12 @@
         "font-src": "'self' data:",
         "style-src-attr": "'unsafe-inline'"
       },
-      "dangerousDisableAssetCspModification": [
-        "style-src"
-      ]
+      "dangerousDisableAssetCspModification": ["style-src"]
     }
   },
   "bundle": {
     "active": true,
-    "targets": [
-      "msi",
-      "nsis",
-      "dmg",
-      "app",
-      "appimage",
-      "deb",
-      "rpm"
-    ],
+    "targets": ["msi", "nsis", "dmg", "app", "appimage", "deb", "rpm"],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -69,9 +59,7 @@
   "plugins": {
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEI4QzAzQzYxNTRFMUI4NDIKUldSQ3VPRlVZVHpBdUxVS3Vham1EOXFxTEx3SDVmQkczRFZXeDI0Tlg4UkhVVlRXY3EvM3RFcWEK",
-      "endpoints": [
-        "https://github.com/mateuso12/ytdlp-gui/releases/latest/download/latest.json"
-      ]
+      "endpoints": ["https://github.com/mateuso12/ytdlp-gui/releases/latest/download/latest.json"]
     }
   }
 }

@@ -90,19 +90,19 @@ A linguagem visual vem do YouTube, levantada com o REA a partir do youtube.com. 
 
 ### 3.1 Tokens
 
-| Token | Escuro | Claro |
-|---|---|---|
-| `--bg` | `#0f0f0f` | `#ffffff` |
-| `--raised` (painéis, item ativo do menu) | `#212121` | `#f2f2f2` |
-| `--hover` | `#272727` | `#f2f2f2` |
-| `--chip` | `rgba(255,255,255,.10)` | `rgba(0,0,0,.05)` |
-| `--line` | `rgba(255,255,255,.10)` | `rgba(0,0,0,.10)` |
-| `--field` / `--field-line` | `#121212` / `#303030` | `#ffffff` / `#d3d3d3` |
-| `--text-1` | `#f1f1f1` | `#0f0f0f` |
-| `--text-2` | `#aaaaaa` | `#606060` |
-| `--accent` (interruptores, links) | `#3ea6ff` | `#065fd4` |
-| `--signal` (barra de progresso, contador) | `#ff0033` | `#ff0033` |
-| `--success` | `#2ba640` | `#2ba640` |
+| Token                                     | Escuro                  | Claro                 |
+| ----------------------------------------- | ----------------------- | --------------------- |
+| `--bg`                                    | `#0f0f0f`               | `#ffffff`             |
+| `--raised` (painéis, item ativo do menu)  | `#212121`               | `#f2f2f2`             |
+| `--hover`                                 | `#272727`               | `#f2f2f2`             |
+| `--chip`                                  | `rgba(255,255,255,.10)` | `rgba(0,0,0,.05)`     |
+| `--line`                                  | `rgba(255,255,255,.10)` | `rgba(0,0,0,.10)`     |
+| `--field` / `--field-line`                | `#121212` / `#303030`   | `#ffffff` / `#d3d3d3` |
+| `--text-1`                                | `#f1f1f1`               | `#0f0f0f`             |
+| `--text-2`                                | `#aaaaaa`               | `#606060`             |
+| `--accent` (interruptores, links)         | `#3ea6ff`               | `#065fd4`             |
+| `--signal` (barra de progresso, contador) | `#ff0033`               | `#ff0033`             |
+| `--success`                               | `#2ba640`               | `#2ba640`             |
 
 - **Tipografia:** Roboto 400, 500 e 700, com Roboto Mono para caminhos e versões. As fontes vêm empacotadas no app, sem depender da internet.
 - **Raios:**
@@ -208,14 +208,14 @@ Como `buildArgs` monta os argumentos, por modo:
 
 ### 4.3 Rust: comandos e eventos
 
-| Comando | Entrada | Efeito |
-|---|---|---|
-| `run_ytdlp` | `jobId`, `args[]` | Inicia o processo e emite `job://line {jobId, stream, line}` e `job://exit {jobId, code}` |
-| `run_ytdlp_capture` | `args[]` | Executa e devolve `{code, stdout, stderr}` (usado pelo probe) |
-| `cancel_job` | `jobId` | Encerra a árvore de processos (no Windows com Job Object, no Unix por grupo de processos) |
-| `deps_status` | — | Versões e caminhos do yt-dlp e do ffmpeg, e se o ffmpeg é do sistema ou do app |
-| `deps_install` | `which`, `channel` | Baixa, confere o SHA-256, grava em `$APPDATA/bin`, aplica permissão de execução e emite `deps://progress` |
-| `deps_update_ytdlp` | `channel` | `yt-dlp --update-to <channel>` |
+| Comando             | Entrada            | Efeito                                                                                                    |
+| ------------------- | ------------------ | --------------------------------------------------------------------------------------------------------- |
+| `run_ytdlp`         | `jobId`, `args[]`  | Inicia o processo e emite `job://line {jobId, stream, line}` e `job://exit {jobId, code}`                 |
+| `run_ytdlp_capture` | `args[]`           | Executa e devolve `{code, stdout, stderr}` (usado pelo probe)                                             |
+| `cancel_job`        | `jobId`            | Encerra a árvore de processos (no Windows com Job Object, no Unix por grupo de processos)                 |
+| `deps_status`       | —                  | Versões e caminhos do yt-dlp e do ffmpeg, e se o ffmpeg é do sistema ou do app                            |
+| `deps_install`      | `which`, `channel` | Baixa, confere o SHA-256, grava em `$APPDATA/bin`, aplica permissão de execução e emite `deps://progress` |
+| `deps_update_ytdlp` | `channel`          | `yt-dlp --update-to <channel>`                                                                            |
 
 **Fontes dos binários**
 
@@ -234,17 +234,17 @@ Como `buildArgs` monta os argumentos, por modo:
 
 ## 5. Tratamento de erros
 
-| Situação | Onde aparece | Ação oferecida |
-|---|---|---|
-| URL inválida ou site não suportado | abaixo do campo de link | — |
-| Vídeo privado, removido ou com restrição de idade | abaixo do campo / no item | "Usar cookies do navegador" |
-| Bloqueio por região | item | "Configurar proxy" |
-| Erro do extrator (site mudou) | item | "Atualizar yt-dlp" |
-| HTTP 429 / limite de requisições | item | "Tentar de novo mais tarde", com sugestão de limite de velocidade |
-| ffmpeg ausente ou com falha | item | "Reinstalar ffmpeg" |
-| Falha ao ler cookies do Chrome (Windows) | item / Configurações | "Usar Firefox", com explicação |
-| Disco cheio ou sem permissão de escrita | item | "Escolher outra pasta" |
-| Sem internet na primeira execução | tela de preparação | "Tentar de novo" |
+| Situação                                          | Onde aparece              | Ação oferecida                                                    |
+| ------------------------------------------------- | ------------------------- | ----------------------------------------------------------------- |
+| URL inválida ou site não suportado                | abaixo do campo de link   | —                                                                 |
+| Vídeo privado, removido ou com restrição de idade | abaixo do campo / no item | "Usar cookies do navegador"                                       |
+| Bloqueio por região                               | item                      | "Configurar proxy"                                                |
+| Erro do extrator (site mudou)                     | item                      | "Atualizar yt-dlp"                                                |
+| HTTP 429 / limite de requisições                  | item                      | "Tentar de novo mais tarde", com sugestão de limite de velocidade |
+| ffmpeg ausente ou com falha                       | item                      | "Reinstalar ffmpeg"                                               |
+| Falha ao ler cookies do Chrome (Windows)          | item / Configurações      | "Usar Firefox", com explicação                                    |
+| Disco cheio ou sem permissão de escrita           | item                      | "Escolher outra pasta"                                            |
+| Sem internet na primeira execução                 | tela de preparação        | "Tentar de novo"                                                  |
 
 - Todo erro tem um link "Ver detalhes técnicos" com o comando executado (cookies e proxy mascarados), o stderr completo e um botão "Copiar para relatar problema".
 - Erros que o `mapError` não reconhece aparecem como "Erro inesperado", com a última linha do stderr e os detalhes técnicos.
