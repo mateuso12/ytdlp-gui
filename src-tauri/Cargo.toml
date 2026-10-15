@@ -22,8 +22,16 @@ tauri = { version = "2", features = [] }
 tauri-plugin-opener = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-tokio = { version = "1.53.3", features = ["process", "io-util", "macros", "rt", "time", "sync"] }
+tokio = { version = "1.53.3", features = ["process", "io-util", "macros", "rt", "time", "sync", "fs"] }
 command-group = { version = "5.0.1", features = ["with-tokio"] }
+reqwest = { version = "0.13.5", default-features = false, features = ["rustls-no-provider"] }
+# Pure-ring TLS backend: aws-lc-sys (reqwest's default provider) needs cmake/NASM on Windows.
+rustls = { version = "0.23", default-features = false, features = ["ring", "std", "tls12"] }
+sha2 = "0.11.1"
+which = "8.0.6"
+zip = { version = "9.0.3", default-features = false, features = ["deflate"] }
+tar = "0.4.46"
+xz2 = "0.1.7"
 
 
 # Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration

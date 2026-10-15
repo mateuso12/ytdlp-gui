@@ -1,3 +1,4 @@
+mod deps;
 mod process;
 
 use tauri::Manager;
@@ -11,6 +12,9 @@ pub fn run() {
             process::run_ytdlp,
             process::run_ytdlp_capture,
             process::cancel_job,
+            deps::deps_status,
+            deps::deps_install,
+            deps::deps_update_ytdlp,
         ])
         .build(tauri::generate_context!())
         .expect("error while building tauri application")

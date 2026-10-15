@@ -9,7 +9,7 @@
 
 use std::collections::HashMap;
 use std::io;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::process::Stdio;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, Mutex, MutexGuard, PoisonError};
@@ -315,16 +315,6 @@ struct ExitPayload {
     code: Option<i32>,
 }
 
-/// Path of the yt-dlp binary.
-///
-/// Stub until Task 11, which replaces the body with
-/// `Ok(crate::deps::ytdlp_path(app))`.
-fn ytdlp_bin(_app: &AppHandle) -> Result<PathBuf, String> {
-    std::env::var_os("YTDLP_GUI_BIN")
-        .map(PathBuf::from)
-        .ok_or_else(|| "yt-dlp not found (set YTDLP_GUI_BIN)".to_string())
-}
-
 /// Starts a download job. Resolves once yt-dlp is running; output arrives as
 /// `job://line` events and the end as one `job://exit` event.
 #[tauri::command]
@@ -334,7 +324,7 @@ pub async fn run_ytdlp(
     job_id: String,
     args: Vec<String>,
 ) -> Result<(), String> {
-    let bin = ytdlp_bin(&app)?;
+    let bin = crate::deps::ytdlp_path(&app);
     let line_app = app.clone();
     let line_job_id = job_id.clone();
     let on_line: LineSink = Arc::new(move |stream, line| {
@@ -358,7 +348,7 @@ pub async fn run_ytdlp(
 /// Runs yt-dlp to completion and returns its output (used by the probe).
 #[tauri::command]
 pub async fn run_ytdlp_capture(app: AppHandle, args: Vec<String>) -> Result<Capture, String> {
-    let bin = ytdlp_bin(&app)?;
+    let bin = crate::deps::ytdlp_path(&app);
     capture(&bin, &args)
         .await
         .map_err(|e| format!("failed to run yt-dlp: {e}"))
