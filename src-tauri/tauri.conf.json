@@ -20,24 +20,42 @@
       }
     ],
     "security": {
-      "csp": null
+      "csp": {
+        "default-src": "'self'",
+        "img-src": "'self' data: https:",
+        "style-src": "'self' 'unsafe-inline'",
+        "script-src": "'self'",
+        "connect-src": "ipc: http://ipc.localhost 'self'",
+        "font-src": "'self' data:",
+        "style-src-attr": "'unsafe-inline'"
+      },
+      "devCsp": {
+        "default-src": "'self'",
+        "img-src": "'self' data: https:",
+        "style-src": "'self' 'unsafe-inline'",
+        "script-src": "'self' 'unsafe-inline'",
+        "connect-src": "ipc: http://ipc.localhost 'self' ws://localhost:1420 http://localhost:1420",
+        "font-src": "'self' data:",
+        "style-src-attr": "'unsafe-inline'"
+      }
     }
   },
   "bundle": {
     "active": true,
-    "targets": "all",
+    "targets": ["msi", "nsis", "dmg", "app", "appimage", "deb", "rpm"],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "createUpdaterArtifacts": true
   },
   "plugins": {
     "updater": {
-      "pubkey": "",
-      "endpoints": []
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEI4QzAzQzYxNTRFMUI4NDIKUldSQ3VPRlVZVHpBdUxVS3Vham1EOXFxTEx3SDVmQkczRFZXeDI0Tlg4UkhVVlRXY3EvM3RFcWEK",
+      "endpoints": ["https://github.com/mateuso12/ytdlp-gui/releases/latest/download/latest.json"]
     }
   }
 }
