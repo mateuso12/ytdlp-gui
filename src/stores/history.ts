@@ -14,6 +14,17 @@ export interface HistoryItem {
   finishedAt: number
 }
 
+function isStoredItem(v: unknown): v is HistoryItem {
+  if (typeof v !== 'object' || v === null) return false
+  const i = v as Record<string, unknown>
+  return (
+    typeof i.id === 'string' &&
+    typeof i.extractor === 'string' &&
+    typeof i.videoId === 'string' &&
+    typeof i.title === 'string'
+  )
+}
+
 export interface HistoryState {
   /** Newest first. */
   items: HistoryItem[]
@@ -43,11 +54,17 @@ export function createHistoryStore() {
 
     async load(b) {
       bridge = b
-      const stored = await b.store.get<HistoryItem[]>('history')
+      let stored: unknown
+      try {
+        stored = await b.store.get<unknown>('history')
+      } catch (error) {
+        console.error('could not read the saved history; starting empty', error)
+      }
       if (!Array.isArray(stored)) return
+      const valid = stored.filter(isStoredItem)
       // Merge: anything added while the read was in flight stays on top.
       set((s) => ({
-        items: [...s.items, ...stored.filter((i) => !s.items.some((x) => x.id === i.id))],
+        items: [...s.items, ...valid.filter((i) => !s.items.some((x) => x.id === i.id))],
       }))
     },
 

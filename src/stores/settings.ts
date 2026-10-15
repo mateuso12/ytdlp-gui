@@ -10,9 +10,16 @@ export const SETTINGS_DEBOUNCE_MS = 300
 /** The settings a fresh install starts with. */
 export async function defaultSettings(bridge: Bridge): Promise<Settings> {
   const sep = bridge.os.platform() === 'windows' ? '\\' : '/'
-  const videos = (await bridge.os.videoDir()).replace(/[\\/]+$/, '')
+  let outputDir = 'ytdlp-gui'
+  try {
+    const videos = (await bridge.os.videoDir()).replace(/[\\/]+$/, '')
+    if (videos) outputDir = `${videos}${sep}ytdlp-gui`
+  } catch {
+    // No Videos folder (e.g. Linux without XDG dirs): fall back to a `ytdlp-gui` folder
+    // relative to the app's working directory. The user can pick a folder in Settings.
+  }
   return {
-    outputDir: `${videos}${sep}ytdlp-gui`,
+    outputDir,
     outputTemplate: '%(title)s [%(id)s].%(ext)s',
     concurrency: 2,
     rateLimit: null,
@@ -74,9 +81,13 @@ export function createSettingsStore() {
       bridge = b
       const [defaults, stored] = await Promise.all([
         defaultSettings(b),
-        b.store.get<Partial<Settings>>('settings'),
+        b.store.get<unknown>('settings').catch((error: unknown) => {
+          console.error('could not read the saved settings; using defaults', error)
+          return undefined
+        }),
       ])
-      const saved = stored ?? {}
+      const saved: Partial<Settings> =
+        typeof stored === 'object' && stored !== null && !Array.isArray(stored) ? stored : {}
       set({
         loaded: true,
         settings: { ...defaults, ...saved, defaults: { ...defaults.defaults, ...saved.defaults } },

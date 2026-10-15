@@ -3,7 +3,7 @@ import type { Bridge } from '../bridge/types'
 import { buildArgs, type BinPaths } from '../core/buildArgs'
 import { mapError } from '../core/mapError'
 import { parseLine } from '../core/parseProgress'
-import type { DownloadOptions, FriendlyError, ProgressEvent, Settings } from '../core/types'
+import type { DownloadOptions, FriendlyError, ProgressEvent } from '../core/types'
 import { useHistory, type HistoryStore } from './history'
 import { createWriter } from './persist'
 import { useSettings, type SettingsStore } from './settings'
@@ -35,6 +35,12 @@ export interface Job {
   stderrTail: string[]
   startedAt: number | null
   finishedAt: number | null
+  /**
+   * Present only while `args` is empty (not built yet, or building failed, e.g. ffmpeg missing).
+   * It is persisted, so a retry after a restart can still build the args (with the then-current
+   * settings and tool paths).
+   */
+  pending?: { opts: DownloadOptions }
 }
 
 export interface QueueInput {
@@ -100,6 +106,36 @@ function restoreJob(raw: Job): Job {
     : job
 }
 
+const STATUSES: readonly string[] = [
+  'queued',
+  'active',
+  'done',
+  'error',
+  'cancelled',
+  'interrupted',
+]
+const isString = (v: unknown): v is string => typeof v === 'string'
+
+/** Whether a persisted value is usable as a job; anything else is dropped on load. */
+function isStoredJob(v: unknown): v is Job {
+  if (typeof v !== 'object' || v === null) return false
+  const j = v as Record<string, unknown>
+  return (
+    isString(j.id) &&
+    j.id !== '' &&
+    isString(j.url) &&
+    isString(j.title) &&
+    isString(j.extractor) &&
+    isString(j.videoId) &&
+    isString(j.status) &&
+    STATUSES.includes(j.status) &&
+    Array.isArray(j.args) &&
+    j.args.every(isString) &&
+    // a job without args is only recoverable if it kept what is needed to rebuild them
+    (j.args.length > 0 || (typeof j.pending === 'object' && j.pending !== null))
+  )
+}
+
 /** True when a job was added/removed, changed status, or got its args. Progress alone is not a change. */
 function structureChanged(a: Job[], b: Job[]): boolean {
   if (a.length !== b.length) return true
@@ -120,14 +156,10 @@ export function createQueueStore(deps: Partial<QueueDeps> = {}) {
   const settingsStore = deps.settings ?? useSettings
   const historyStore = deps.history ?? useHistory
   let bridge: Bridge | null = null
-  /** What each job needs to build its args; dropped once the args exist. Not persisted. */
-  const specs = new Map<string, { url: string; opts: DownloadOptions; settings: Settings }>()
-
   const writer = createWriter(
     'queue',
     () => bridge,
-    // A job whose args are still being built is not worth saving yet.
-    () => store.getState().jobs.filter((j) => j.args.length > 0 || j.status !== 'queued'),
+    () => store.getState().jobs,
   )
   const store: UseBoundStore<StoreApi<QueueState>> = create<QueueState>()((set, get) => {
     const patch = (jobs: Job[]) => ({ jobs, activeCount: countActive(jobs) })
@@ -145,7 +177,7 @@ export function createQueueStore(deps: Partial<QueueDeps> = {}) {
     const fail = (job: Job, error: FriendlyError) =>
       updateJob(job.id, (j) => ({ ...j, status: 'error', error, finishedAt: Date.now() }))
 
-    /** Builds the args of freshly enqueued jobs from the installed tool paths (R9). */
+    /** Builds the args of jobs that still have `pending` data, from the installed tool paths (R9). */
     async function prepare(b: Bridge, ids: string[]) {
       let bin: BinPaths | null = null
       try {
@@ -154,19 +186,19 @@ export function createQueueStore(deps: Partial<QueueDeps> = {}) {
       } catch {
         // treated like a missing ffmpeg: nothing can run
       }
+      const settings = settingsStore.getState().settings
       set((s) =>
         patch(
           s.jobs.map((j) => {
-            const spec = specs.get(j.id)
-            if (!spec || !ids.includes(j.id)) return j
+            if (!j.pending || !ids.includes(j.id)) return j
             if (!bin) {
-              // keep the spec so a retry can try again once ffmpeg is installed
+              // keep `pending` so a retry can try again once ffmpeg is installed
               return j.status === 'queued'
                 ? { ...j, status: 'error', error: FFMPEG_MISSING, finishedAt: Date.now() }
                 : j
             }
-            specs.delete(j.id)
-            return { ...j, args: buildArgs(spec.url, spec.opts, spec.settings, bin) }
+            const { pending, ...rest } = j
+            return { ...rest, args: buildArgs(j.url, pending.opts, settings, bin) }
           }),
         ),
       )
@@ -179,15 +211,22 @@ export function createQueueStore(deps: Partial<QueueDeps> = {}) {
 
       async load(b) {
         bridge = b
-        const stored = await b.store.get<Job[]>('queue')
-        const restored = Array.isArray(stored) ? stored.map(restoreJob) : []
+        let stored: unknown
+        try {
+          stored = await b.store.get<unknown>('queue')
+        } catch (error) {
+          console.error('could not read the saved queue; starting empty', error)
+        }
+        const restored = Array.isArray(stored) ? stored.filter(isStoredJob).map(restoreJob) : []
         // Anything enqueued while the read was in flight stays after the restored jobs.
         set((s) => patch([...restored, ...s.jobs]))
+        // Jobs saved before their args were built (or whose build failed) get another go.
+        const unbuilt = restored.filter((j) => j.status === 'queued' && j.pending).map((j) => j.id)
+        if (unbuilt.length > 0) void prepare(b, unbuilt)
       },
 
       enqueue(inputs) {
         if (!bridge) throw new Error('queue store used before load()')
-        const settings = settingsStore.getState().settings
         const jobs: Job[] = inputs.map(({ opts, ...i }) => {
           const job: Job = {
             ...i,
@@ -202,8 +241,8 @@ export function createQueueStore(deps: Partial<QueueDeps> = {}) {
             stderrTail: [],
             startedAt: null,
             finishedAt: null,
+            pending: { opts },
           }
-          specs.set(job.id, { url: i.url, opts, settings })
           return job
         })
         set((s) => patch([...s.jobs, ...jobs]))
@@ -240,6 +279,11 @@ export function createQueueStore(deps: Partial<QueueDeps> = {}) {
       retry(id) {
         const job = get().jobs.find((j) => j.id === id)
         if (!job || !['error', 'cancelled', 'interrupted'].includes(job.status)) return
+        if (job.args.length === 0 && (!job.pending || !bridge)) {
+          // Nothing to rebuild the args from: say so instead of sitting in `queued` forever.
+          fail(job, mapError(['ERROR: this job cannot be rebuilt, enqueue it again']))
+          return
+        }
         // Same args as before: settings changed since then must not alter a retry.
         updateJob(id, (j) => ({
           ...j,
@@ -252,7 +296,7 @@ export function createQueueStore(deps: Partial<QueueDeps> = {}) {
           startedAt: null,
           finishedAt: null,
         }))
-        if (job.args.length === 0 && specs.has(id) && bridge) void prepare(bridge, [id])
+        if (job.args.length === 0 && bridge) void prepare(bridge, [id])
       },
 
       clearFinished() {

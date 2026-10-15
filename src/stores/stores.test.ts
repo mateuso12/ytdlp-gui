@@ -6,8 +6,8 @@ import type { DownloadOptions } from '../core/types'
 import i18n from '../i18n'
 import { bootstrapStores } from './bootstrap'
 import { createHistoryStore } from './history'
-import { createQueueStore, startScheduler, type QueueInput } from './queue'
-import { createSettingsStore, defaultSettings, startSettingsEffects } from './settings'
+import { createQueueStore, startScheduler, useQueue, type QueueInput } from './queue'
+import { createSettingsStore, defaultSettings, startSettingsEffects, useSettings } from './settings'
 
 const OPTS: DownloadOptions = {
   mode: 'video',
@@ -681,5 +681,208 @@ describe('bootstrapStores', () => {
     expect(keys).toEqual(expect.arrayContaining(['settings', 'history', 'queue']))
     expect(onLine).toHaveBeenCalledTimes(1)
     stop()
+  })
+})
+
+describe('queue: jobs whose args could not be built survive a restart', () => {
+  it('retry after a restart rebuilds the args from the persisted data and runs the job', async () => {
+    // Session 1: ffmpeg is missing, so the job errors without args.
+    const bridge1 = createMockBridge({ deps: { ytdlp: DEPS.ytdlp, ffmpeg: null, deno: null } })
+    const settings1 = createSettingsStore()
+    const queue1 = createQueueStore({ settings: settings1, history: createHistoryStore() })
+    await queue1.getState().load(bridge1)
+    queue1.getState().enqueue([input(1)])
+    await vi.waitFor(() => expect(queue1.getState().jobs[0].status).toBe('error'))
+    await queue1.getState().flush()
+    const saved = lastQueueWrite(bridge1) as Array<{ status: string; args: string[] }>
+    expect(saved).toHaveLength(1)
+    expect(saved[0]).toMatchObject({ status: 'error', args: [] })
+
+    // Session 2: ffmpeg installed; the user hits retry.
+    const r = await rig({ concurrency: 1, store: { queue: saved } })
+    expect(r.queue.getState().jobs[0]).toMatchObject({ status: 'error', args: [] })
+    r.queue.getState().retry(r.queue.getState().jobs[0].id)
+    await vi.waitFor(() => expect(r.runIds()).toHaveLength(1))
+    const expected = buildArgs('https://youtu.be/v1', OPTS, r.settings.getState().settings, {
+      ffmpeg: '/bin/ffmpeg',
+      deno: '/bin/deno',
+    })
+    expect(r.bridge.calls.find((c) => c.method === 'run')?.args[1]).toEqual(expected)
+    expect(r.queue.getState().jobs[0].status).toBe('active')
+    expect(r.queue.getState().jobs[0].pending).toBeUndefined()
+    r.stop()
+  })
+
+  it('a restored queued job that never got its args is rebuilt and started on startup', async () => {
+    const bridge1 = createMockBridge({ deps: DEPS })
+    bridge1.deps.status = () => new Promise(() => undefined) // never resolves: args never built
+    const queue1 = createQueueStore({
+      settings: createSettingsStore(),
+      history: createHistoryStore(),
+    })
+    await queue1.getState().load(bridge1)
+    queue1.getState().enqueue([input(1)])
+    await queue1.getState().flush()
+    const saved = lastQueueWrite(bridge1) as Array<{ status: string; args: string[] }>
+    expect(saved[0]).toMatchObject({ status: 'queued', args: [] })
+
+    const r = await rig({ concurrency: 1, store: { queue: saved } })
+    await vi.waitFor(() => expect(r.runIds()).toHaveLength(1))
+    expect(r.queue.getState().jobs[0].status).toBe('active')
+    r.stop()
+  })
+
+  it('retry of an unbuildable job (no pending data) errors instead of staying queued forever', async () => {
+    const legacy = [{ ...jobShape('a'), status: 'error', args: [] }]
+    const bridge = createMockBridge({ deps: DEPS, store: { queue: legacy } })
+    const queue = createQueueStore({
+      settings: createSettingsStore(),
+      history: createHistoryStore(),
+    })
+    await queue.getState().load(bridge)
+    // such an entry is not recoverable, so it is dropped on load
+    expect(queue.getState().jobs).toEqual([])
+
+    // and if one gets into that state anyway, retry surfaces an error
+    queue.setState({
+      jobs: [{ ...jobShape('b'), status: 'error', args: [], attempt: 0 } as never],
+    })
+    queue.getState().retry('b')
+    expect(queue.getState().jobs[0].status).toBe('error')
+    expect(queue.getState().jobs[0].error).not.toBeNull()
+  })
+})
+
+function jobShape(id: string) {
+  return {
+    id,
+    url: `https://youtu.be/${id}`,
+    title: id,
+    thumbnail: null,
+    extractor: 'youtube',
+    videoId: id,
+    args: ['--x'],
+    status: 'done',
+    attempt: 1,
+    progress: null,
+    phase: null,
+    filePath: null,
+    error: null,
+    stderrTail: [],
+    startedAt: 1,
+    finishedAt: 2,
+  }
+}
+
+describe('startup is resilient to failing reads', () => {
+  beforeEach(() => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    vi.stubGlobal('matchMedia', () => ({
+      matches: false,
+      addEventListener: () => undefined,
+      removeEventListener: () => undefined,
+    }))
+  })
+  afterEach(() => {
+    vi.restoreAllMocks()
+    vi.unstubAllGlobals()
+    delete document.documentElement.dataset.theme
+  })
+
+  it('falls back to a relative outputDir when videoDir() rejects', async () => {
+    const bridge = createMockBridge()
+    bridge.os.videoDir = () => Promise.reject(new Error('no XDG dirs'))
+    expect((await defaultSettings(bridge)).outputDir).toBe('ytdlp-gui')
+    const store = createSettingsStore()
+    await store.getState().load(bridge)
+    expect(store.getState().loaded).toBe(true)
+    expect(store.getState().settings.outputDir).toBe('ytdlp-gui')
+  })
+
+  it('treats a rejecting store.get as empty: defaults are used and the queue still accepts jobs', async () => {
+    const bridge = createMockBridge({ deps: DEPS })
+    bridge.store.get = () => Promise.reject(new Error('disk on fire'))
+    const settings = createSettingsStore()
+    const history = createHistoryStore()
+    const queue = createQueueStore({ settings, history })
+    await settings.getState().load(bridge)
+    await history.getState().load(bridge)
+    await queue.getState().load(bridge)
+    expect(settings.getState().loaded).toBe(true)
+    expect(settings.getState().settings.concurrency).toBe(2)
+    expect(history.getState().items).toEqual([])
+    queue.getState().enqueue([input(1)])
+    expect(queue.getState().jobs).toHaveLength(1)
+  })
+
+  it('bootstrap keeps going when settings and history fail to load', async () => {
+    const bridge = createMockBridge({ deps: DEPS })
+    const onLine = vi.spyOn(bridge, 'onLine')
+    bridge.os.videoDir = () => Promise.reject(new Error('x'))
+    bridge.store.get = (key: string) =>
+      key === 'queue' ? Promise.resolve(undefined) : Promise.reject(new Error(`cannot read ${key}`))
+    const stop = await bootstrapStores(bridge)
+    expect(onLine).toHaveBeenCalledTimes(1)
+    const before = useQueue.getState().jobs.length
+    useQueue.getState().enqueue([input(1)])
+    expect(useQueue.getState().jobs).toHaveLength(before + 1)
+    stop()
+  })
+
+  it('bootstrap still starts the scheduler when a load step throws outright', async () => {
+    const bridge = createMockBridge({ deps: DEPS })
+    const onLine = vi.spyOn(bridge, 'onLine')
+    const load = vi.spyOn(useSettings.getState(), 'load').mockRejectedValue(new Error('boom'))
+    const stop = await bootstrapStores(bridge)
+    expect(onLine).toHaveBeenCalledTimes(1)
+    expect(load).toHaveBeenCalled()
+    stop()
+  })
+
+  it('skips null and malformed entries in the saved queue and history, keeps valid ones', async () => {
+    const good = jobShape('ok')
+    const bridge = createMockBridge({
+      store: {
+        queue: [
+          null,
+          42,
+          'str',
+          { id: 'bad' },
+          { ...jobShape('x'), status: 'weird' },
+          { ...jobShape('y'), args: 'nope' },
+          good,
+        ],
+        history: [
+          null,
+          { nope: true },
+          {
+            id: 'h1',
+            extractor: 'youtube',
+            videoId: 'a',
+            title: 'T',
+            thumbnail: null,
+            path: '/p',
+            sizeBytes: null,
+            finishedAt: 1,
+          },
+        ],
+      },
+    })
+    const queue = createQueueStore({
+      settings: createSettingsStore(),
+      history: createHistoryStore(),
+    })
+    await queue.getState().load(bridge)
+    expect(queue.getState().jobs.map((j) => j.id)).toEqual(['ok'])
+    const history = createHistoryStore()
+    await history.getState().load(bridge)
+    expect(history.getState().items.map((i) => i.id)).toEqual(['h1'])
+  })
+
+  it('ignores a non-object saved settings value', async () => {
+    const bridge = createMockBridge({ store: { settings: 'garbage' } })
+    const store = createSettingsStore()
+    await store.getState().load(bridge)
+    expect(store.getState().settings.concurrency).toBe(2)
   })
 })
