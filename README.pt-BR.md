@@ -8,7 +8,6 @@
 
 Uma interface de desktop simples e amigável para o [yt-dlp](https://github.com/yt-dlp/yt-dlp). Cole um link, escolha a qualidade e baixe. Feito com Tauri 2, React e TypeScript.
 
-> `ytdlp-gui` é um nome provisório.
 
 | Claro                                                                | Escuro                                                               |
 | -------------------------------------------------------------------- | -------------------------------------------------------------------- |
