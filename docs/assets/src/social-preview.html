@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face {
+        font-family: Roboto;
+        font-weight: 500;
+        src: url('../../../node_modules/@fontsource/roboto/files/roboto-latin-500-normal.woff2')
+          format('woff2');
+      }
+      @font-face {
+        font-family: Roboto;
+        font-weight: 700;
+        src: url('../../../node_modules/@fontsource/roboto/files/roboto-latin-700-normal.woff2')
+          format('woff2');
+      }
+      * {
+        margin: 0;
+        box-sizing: border-box;
+      }
+      body {
+        width: 1280px;
+        height: 640px;
+        background: #0f0f0f;
+        font-family: Roboto, sans-serif;
+        color: #f1f1f1;
+        display: flex;
+        align-items: center;
+        padding: 0 100px;
+        gap: 72px;
+      }
+      .logo {
+        width: 280px;
+        height: 280px;
+        flex: none;
+      }
+      h1 {
+        font-weight: 700;
+        font-size: 104px;
+        letter-spacing: -3px;
+        line-height: 1;
+      }
+      p {
+        font-weight: 500;
+        font-size: 36px;
+        color: #aaaaaa;
+        margin-top: 22px;
+      }
+      .chips {
+        display: flex;
+        gap: 12px;
+        margin-top: 40px;
+      }
+      .chip {
+        font-weight: 500;
+        font-size: 22px;
+        color: #f1f1f1;
+        border: 2px solid #2f2f2f;
+        border-radius: 999px;
+        padding: 8px 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <img class="logo" src="../logo.svg" alt="" />
+    <div>
+      <h1>ytdlp-gui</h1>
+      <p>A modern, minimal interface for yt-dlp</p>
+      <div class="chips">
+        <span class="chip">Windows</span><span class="chip">macOS</span
+        ><span class="chip">Linux</span>
+      </div>
+    </div>
+  </body>
+</html>

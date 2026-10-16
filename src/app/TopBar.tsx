@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import { BrandMark } from '../components/BrandMark'
 import { Icon } from '../components/Icon'
 import type { ThemePref } from '../core/types'
 import { useQueue } from '../stores/queue'
@@ -40,7 +41,10 @@ export function TopBar({ urlSlot }: TopBarProps) {
         >
           <Icon name="menu" />
         </button>
-        <span className={styles.name}>{APP_NAME}</span>
+        <span className={styles.name}>
+          <BrandMark className={styles.mark} />
+          {APP_NAME}
+        </span>
       </div>
       <div className={styles.urlSlot}>{urlSlot}</div>
       <div className={styles.right}>

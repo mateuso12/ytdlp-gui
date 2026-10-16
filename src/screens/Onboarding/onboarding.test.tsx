@@ -153,7 +153,7 @@ describe('first run: engine setup', () => {
       return original()
     }
     renderShell(bridge)
-    expect(screen.getByRole('status')).toHaveTextContent('Verificando o motor')
+    expect(screen.getByRole('status', { name: 'Verificando o motor…' })).toBeInTheDocument()
     expect(screen.queryByRole('heading', { level: 1, name: 'Baixar' })).not.toBeInTheDocument()
     await act(async () => answer.resolve())
     expect(await downloadTitle()).toBeInTheDocument()
@@ -168,7 +168,7 @@ describe('first run: engine setup', () => {
       return original()
     }
     renderShell(bridge)
-    expect(screen.getByRole('status')).toHaveTextContent('Verificando o motor')
+    expect(screen.getByRole('status', { name: 'Verificando o motor…' })).toBeInTheDocument()
     expect(screen.queryByText('Preparando o motor')).not.toBeInTheDocument()
     expect(screen.queryByText(/Só na primeira vez/)).not.toBeInTheDocument()
     await act(async () => answer.resolve())

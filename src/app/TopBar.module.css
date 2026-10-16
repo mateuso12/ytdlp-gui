@@ -17,6 +17,9 @@
 }
 
 .name {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   white-space: nowrap;
 }
 
@@ -68,4 +71,8 @@
   font-weight: 500;
   line-height: 16px;
   text-align: center;
+}
+
+.mark {
+  flex: none;
 }

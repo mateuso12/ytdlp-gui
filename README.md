@@ -1,4 +1,8 @@
-# ytdlp-gui
+<p align="center">
+  <img src="docs/assets/logo.svg" alt="ytdlp-gui logo" width="96" height="96" />
+</p>
+
+<h1 align="center">ytdlp-gui</h1>
 
 [Português (Brasil)](README.pt-BR.md)
 

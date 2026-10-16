@@ -3,9 +3,146 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!--
+      Pre-React splash: the window is never blank. Same glyph and keyframes as
+      src/components/BrandLoader (keep them in step). Inline <style> is allowed by the CSP
+      (style-src 'unsafe-inline'); there is no inline script. main.tsx removes #boot once React
+      has rendered, continuing the animation where the splash left off.
+    -->
+    <style>
+      html,
+      body {
+        margin: 0;
+        background: #0f0f0f;
+      }
+      #boot {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #0f0f0f;
+        color: #f1f1f1;
+      }
+      #boot svg {
+        width: 72px;
+        height: 72px;
+        overflow: visible;
+      }
+      #boot .t {
+        fill: currentColor;
+        stroke: currentColor;
+        stroke-width: 10;
+        stroke-linejoin: round;
+        animation:
+          b-draw 600ms cubic-bezier(0.4, 0, 0.2, 1) 0ms both,
+          b-fill 250ms ease-out 600ms both;
+      }
+      #boot .d {
+        animation: b-drop 1800ms ease-in-out 1500ms infinite;
+      }
+      #boot .bi,
+      #boot .b {
+        transform-box: fill-box;
+      }
+      #boot .bi {
+        transform-origin: left center;
+        animation: b-in 350ms cubic-bezier(0.2, 0.7, 0.2, 1) 700ms both;
+      }
+      #boot .b {
+        transform-origin: center;
+        fill: #ff0033;
+        animation: b-pulse 1800ms ease-in-out 1500ms infinite;
+      }
+      @keyframes b-draw {
+        from {
+          stroke-dasharray: 100;
+          stroke-dashoffset: 100;
+        }
+        99.9% {
+          stroke-dasharray: 100;
+          stroke-dashoffset: 0;
+        }
+        to {
+          stroke-dasharray: none;
+          stroke-dashoffset: 0;
+        }
+      }
+      @keyframes b-fill {
+        from {
+          fill-opacity: 0;
+        }
+        to {
+          fill-opacity: 1;
+        }
+      }
+      @keyframes b-in {
+        from {
+          transform: scaleX(0);
+        }
+        to {
+          transform: scaleX(1);
+        }
+      }
+      @keyframes b-drop {
+        0%,
+        35% {
+          transform: translateY(0);
+        }
+        58% {
+          transform: translateY(5px);
+          animation-timing-function: ease-out;
+        }
+        100% {
+          transform: translateY(0);
+        }
+      }
+      @keyframes b-pulse {
+        0%,
+        50% {
+          transform: scaleX(1);
+          opacity: 1;
+        }
+        60% {
+          transform: scaleX(0.95);
+          opacity: 0.8;
+          animation-timing-function: ease-out;
+        }
+        100% {
+          transform: scaleX(1);
+          opacity: 1;
+        }
+      }
+      @media (prefers-color-scheme: light) {
+        html,
+        body,
+        #boot {
+          background: #ffffff;
+        }
+        #boot {
+          color: #0f0f0f;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #boot .t,
+        #boot .d,
+        #boot .bi,
+        #boot .b {
+          animation: none;
+        }
+      }
+    </style>
   </head>
 
   <body>
+    <div id="boot" aria-hidden="true">
+      <svg viewBox="25 24.5 100 100" focusable="false">
+        <g class="d"><path class="t" d="M44 35h62L75 89z" pathLength="100" /></g>
+        <g class="bi"><rect class="b" x="33" y="106" width="84" height="13" rx="6.5" /></g>
+      </svg>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
