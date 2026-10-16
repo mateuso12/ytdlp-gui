@@ -1,7 +1,7 @@
 {
   "name": "ytdlp-gui",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "packageManager": "pnpm@12.11.2",
   "type": "module",
   "scripts": {
