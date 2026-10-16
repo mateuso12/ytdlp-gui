@@ -1,6 +1,6 @@
 [package]
 name = "ytdlp-gui"
-version = "0.2.0"
+version = "0.3.0"
 description = "A simple, friendly desktop interface for yt-dlp"
 authors = ["Mateus Amaro"]
 edition = "2024"
