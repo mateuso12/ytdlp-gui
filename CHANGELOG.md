@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/mateuso12/ytdlp-gui/compare/v0.1.0...v0.2.0) (2026-10-16)
+
+
+### Features
+
+* **brand:** logo, app icons and social preview ([#8](https://github.com/mateuso12/ytdlp-gui/issues/8)) ([7db15dd](https://github.com/mateuso12/ytdlp-gui/commit/7db15dd1701815c009f5b15752963f3d40dbf63b))
+
 ## 0.1.0 (2026-10-15)
 
 
