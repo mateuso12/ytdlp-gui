@@ -56,6 +56,12 @@ export function App({ urlSlot }: AppProps) {
   const Current = SCREENS[screen]
   useFocusUrlFieldOnPaste()
 
+  // The static splash in index.html has done its job once React has committed (BrandLoader picks
+  // the animation up where it left off). Done here so every entry point (incl. e2e) hands over.
+  useEffect(() => {
+    document.getElementById('boot')?.remove()
+  }, [])
+
   // The first read of what is installed. Until it answers, or while a tool is missing, the setup
   // screen stands in for the shell. It gates the UI only: the stores bootstrap underneath.
   useEffect(() => {
