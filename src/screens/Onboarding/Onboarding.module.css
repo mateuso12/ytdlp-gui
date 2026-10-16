@@ -4,6 +4,21 @@
   padding-top: 12vh;
 }
 
+.checking {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  box-sizing: border-box;
+  /* The shell pads 24px above and 32px below: 8px here puts the logo at the window's exact center. */
+  padding-top: 8px;
+}
+
+.loader {
+  display: flex;
+  margin-bottom: 24px;
+}
+
 .title {
   margin: 0 0 8px;
   font-size: 20px;

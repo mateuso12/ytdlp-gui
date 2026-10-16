@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useBridge } from '../../bridge/context'
 import type { DepName, DepsProgress, DepsStatus } from '../../bridge/types'
+import { BrandLoader } from '../../components/BrandLoader'
 import { Icon } from '../../components/Icon'
 import { PillButton } from '../../components/PillButton'
 import { formatBytes } from '../../core/units'
@@ -125,26 +126,21 @@ export function Onboarding() {
   const shown: Problem | null = problem ?? (!known && readFailed ? { kind: 'read' } : null)
   const checking = !known && !readFailed
   const nameOf = (which: DepName) => TOOLS.find((tool) => tool.which === which)?.name ?? which
-  const liveText = checking
-    ? t('onboarding.checking')
-    : installing
-      ? t('onboarding.installing', { name: nameOf(installing) })
-      : ''
+  const liveText = installing ? t('onboarding.installing', { name: nameOf(installing) }) : ''
 
-  // Nothing is known to be missing yet: say only that the engine is being checked, so the
-  // first-run copy never flashes at someone who already has everything installed.
+  // Nothing is known to be missing yet: show only the logo loader (its label says the engine is
+  // being checked), so the first-run copy never flashes at someone who already has everything.
   if (checking) {
     return (
-      <section className={styles.screen} aria-busy="true">
-        <p className={styles.live} role="status">
-          {liveText}
-        </p>
+      <section className={styles.checking} aria-busy="true">
+        <BrandLoader size={72} />
       </section>
     )
   }
 
   return (
     <section className={styles.screen} aria-labelledby="onboarding-title">
+      <BrandLoader size={56} label={null} className={styles.loader} />
       <h1 id="onboarding-title" className={styles.title}>
         {t('onboarding.title')}
       </h1>
